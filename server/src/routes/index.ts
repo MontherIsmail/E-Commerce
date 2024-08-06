@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRouter from "./authRoutes";
+import productRoutes from "./productRoutes";
 
 const router = Router();
 
@@ -8,6 +9,7 @@ router.get('/', (req, res) => {
 });
 
 router.use('/auth', authRouter);
+router.use('/products', productRoutes);
 
 
 export default router;
