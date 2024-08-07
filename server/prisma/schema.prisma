@@ -13,6 +13,7 @@ model users {
   username      String?
   password      String?
   role      String?
+  carts       cart[]
   createdAt DateTime @default(now())
 }
  
@@ -23,5 +24,17 @@ model products {
   productDescription      String?
   productCategory      String?
   productUrlImg      String?
+  carts       cart[]
   createdAt DateTime @default(now())
+}
+
+model cart {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId  Int
+  quantity  Int      @default(1)
+  users    users @relation(fields: [userId], references: [id])
+  products    products @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  @@unique([userId, productId])
 }
