@@ -1,4 +1,5 @@
 import addProductSchema from "./addProductSchema";
+import editPassSchema from "./editPassSchema";
 import editProductSchema from "./editProductValidation";
 import editProfileSchema from "./editProfileSchema";
 import loginSchema from "./loginSchema";
@@ -10,4 +11,5 @@ export {
   addProductSchema,
   editProductSchema,
   editProfileSchema,
+  editPassSchema,
 };
