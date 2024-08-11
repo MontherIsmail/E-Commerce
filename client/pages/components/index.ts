@@ -1,4 +1,4 @@
-import Catigories from "./Catigories";
+import Catigories from "./Categories";
 import CollectionSample from "./CollectionSample";
 import CustomButton from "./CustomButton";
 import Navbar from "./Navbar";

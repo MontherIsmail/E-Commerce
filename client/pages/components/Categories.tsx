@@ -24,7 +24,7 @@ const callouts = [
     },
   ]
   
-const Catigories = () => {
+const Categories = () => {
     return (
       <div className="bg-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -57,4 +57,4 @@ const Catigories = () => {
     )
   }
   
-  export default Catigories;
+  export default Categories;
