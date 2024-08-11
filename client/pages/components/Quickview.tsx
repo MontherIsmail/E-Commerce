@@ -50,7 +50,8 @@ const Quickview = () => {
     <div>
       <button
         style={{
-          padding: "3px 105px",
+          padding: "3px 0",
+          width: "100%",
           border: "none",
           backgroundColor: "#000",
           color: "white",
