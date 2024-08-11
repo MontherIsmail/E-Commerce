@@ -7,10 +7,10 @@ import Image from "next/image";
 import logo from "../assets/logo.png"
 
 const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
+  { name: "Products", href: "/products" },
+  { name: "Men", href: "#" },
+  { name: "Women", href: "#" },
+  { name: "About Us", href: "#" },
 ];
 
 const Navbar = () => {
@@ -22,7 +22,7 @@ const Navbar = () => {
           className="flex items-center justify-between p-6 lg:px-8"
         >
           <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5">
+            <a href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <Image
                 alt=""
