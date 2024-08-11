@@ -4,6 +4,7 @@ import {
   Promo,
   CollectionSample,
   Catigories,
+  Footer,
 } from "./components";
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
       <Popular />
       <CollectionSample />
       <Catigories />
+      <Footer />
     </div>
   );
 }
