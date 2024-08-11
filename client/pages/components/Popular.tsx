@@ -58,6 +58,7 @@ const Popular = () => {
             <Card product={product} />
           ))}
         </div>
+      <button className="see-more">See More</button>
       </div>
       <style jsx>{`
         .p-style {
@@ -67,6 +68,14 @@ const Popular = () => {
           font-family: "Poppins", sans-serif;
           font-size: 0.8rem;
           margin-bottom: 5px;
+        }
+        .see-more {
+          width: 100%;
+          padding: 5px 0;
+          background-color: #fff;
+          color: #000;
+          margin-top: 30px;
+          border: solid 1px #000;
         }
       `}</style>
     </div>
