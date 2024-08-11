@@ -1,4 +1,4 @@
-import { Navbar, Popular, Promo, Quickview } from "./components";
+import { Navbar, Popular, Promo, CollectionSample } from "./components";
 
 export default function Home() {
   return (
@@ -6,6 +6,7 @@ export default function Home() {
       <Navbar />
       <Promo />
       <Popular />
+      <CollectionSample />
     </div>
   );
 }
