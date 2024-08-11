@@ -20,9 +20,9 @@ const Promo = () => {
         .promo-style {
           margin-top: 80px;
           width: 100%;
-          height: 100vh;
+          height: fit-content;
           padding: 0 30px;
-        }
+        } 
         .promo-info {
           display: flex;
           justify-content: space-between;
@@ -49,8 +49,8 @@ const Promo = () => {
           margin-bottom: 30px;
         }
 
-        .Image-style {
-          height: 100vh;
+        .image-container{
+          height: fit-content;
         }
 
         @media (max-width: 640px) {
