@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
-import collection01 from "../../assets/collection-01.jpg";
-import collection02 from "../../assets/collection-02.jpg";
+import collection01 from "../assets/collection-01.jpg";
+import collection02 from "../assets/collection-02.jpg";
 import CustomButton from "./CustomButton";
 
 const CollectionSample = () => {

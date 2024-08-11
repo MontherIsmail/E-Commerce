@@ -1,6 +1,6 @@
 import React from "react";
 import CustomButton from "./CustomButton";
-import promo from "../../assets/promo.png";
+import promo from "../assets/promo.png";
 import Image from "next/image";
 
 const Promo = () => {
