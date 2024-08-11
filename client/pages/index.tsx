@@ -1,4 +1,10 @@
-import { Navbar, Popular, Promo, CollectionSample } from "./components";
+import {
+  Navbar,
+  Popular,
+  Promo,
+  CollectionSample,
+  Catigories,
+} from "./components";
 
 export default function Home() {
   return (
@@ -7,6 +13,7 @@ export default function Home() {
       <Promo />
       <Popular />
       <CollectionSample />
+      <Catigories />
     </div>
   );
 }
