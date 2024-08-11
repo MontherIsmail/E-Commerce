@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Navbar,
   Popular,
@@ -5,17 +6,19 @@ import {
   CollectionSample,
   Catigories,
   Footer,
-} from "./components";
+} from "../components";
 
-export default function Home() {
+const Home = () => {
   return (
-    <div>
+    <>
       <Navbar />
       <Promo />
       <Popular />
       <CollectionSample />
       <Catigories />
       <Footer />
-    </div>
+    </>
   );
-}
+};
+
+export default Home;
