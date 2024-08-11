@@ -1,6 +1,7 @@
 import Catigories from "./Categories";
 import CollectionSample from "./CollectionSample";
 import CustomButton from "./CustomButton";
+import Filters from "./Filters";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Popular from "./Popular";
@@ -15,5 +16,6 @@ export {
   Quickview,
   CollectionSample,
   Catigories,
-  Footer
+  Footer,
+  Filters
 };

@@ -1,10 +1,10 @@
 import React from "react";
 
 const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
+  { name: "Products", href: "/products" },
+  { name: "Men", href: "#" },
+  { name: "Women", href: "#" },
+  { name: "About Us", href: "#" },
 ];
 
 const Footer = () => {
