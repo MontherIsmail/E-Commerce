@@ -56,7 +56,7 @@ const Quickview = () => {
           backgroundColor: "#000",
           color: "white",
           fontSize: "1rem",
-          marginTop: "10px"
+          marginTop: "10px",
         }}
         onClick={() => setOpen(true)}
       >
@@ -105,7 +105,7 @@ const Quickview = () => {
                         Product information
                       </h3>
 
-                      <p className="text-2xl text-gray-900">
+                      <p className="text-2xl text-green-500">
                         {productData.price}
                       </p>
 
@@ -120,7 +120,7 @@ const Quickview = () => {
                                 aria-hidden="true"
                                 className={classNames(
                                   productData.rating > rating
-                                    ? "text-gray-900"
+                                    ? "text-yellow-500"
                                     : "text-gray-200",
                                   "h-5 w-5 flex-shrink-0"
                                 )}
@@ -247,7 +247,7 @@ const Quickview = () => {
 
                         <button
                           type="submit"
-                          className="mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="mt-6 flex w-full items-center justify-center border border-transparent bg-green-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                           Add to Cart
                         </button>
