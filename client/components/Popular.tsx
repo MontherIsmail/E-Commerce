@@ -49,16 +49,22 @@ const Popular = () => {
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <p className="p-style">Summer Collection</p>
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-          Popular T-Shirts
-        </h2>
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="p-style">Summer Collection</p>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+              Popular T-Shirts
+            </h2>
+          </div>
+          <a href="/products">
+            <button className="see-more">See More</button>
+          </a>
+        </div>
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product: any) => (
             <Card product={product} />
           ))}
         </div>
-      <button className="see-more">See More</button>
       </div>
       <style jsx>{`
         .p-style {
@@ -70,12 +76,11 @@ const Popular = () => {
           margin-bottom: 5px;
         }
         .see-more {
-          width: 100%;
-          padding: 5px 0;
-          background-color: #fff;
+          padding: 5px 10px;
+          background: none;
           color: #000;
           margin-top: 30px;
-          border: solid 1px #000;
+          border: none;
         }
       `}</style>
     </div>
