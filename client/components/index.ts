@@ -5,8 +5,10 @@ import Filters from "./Filters";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Popular from "./Popular";
+import ProductsList from "./ProductsList";
 import Promo from "./Promo";
 import Quickview from "./Quickview";
+import RelatedProducts from "./RelatedProducts";
 
 export {
   CustomButton,
@@ -17,5 +19,7 @@ export {
   CollectionSample,
   Catigories,
   Footer,
-  Filters
+  Filters,
+  ProductsList,
+  RelatedProducts
 };
