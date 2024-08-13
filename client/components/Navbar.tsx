@@ -13,9 +13,9 @@ import ProfileMenu from "./ProfileMenu";
 
 const navigation = [
   { name: "Products", href: "/products" },
-  { name: "Men", href: "#" },
-  { name: "Women", href: "#" },
-  { name: "About Us", href: "#" },
+  { name: "Men", href: "products" },
+  { name: "Women", href: "products" },
+  { name: "About Us", href: "/about" },
 ];
 
 const Navbar = () => {
