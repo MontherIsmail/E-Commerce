@@ -5,7 +5,16 @@ import cloudinaryImg from "../../utils/cloudinary";
 
 const editProduct = async (req: Request, res: Response) => {
   const { productId } = req.params;
-  const { name, price, description, category, image } = req.body;
+  const {
+    name,
+    price,
+    description,
+    category,
+    image,
+    productColors,
+    productSizes,
+    stock,
+  } = req.body;
   await editProductSchema.validateAsync(req.body);
   try {
     const product = await prisma.products.findUnique({
@@ -23,6 +32,9 @@ const editProduct = async (req: Request, res: Response) => {
         productDescription: description,
         productPrice: price,
         productCategory: category,
+        productColors,
+        productSizes,
+        stock,
       },
     });
 

@@ -6,6 +6,9 @@ const addProductSchema = joi.object({
   productPrice: joi.number().required(),
   productDescription: joi.string().required(),
   productCategory: joi.string().required(),
+  productColors: joi.array().required(),
+  productSizes: joi.array().required(),
+  stock: joi.number().required(),
 });
 
 export default addProductSchema;
