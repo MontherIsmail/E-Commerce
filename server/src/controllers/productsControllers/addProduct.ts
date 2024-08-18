@@ -10,6 +10,9 @@ const addProduct = async (req: Request, res: Response) => {
     productPrice,
     productDescription,
     productCategory,
+    productColors,
+    productSizes,
+    stock,
   } = req.body;
   await addProductSchema.validateAsync(req.body);
   const productUrlImg: any = await cloudinaryImg(productImage);
@@ -21,6 +24,9 @@ const addProduct = async (req: Request, res: Response) => {
         productPrice,
         productDescription,
         productCategory,
+        productColors,
+        productSizes,
+        stock,
       },
     });
     return res
