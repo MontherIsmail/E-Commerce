@@ -4,65 +4,38 @@ import { useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { Footer, Navbar, RelatedProducts } from "../../components";
+import createClient from "../../api";
+import { GetStaticPaths, GetStaticProps } from "next";
 
-const product = {
-  name: "Basic Tee 6-Pack",
-  price: "$192",
-  href: "#",
-  breadcrumbs: [{ id: 1, name: "Men", href: "#" }],
-  images: [
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
-      alt: "Two each of gray, white, and black shirts laying flat.",
-    },
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
-      alt: "Model wearing plain black basic tee.",
-    },
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
-      alt: "Model wearing plain gray basic tee.",
-    },
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
-      alt: "Model wearing plain white basic tee.",
-    },
-  ],
-  colors: [
-    { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-    { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
-    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-  ],
-  sizes: [
-    { name: "XXS", inStock: false },
-    { name: "XS", inStock: true },
-    { name: "S", inStock: true },
-    { name: "M", inStock: true },
-    { name: "L", inStock: true },
-    { name: "XL", inStock: true },
-    { name: "2XL", inStock: true },
-    { name: "3XL", inStock: true },
-  ],
-  description:
-    'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
-  highlights: [
-    "Hand cut and sewn locally",
-    "Dyed with our proprietary colors",
-    "Pre-washed & pre-shrunk",
-    "Ultra-soft 100% cotton",
-  ],
-  details:
-    'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
-};
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
 const classNames = (...classes: any) => {
   return classes.filter(Boolean).join(" ");
 };
 
-const Product = () => {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+const Product = ({ product, products, userId }: any) => {
+  const [selectedColor, setSelectedColor] = useState(product.productColors[0]);
+  const [selectedSize, setSelectedSize] = useState(product.productSizes[2]);
+  const [quantity, setQuantity] = useState(1);
+
+  const addToCartFun = async (e: any) => {
+    e.preventDefault();
+    const { addToCart } = createClient("");
+    const cartItem = {
+      productId: product.id,
+      userId,
+      selectedColor: selectedColor.name,
+      selectedSize: selectedSize.name,
+      quantity,
+    };
+
+    try {
+      const response = await addToCart(cartItem);
+      console.log("Product added to cart:", response);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
 
   return (
     <>
@@ -74,35 +47,33 @@ const Product = () => {
               role="list"
               className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
             >
-              {product.breadcrumbs.map((breadcrumb) => (
-                <li key={breadcrumb.id}>
-                  <div className="flex items-center">
-                    <a
-                      href={breadcrumb.href}
-                      className="mr-2 text-sm font-medium text-gray-900"
-                    >
-                      {breadcrumb.name}
-                    </a>
-                    <svg
-                      fill="currentColor"
-                      width={16}
-                      height={20}
-                      viewBox="0 0 16 20"
-                      aria-hidden="true"
-                      className="h-5 w-4 text-gray-300"
-                    >
-                      <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                    </svg>
-                  </div>
-                </li>
-              ))}
+              <li>
+                <div className="flex items-center">
+                  <a
+                    href="/men"
+                    className="mr-2 text-sm font-medium text-gray-900"
+                  >
+                    men
+                  </a>
+                  <svg
+                    fill="currentColor"
+                    width={16}
+                    height={20}
+                    viewBox="0 0 16 20"
+                    aria-hidden="true"
+                    className="h-5 w-4 text-gray-300"
+                  >
+                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+                  </svg>
+                </div>
+              </li>
               <li className="text-sm">
                 <a
                   href={product.href}
                   aria-current="page"
                   className="font-medium text-gray-500 hover:text-gray-600"
                 >
-                  {product.name}
+                  {product.productName}
                 </a>
               </li>
             </ol>
@@ -115,10 +86,10 @@ const Product = () => {
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <h1 className="text-2xl font-bold tracking-tight mb-5 text-gray-900 sm:text-3xl">
-                {product.name}
+                {product.productName}
               </h1>
               <p className="text-3xl tracking-tight text-green-500">
-                {product.price}
+                ${product.productPrice}
               </p>
 
               {/* Reviews */}
@@ -149,7 +120,7 @@ const Product = () => {
                 </div>
               </div>
 
-              <form className="mt-10">
+              <form className="mt-10" onSubmit={addToCartFun}>
                 {/* Colors */}
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Color</h3>
@@ -160,7 +131,7 @@ const Product = () => {
                       onChange={setSelectedColor}
                       className="flex items-center space-x-3"
                     >
-                      {product.colors.map((color) => (
+                      {product.productColors.map((color: any) => (
                         <Radio
                           key={color.name}
                           value={color}
@@ -201,7 +172,7 @@ const Product = () => {
                       onChange={setSelectedSize}
                       className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
                     >
-                      {product.sizes.map((size) => (
+                      {product.productSizes.map((size: any) => (
                         <Radio
                           key={size.name}
                           value={size}
@@ -246,6 +217,29 @@ const Product = () => {
                   </fieldset>
                 </div>
 
+                {/* Quantity */}
+                <div className="mt-10">
+                  <h3 className="text-sm font-medium text-gray-900">
+                    Quantity
+                  </h3>
+                  <div className="relative mt-4">
+                    <select
+                      id="quantity"
+                      name="quantity"
+                      onChange={(e: any) =>
+                        setQuantity(parseInt(e.target.value))
+                      }
+                      className="block w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-base leading-5 text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      {[...Array(10).keys()].map((x) => (
+                        <option key={x + 1} value={x + 1}>
+                          {x + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
                 <button
                   type="submit"
                   className="mt-10 flex w-full items-center justify-center  border border-transparent bg-green-600 px-8 py-3 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -259,23 +253,23 @@ const Product = () => {
               <div className="mx-auto max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
                 <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
                   <img
-                    alt={product.images[3].alt}
-                    src={product.images[3].src}
+                    alt={product.productUrlImgs[1]}
+                    src={product.productUrlImgs[1]}
                     className="h-full w-full object-cover object-center"
                   />
                 </div>
                 <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
                   <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
                     <img
-                      alt={product.images[1].alt}
-                      src={product.images[1].src}
+                      alt={product.productUrlImgs[1]}
+                      src={product.productUrlImgs[1]}
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
                   <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
                     <img
-                      alt={product.images[2].alt}
-                      src={product.images[2].src}
+                      alt={product.productUrlImgs[2]}
+                      src={product.productUrlImgs[2]}
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
@@ -289,7 +283,7 @@ const Product = () => {
                 </h3>
                 <div className="space-y-6">
                   <p className="text-base text-gray-900">
-                    {product.description}
+                    {product.productDescription}
                   </p>
                 </div>
               </div>
@@ -298,11 +292,52 @@ const Product = () => {
         </div>
       </div>
       <div style={{ padding: "0 70px" }}>
-        <RelatedProducts />
+        <RelatedProducts products={products} />
       </div>
       <Footer />
     </>
   );
+};
+
+interface ProductPageProps {
+  product: any;
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const { getProducts } = createClient("");
+  const data = await getProducts();
+  const { products } = data;
+
+  const paths = products.map((product: { id: string }) => ({
+    params: { id: product.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps<ProductPageProps> = async (
+  context
+) => {
+  const { id } = context.params!;
+
+  const { getProduct, getProducts } = createClient("");
+  const productData = await getProduct(id);
+  const { product } = productData;
+  const productsData = await getProducts();
+  const { products } = productsData;
+
+  const userId = 1;
+
+  return {
+    props: {
+      product,
+      products,
+      userId,
+    },
+  };
 };
 
 export default Product;

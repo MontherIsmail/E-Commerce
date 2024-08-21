@@ -2,7 +2,7 @@ import joi from "joi";
 
 const editProductSchema = joi.object({
   name: joi.string().required(),
-  image: joi.string().required(),
+  images: joi.array().required(),
   price: joi.number().required(),
   description: joi.string().required(),
   category: joi.string().required(),

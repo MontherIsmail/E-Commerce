@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import logo from "../assets/logo.png";
 import ProfileMenu from "./ProfileMenu";
+import createClient from "../api";
 
 const navigation = [
   { name: "Products", href: "/products" },
@@ -20,6 +21,19 @@ const navigation = [
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+
+  const getCartItems = async () => {
+    const { getCart } = createClient("");
+    const data = await getCart(1);
+    return setCartItems(data.cartItems);
+  };
+
+  useEffect(() => {
+    getCartItems();
+  }, []);
+
+  const cartItemCount = cartItems ? cartItems.length : 0;
   return (
     <header className="absolute inset-x-0 top-0 z-50">
       <nav
@@ -53,7 +67,7 @@ const Navbar = () => {
                     className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                   />
                   <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                    0
+                    {cartItemCount}
                   </span>
                   <span className="sr-only">items in cart, view bag</span>
                 </a>

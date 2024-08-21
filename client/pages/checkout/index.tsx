@@ -6,57 +6,38 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import createClient from "../../api";
+import { Footer, Navbar } from "../../components";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
 );
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ data }: any) => {
+  const { cartItems } = data;
+  const calculateSubTotal = (cartItems: any) => {
+    if (!cartItems || !Array.isArray(cartItems)) return 0;
+
+    return cartItems.reduce((subtotal, item) => {
+      const price = item.products?.productPrice || 0;
+      return subtotal + item.quantity * price;
+    }, 0);
+  };
+  const [subTotal, setSubtotal] = useState(0);
+  useEffect(() => {
+    if (data && data.cartItems) {
+      const total = calculateSubTotal(data.cartItems);
+      setSubtotal(total);
+    }
+  }, [data]);
+
   const stripe = useStripe();
   const elements = useElements();
   const [clientSecret, setClientSecret] = useState("");
 
-  const order = {
-    datePlaced: "January 22, 2021",
-    orderNumber: "WU88191111",
-    products: [
-      {
-        id: 1,
-        name: "Throwback Hip Bag",
-        href: "#",
-        color: "Salmon",
-        status: "Delivered Jan 25, 2021	",
-        size: "xl",
-        price: 90.00,
-        quantity: 1,
-        imageSrc:
-          "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-        imageAlt:
-          "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-      },
-      {
-        id: 2,
-        name: "Throwback Hip Bag",
-        href: "#",
-        color: "Salmon",
-        status: "Delivered Jan 25, 2021	",
-        size: "xl",
-        price: 90.00,
-        quantity: 5,
-        imageSrc:
-          "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-02.jpg",
-        imageAlt:
-          "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-      },
-    ],
-  };
-
-  const totalAmount = order.products.reduce((acc, product) => {
-    return acc + product.price * product.quantity;
-  }, 0);
+  const amount = subTotal + (subTotal * 2) / 100 + 5;
   useEffect(() => {
-    const amount = totalAmount * 10;
-    const { products } = order;
+    const products = cartItems;
     const userId = 1;
     // Create PaymentIntent as soon as the page loads
     fetch("http://localhost:5000/api/v1/payment/create-payment-intent", {
@@ -75,7 +56,7 @@ const CheckoutForm = () => {
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
-  }, [totalAmount]);
+  }, [amount]);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -103,7 +84,7 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form style={{ marginTop: "70px" }} onSubmit={handleSubmit}>
       <div className="lg:flex lg:justify-between lg:items-start">
         <div className="p-10 lg:w-1/2">
           <h3 className="text-lg font-medium">Contact Information</h3>
@@ -162,12 +143,12 @@ const CheckoutForm = () => {
           <div className=" lg:p-20 p-10">
             <div className="flow-root">
               <ul role="list" className="-my-6 divide-y divide-gray-200">
-                {order.products.map((product) => (
+                {cartItems?.map((product: any) => (
                   <li key={product.id} className="flex py-6">
                     <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                       <img
-                        alt={product.imageAlt}
-                        src={product.imageSrc}
+                        alt="Product Image"
+                        src={product.products.productUrlImgs[0]}
                         className="h-full w-full object-cover object-center"
                       />
                     </div>
@@ -176,9 +157,13 @@ const CheckoutForm = () => {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>
-                            <a href={product.href}>{product.name}</a>
+                            <a href={product.href}>
+                              {product.products.productName}
+                            </a>
                           </h3>
-                          <p className="ml-4 text-green-400">{product.price}</p>
+                          <p className="ml-4 text-green-400">
+                            ${product.products.productPrice}
+                          </p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
                           {product.color}
@@ -212,7 +197,7 @@ const CheckoutForm = () => {
             <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
               <div className="flex justify-between mt-0.5 text-sm text-gray-500">
                 <p>Subtotal</p>
-                <p>{totalAmount}</p>
+                <p>${subTotal}</p>
               </div>
             </div>
             <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
@@ -224,14 +209,14 @@ const CheckoutForm = () => {
             <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
               <div className="flex justify-between mt-0.5 text-sm text-gray-500">
                 <p>Tax estimate</p>
-                <p>$112.32</p>
+                <p>${(subTotal * 2) / 100}</p>
               </div>
             </div>
 
             <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
               <div className="flex justify-between text-base font-medium text-gray-900">
                 <p>Order total</p>
-                <p>{totalAmount}</p>
+                <p>${amount}</p>
               </div>
             </div>
           </div>
@@ -241,12 +226,25 @@ const CheckoutForm = () => {
   );
 };
 
-const PaymentPage = () => {
+const Checkout = ({ data }: any) => {
   return (
-    <Elements stripe={stripePromise}>
-      <CheckoutForm />
-    </Elements>
+    <>
+      <Navbar />
+      <Elements stripe={stripePromise}>
+        <CheckoutForm data={data} />
+      </Elements>
+      <Footer />
+    </>
   );
 };
 
-export default PaymentPage;
+export async function getStaticProps() {
+  const { getCart } = createClient("");
+  const data = await getCart(1);
+
+  return {
+    props: { data },
+  };
+}
+
+export default Checkout;
