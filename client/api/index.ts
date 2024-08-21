@@ -54,6 +54,11 @@ const createClient = (
       return response;
     },
 
+    getOrders: async (userId: any): Promise<any> => {
+      const response = await get(`orders/${userId}`);
+      return response;
+    },
+
     // getMenu: async (): Promise<any> => {
     //     const response = await get("menu");
     //     return response;

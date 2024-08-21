@@ -8,6 +8,8 @@ import {
 } from "@stripe/react-stripe-js";
 import createClient from "../../api";
 import { Footer, Navbar } from "../../components";
+import Swal from "sweetalert2";
+import { useRouter } from 'next/router';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
@@ -33,6 +35,7 @@ const CheckoutForm = ({ data }: any) => {
 
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
   const [clientSecret, setClientSecret] = useState("");
 
   const amount = subTotal + (subTotal * 2) / 100 + 5;
@@ -79,7 +82,14 @@ const CheckoutForm = ({ data }: any) => {
     if (error) {
       console.error(error);
     } else if (paymentIntent.status === "succeeded") {
-      console.log("Payment succeeded!", "monther", paymentIntent);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Payment succeeded",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      router.push('/orders');
     }
   };
 

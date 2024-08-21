@@ -6,6 +6,7 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { Footer, Navbar, RelatedProducts } from "../../components";
 import createClient from "../../api";
 import { GetStaticPaths, GetStaticProps } from "next";
+import Swal from 'sweetalert2';
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -31,6 +32,13 @@ const Product = ({ product, products, userId }: any) => {
 
     try {
       const response = await addToCart(cartItem);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Product Added to Cart",
+        showConfirmButton: false,
+        timer: 1500
+      });
       console.log("Product added to cart:", response);
     } catch (error) {
       console.error("Error adding to cart:", error);
