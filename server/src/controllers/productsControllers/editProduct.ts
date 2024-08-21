@@ -10,7 +10,7 @@ const editProduct = async (req: Request, res: Response) => {
     price,
     description,
     category,
-    image,
+    images,
     productColors,
     productSizes,
     stock,
@@ -23,12 +23,17 @@ const editProduct = async (req: Request, res: Response) => {
     if (!product) {
       return res.status(404).json({ message: "No Products Found" });
     }
-    const newProductUrlImg: any = await cloudinaryImg(image);
+    const productUrlImgs = await Promise.all(
+      images.map(async (image: any) => {
+        const url = await cloudinaryImg(image);
+        return url;
+      })
+    );
     const updatedProduct = await prisma.products.update({
       where: { id: parseInt(productId) },
       data: {
         productName: name,
-        productUrlImg: newProductUrlImg,
+        productUrlImgs,
         productDescription: description,
         productPrice: price,
         productCategory: category,

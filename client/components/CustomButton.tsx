@@ -1,7 +1,15 @@
+import Link from "next/link";
 import React from "react";
 
-const CustomButton = ({btnText}:any) => {
-  return <button style={customBtnStyle}>{btnText}</button>;
+const CustomButton = ({ btnText }: any) => {
+  return (
+    <Link href="/products">
+      <button style={customBtnStyle}>
+        {btnText}
+      </button>
+      ;
+    </Link>
+  );
 };
 
 const customBtnStyle = {
@@ -9,6 +17,6 @@ const customBtnStyle = {
   border: "none",
   backgroundColor: "#000",
   color: "white",
-  fontSize: "1rem"
-}
+  fontSize: "1rem",
+};
 export default CustomButton;

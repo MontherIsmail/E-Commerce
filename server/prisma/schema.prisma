@@ -25,7 +25,7 @@ model products {
   productPrice       Float?
   productDescription String?
   productCategory    String?
-  productUrlImg      String?
+  productUrlImgs      Json?
   productColors      Json?
   productSizes       Json?
   stock              Int       @default(1)
@@ -39,6 +39,8 @@ model cart {
   userId    Int
   productId  Int
   quantity  Int      @default(1)
+  color     String?
+  size      String?
   users    users @relation(fields: [userId], references: [id])
   products    products @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())

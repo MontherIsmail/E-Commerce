@@ -6,7 +6,7 @@ import cloudinaryImg from "../../utils/cloudinary";
 const addProduct = async (req: Request, res: Response) => {
   const {
     productName,
-    productImage,
+    productImages,
     productPrice,
     productDescription,
     productCategory,
@@ -15,12 +15,18 @@ const addProduct = async (req: Request, res: Response) => {
     stock,
   } = req.body;
   await addProductSchema.validateAsync(req.body);
-  const productUrlImg: any = await cloudinaryImg(productImage);
+
+  const productUrlImgs = await Promise.all(
+    productImages.map(async (productImage: any) => {
+      const url = await cloudinaryImg(productImage);
+      return url;
+    })
+  );
   try {
     const newProduct = await prisma.products.create({
       data: {
         productName,
-        productUrlImg,
+        productUrlImgs,
         productPrice,
         productDescription,
         productCategory,
@@ -33,7 +39,7 @@ const addProduct = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: "Product Added Successfully", newProduct });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 

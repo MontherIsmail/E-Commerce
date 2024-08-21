@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -10,41 +10,37 @@ import {
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
-
-const productData = {
-  name: "Basic Tee 6-Pack ",
-  price: "$192",
-  rating: 3.9,
-  reviewCount: 117,
-  href: "#",
-  imageSrc:
-    "https://tailwindui.com/img/ecommerce-images/product-quick-preview-02-detail.jpg",
-  imageAlt: "Two each of gray, white, and black shirts arranged on table.",
-  colors: [
-    { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-    { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
-    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-  ],
-  sizes: [
-    { name: "XXS", inStock: true },
-    { name: "XS", inStock: true },
-    { name: "S", inStock: true },
-    { name: "M", inStock: true },
-    { name: "L", inStock: true },
-    { name: "XL", inStock: true },
-    { name: "XXL", inStock: true },
-    { name: "XXXL", inStock: false },
-  ],
-};
+import createClient from "../api";
 
 const classNames = (...classes: any) => {
   return classes.filter(Boolean).join(" ");
 };
 
-const Quickview = () => {
+const Quickview = ({ id }: any) => {
   const [open, setOpen] = useState<any>(false);
-  const [selectedColor, setSelectedColor] = useState(productData.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(productData.sizes[2]);
+  const [selectedColor, setSelectedColor] = useState();
+  const [selectedSize, setSelectedSize] = useState();
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { getProduct } = createClient("");
+        const data = await getProduct(id);
+        return setProduct(data.product);
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+    }
+  }, [id]);
 
   return (
     <div>
@@ -87,14 +83,14 @@ const Quickview = () => {
                 <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                   <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
                     <img
-                      alt={productData.imageAlt}
-                      src={productData.imageSrc}
+                      alt="Product Image Alt"
+                      src={product?.productUrlImgs[0]}
                       className="object-cover object-center"
                     />
                   </div>
                   <div className="sm:col-span-8 lg:col-span-7">
                     <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">
-                      {productData.name}
+                      {product?.productName}
                     </h2>
 
                     <section
@@ -106,7 +102,7 @@ const Quickview = () => {
                       </h3>
 
                       <p className="text-2xl text-green-500">
-                        {productData.price}
+                        {product?.productPrice}
                       </p>
 
                       {/* Reviews */}
@@ -119,7 +115,7 @@ const Quickview = () => {
                                 key={rating}
                                 aria-hidden="true"
                                 className={classNames(
-                                  productData.rating > rating
+                                  3.9 > rating
                                     ? "text-yellow-500"
                                     : "text-gray-200",
                                   "h-5 w-5 flex-shrink-0"
@@ -127,14 +123,12 @@ const Quickview = () => {
                               />
                             ))}
                           </div>
-                          <p className="sr-only">
-                            {productData.rating} out of 5 stars
-                          </p>
+                          <p className="sr-only">3.9 out of 5 stars</p>
                           <a
                             href="#"
                             className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
                           >
-                            {productData.reviewCount} reviews
+                            117 reviews
                           </a>
                         </div>
                       </div>
@@ -160,7 +154,7 @@ const Quickview = () => {
                             onChange={setSelectedColor}
                             className="mt-4 flex items-center space-x-3"
                           >
-                            {productData.colors.map((color: any) => (
+                            {product?.productColors?.map((color: any) => (
                               <Radio
                                 key={color.name}
                                 value={color}
@@ -201,7 +195,7 @@ const Quickview = () => {
                             onChange={setSelectedSize}
                             className="mt-4 grid grid-cols-4 gap-4"
                           >
-                            {productData.sizes.map((size: any) => (
+                            {product?.productSizes?.map((size: any) => (
                               <Radio
                                 key={size.name}
                                 value={size}

@@ -2,7 +2,7 @@ import joi from "joi";
 
 const addProductSchema = joi.object({
   productName: joi.string().required(),
-  productImage: joi.string().required(),
+  productImages: joi.array().required(),
   productPrice: joi.number().required(),
   productDescription: joi.string().required(),
   productCategory: joi.string().required(),
