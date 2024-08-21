@@ -12,7 +12,7 @@ const login = async (req: Request, res: Response) => {
       where: { email: email },
     });
     if (!isExitUser) {
-      return res.status(404).json({ message: "Email Dose Not Exit!" });
+      return res.status(404).json({ message: "Email Dose Not Found!" });
     }
     const hashedPassword = isExitUser.password;
     const { id, username, role } = isExitUser;

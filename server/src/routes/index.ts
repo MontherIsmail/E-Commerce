@@ -6,6 +6,7 @@ import cartRoutes from "./cartRoutes";
 import asyncMiddleware from "../middleware/asyncMiddleware";
 import checkAuth from "../middleware/checkAuth";
 import paymentRoutes from "./paymentRoute";
+import ordersRoutes from "./ordersRoutes";
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use("/products", productRoutes);
 router.use("/profile", profileRoutes);
 router.use("/cart", cartRoutes);
 router.use("/payment", paymentRoutes);
+router.use("/orders", ordersRoutes);
 
 export default router;

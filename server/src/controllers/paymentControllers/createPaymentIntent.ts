@@ -50,8 +50,9 @@ const createPaymentIntent = async (req: Request, res: Response) => {
       data: {
         userId,
         paymentId: payment.id,
+        amount,
         items: {
-          create: products.map(
+          create: products?.map(
             (product: { products: any; id: number; quantity: number }) => ({
               products: { connect: { id: product.products.id } },
               quantity: product.quantity,
@@ -66,9 +67,11 @@ const createPaymentIntent = async (req: Request, res: Response) => {
       order,
     });
   } catch (error: any) {
-    res.status(400).json({
-      error: { message: error.message },
-    });
+    console.log('error', error);
+    
+    // res.status(400).json({
+    //   error: { message: error.message },
+    // });
   }
 };
 

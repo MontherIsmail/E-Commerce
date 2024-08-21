@@ -50,6 +50,7 @@ model cart {
 model Order {
   id        Int        @id @default(autoincrement())
   items     OrderItem[]
+  amount    Int        
   payment   Payment?   @relation(fields: [paymentId], references: [id])
   paymentId Int?       @unique
   userId    Int        

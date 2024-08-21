@@ -32,6 +32,8 @@ CREATE TABLE "cart" (
     "userId" INTEGER NOT NULL,
     "productId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
+    "color" TEXT,
+    "size" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "cart_pkey" PRIMARY KEY ("id")
@@ -40,6 +42,7 @@ CREATE TABLE "cart" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" SERIAL NOT NULL,
+    "amount" INTEGER NOT NULL,
     "paymentId" INTEGER,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
