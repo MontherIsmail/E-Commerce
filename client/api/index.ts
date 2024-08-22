@@ -13,7 +13,7 @@ const createClient = (
   const get = async (query: string) => {
     try {
       const response = await api.get(query);
-      console.log("response", response);
+      // console.log("response", response);
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -24,6 +24,17 @@ const createClient = (
   const post = async (query: string, data: any) => {
     try {
       const response = await api.post(query, data);
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+  const dele = async (query: string) => {
+    try {
+      const response = await api.delete(query);
+      // console.log("response", response);
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -56,6 +67,11 @@ const createClient = (
 
     getOrders: async (userId: any): Promise<any> => {
       const response = await get(`orders/${userId}`);
+      return response;
+    },
+
+    deleteCartItem: async (itemId: any): Promise<any> => {
+      const response = await dele(`cart/${itemId}`);
       return response;
     },
 
