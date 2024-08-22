@@ -2,9 +2,11 @@
 import React, { useState, useEffect } from "react";
 import createClient from "../../api";
 import { Footer, Navbar } from "../../components";
+import Swal from "sweetalert2";
 
 const Cart = ({ data }: any) => {
-  const { cartItems } = data;
+  const [subTotal, setSubtotal] = useState(0);
+  const [cartItems, setCartItems] = useState(data.cartItems || []);
   const calculateSubTotal = (cartItems: any) => {
     if (!cartItems || !Array.isArray(cartItems)) return 0;
 
@@ -13,7 +15,6 @@ const Cart = ({ data }: any) => {
       return subtotal + item.quantity * price;
     }, 0);
   };
-  const [subTotal, setSubtotal] = useState(0);
 
   useEffect(() => {
     if (data && data.cartItems) {
@@ -21,6 +22,63 @@ const Cart = ({ data }: any) => {
       setSubtotal(total);
     }
   }, [data]);
+
+  const deleteFromCart = async (id: any) => {
+    try {
+      const { deleteCartItem } = createClient("");
+      await deleteCartItem(id);
+      const updatedCartItems = cartItems.filter((item: any) => item.id !== id);
+      setCartItems(updatedCartItems);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+        footer: `${error}`,
+      });
+    }
+  };
+
+  const sweet = (id: any) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton:
+          "text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800",
+        cancelButton:
+          "focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          deleteFromCart(id);
+          swalWithBootstrapButtons.fire({
+            title: "Deleted!",
+            text: "Item has been deleted.",
+            icon: "success",
+          });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "The item is safe :)",
+            icon: "error",
+          });
+        }
+      });
+  };
 
   return (
     <>
@@ -34,7 +92,7 @@ const Cart = ({ data }: any) => {
         <div className="lg:flex-1 lg:p-20 p-10">
           <div className="flow-root">
             <ul role="list" className="-my-6 divide-y divide-gray-200">
-              {cartItems.map((item: any) => (
+              {cartItems?.map((item: any) => (
                 <li key={item.id} className="flex py-6">
                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                     <img
@@ -65,6 +123,7 @@ const Cart = ({ data }: any) => {
                       <div className="flex">
                         <button
                           type="button"
+                          onClick={() => sweet(item.id)}
                           className="font-medium text-red-600 hover:text-red-400"
                         >
                           Remove
