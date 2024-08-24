@@ -30,7 +30,7 @@ const login = async (req: Request, res: Response) => {
       .cookie("token", token, {
         httpOnly: false,
       })
-      .json({ message: "login successfully" });
+      .json({ message: "login successfully", token });
   } catch (error) {
     return res.status(500).json("Internal Server Error");
   }

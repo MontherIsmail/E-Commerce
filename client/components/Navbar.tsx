@@ -11,6 +11,7 @@ import Image from "next/image";
 import logo from "../assets/logo.png";
 import ProfileMenu from "./ProfileMenu";
 import createClient from "../api";
+import { useAuth } from "../context/AuthContext";
 
 const navigation = [
   { name: "Products", href: "/products" },
@@ -22,6 +23,7 @@ const navigation = [
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const { logout } = useAuth();
 
   const getCartItems = async () => {
     const { getCart } = createClient("");
@@ -136,7 +138,7 @@ const Navbar = () => {
                 ))}
               </div>
               <div className="py-6">
-                {true ? (
+                {false ? (
                   <a
                     href="/login"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
@@ -152,7 +154,8 @@ const Navbar = () => {
                       Profile
                     </a>
                     <a
-                      href="/logout"
+                      href="/login"
+                      onClick={() => logout()}
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
                       Log out

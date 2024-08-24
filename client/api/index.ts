@@ -79,6 +79,17 @@ const createClient = (
       const response = await dele(`cart/reset/${userId}`);
       return response;
     },
+
+    login: async (i: any): Promise<any> => {
+      const response = await post("auth/login", { ...i },
+      );
+      return response;
+    },
+
+    logout: async (): Promise<any> => {
+      const response = await post('auth/logout', {});
+      return response;
+    },
     get,
     post,
   };
