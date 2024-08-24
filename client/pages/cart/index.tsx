@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import createClient from "../../api";
 import { Footer, Navbar } from "../../components";
 import Swal from "sweetalert2";
+import withAuth from '../../hoc/withAuth';
 
 const Cart = ({ data }: any) => {
   const [subTotal, setSubtotal] = useState(0);
@@ -272,4 +273,4 @@ export async function getStaticProps() {
   };
 }
 
-export default Cart;
+export default withAuth(Cart);

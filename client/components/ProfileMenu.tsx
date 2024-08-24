@@ -1,13 +1,19 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ChevronDownIcon, UserIcon } from "@heroicons/react/20/solid";
 import { ChartPieIcon, CursorArrowRaysIcon } from "@heroicons/react/24/outline";
-
-const solutions = [
-  { name: "Profile", href: "#", icon: UserIcon },
-  { name: "Logout", href: "#", icon: CursorArrowRaysIcon },
-];
+import { useAuth } from "../context/AuthContext";
 
 const ProfileMenu = () => {
+  const { logout } = useAuth();
+  const solutions = [
+    { name: "Profile", href: "/profile/1", icon: UserIcon },
+    {
+      name: "Logout",
+      href: "/login",
+      onClick: () => logout(),
+      icon: CursorArrowRaysIcon,
+    },
+  ];
   return (
     <Popover className="relative mr-5">
       <PopoverButton className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 focus:outline-none">
@@ -28,6 +34,7 @@ const ProfileMenu = () => {
             {solutions.map((item) => (
               <div
                 key={item.name}
+                onClick={item.onClick}
                 className="group relative pr-5 pl-2 py-1.5 flex gap-x-2 rounded-lg p-0 hover:bg-gray-50"
               >
                 <div className="mt-1 flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">

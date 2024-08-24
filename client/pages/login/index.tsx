@@ -1,7 +1,26 @@
 import Image from "next/image";
+import { useFormik } from "formik";
 import logo from "../../assets/logo.png";
+import { loginValidation } from "../../utils/validation";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
+  const { login } = useAuth();
+  const submitLogin = async (i: any) => {
+    const { email, password } = i;
+    await login(email, password);
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: loginValidation,
+    onSubmit: (values) => {
+      submitLogin(values);
+    },
+  });
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -17,7 +36,12 @@ const Login = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form
+            action="#"
+            method="POST"
+            onSubmit={formik.handleSubmit}
+            className="space-y-6"
+          >
             <div>
               <label
                 htmlFor="email"
@@ -30,11 +54,17 @@ const Login = () => {
                   id="email"
                   name="email"
                   type="email"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.email}
                   required
                   autoComplete="email"
                   className="block w-full border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {formik.touched.email && formik.errors.email ? (
+                <div style={{ color: "red" }}>{formik.errors.email}</div>
+              ) : null}
             </div>
 
             <div>
@@ -59,10 +89,16 @@ const Login = () => {
                   id="password"
                   name="password"
                   type="password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.password}
                   required
                   autoComplete="current-password"
                   className="block w-full border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {formik.touched.password && formik.errors.password ? (
+                  <div style={{ color: "red" }}>{formik.errors.password}</div>
+                ) : null}
               </div>
             </div>
 
