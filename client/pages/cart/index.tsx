@@ -3,11 +3,12 @@ import React, { useState, useEffect } from "react";
 import createClient from "../../api";
 import { Footer, Navbar } from "../../components";
 import Swal from "sweetalert2";
-import withAuth from '../../hoc/withAuth';
+import withAuth from "../../hoc/withAuth";
 
-const Cart = ({ data }: any) => {
+const Cart = () => {
   const [subTotal, setSubtotal] = useState(0);
-  const [cartItems, setCartItems] = useState(data.cartItems || []);
+  const [cartItems, setCartItems] = useState([]);
+
   const calculateSubTotal = (cartItems: any) => {
     if (!cartItems || !Array.isArray(cartItems)) return 0;
 
@@ -17,12 +18,22 @@ const Cart = ({ data }: any) => {
     }, 0);
   };
 
+  const getCartItems = async () => {
+    const { getCart } = createClient("");
+    const data = await getCart(1);
+    setCartItems(data.cartItems);
+  };
+
   useEffect(() => {
-    if (data && data.cartItems) {
-      const total = calculateSubTotal(data.cartItems);
+    getCartItems();
+  }, []);
+
+  useEffect(() => {
+    if (cartItems?.length > 0) {
+      const total = calculateSubTotal(cartItems);
       setSubtotal(total);
     }
-  }, [data]);
+  }, [cartItems]);
 
   const deleteFromCart = async (id: any) => {
     try {
@@ -123,10 +134,7 @@ const Cart = ({ data }: any) => {
             text: "All Items Deleted",
             icon: "success",
           });
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "Cancelled",
             text: "The items are safe :)",
@@ -144,7 +152,7 @@ const Cart = ({ data }: any) => {
       <h3 className="pl-8 pt-10 text-base font-bold text-xl text-gray-900 ">
         Shopping Cart
       </h3>
-      {cartItems[0] ? (
+      {cartItems ? (
         <div className="lg:flex lg:justify-between lg:items-start">
           <div className="lg:flex-1 lg:p-20 p-10">
             <div className="flow-root">
@@ -264,13 +272,13 @@ const Cart = ({ data }: any) => {
   );
 };
 
-export async function getStaticProps() {
-  const { getCart } = createClient("");
-  const data = await getCart(1);
+// export async function getStaticProps() {
+//   const { getCart } = createClient("");
+//   const data = await getCart(1);
 
-  return {
-    props: { data },
-  };
-}
+//   return {
+//     props: { data },
+//   };
+// }
 
-export default withAuth(Cart);
+export default Cart;

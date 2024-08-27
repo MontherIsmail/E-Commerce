@@ -1,7 +1,29 @@
 import Image from "next/image";
+import { useFormik } from "formik";
 import logo from "../../assets/logo.png";
+import { registerValidation } from "../../utils/validation";
+import { useAuth } from "../../context/AuthContext";
 
 const Register = () => {
+  const { register } = useAuth();
+  const submitRegister = async (i: any) => {
+    const { username, email, password } = i;
+    await register(username, email, password);
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: registerValidation,
+    onSubmit: (values) => {
+      submitRegister(values);
+    },
+  });
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -17,10 +39,15 @@ const Register = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
-          <div>
+          <form
+            action="#"
+            method="POST"
+            onSubmit={formik.handleSubmit}
+            className="space-y-6"
+          >
+            <div>
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 User Name
@@ -30,12 +57,19 @@ const Register = () => {
                   id="username"
                   name="username"
                   type="text"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.username}
                   required
                   autoComplete="username"
                   className="block w-full border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {formik.touched.username && formik.errors.username ? (
+                <div style={{ color: "red" }}>{formik.errors.username}</div>
+              ) : null}
             </div>
+
             <div>
               <label
                 htmlFor="email"
@@ -48,50 +82,68 @@ const Register = () => {
                   id="email"
                   name="email"
                   type="email"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.email}
                   required
                   autoComplete="email"
                   className="block w-full border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {formik.touched.email && formik.errors.email ? (
+                <div style={{ color: "red" }}>{formik.errors.email}</div>
+              ) : null}
             </div>
 
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Password
-                </label>
-              </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Password
+              </label>
               <div className="mt-2">
                 <input
                   id="password"
                   name="password"
                   type="password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.password}
                   required
                   autoComplete="current-password"
                   className="block w-full border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {formik.touched.password && formik.errors.password ? (
+                  <div style={{ color: "red" }}>{formik.errors.password}</div>
+                ) : null}
               </div>
+            </div>
 
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Confierm Password
-                </label>
-              </div>
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Confirm Password
+              </label>
               <div className="mt-2">
                 <input
-                  id="password"
-                  name="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
                   type="password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.confirmPassword}
                   required
                   autoComplete="current-password"
                   className="block w-full border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+                  <div style={{ color: "red" }}>{formik.errors.confirmPassword}</div>
+                ) : null}
               </div>
+            </div>
 
             <div>
               <button
@@ -104,7 +156,7 @@ const Register = () => {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Already have an account ?{" "}
+            Already have an account?{" "}
             <a
               href="/login"
               className="font-semibold leading-6 text-gray-600 hover:text-gray-500"
