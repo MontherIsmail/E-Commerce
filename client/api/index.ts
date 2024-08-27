@@ -8,12 +8,12 @@ const createClient = (
     baseURL,
     timeout: 1000,
     headers: { authorization: userToken },
+    withCredentials: true,
   });
 
   const get = async (query: string) => {
     try {
       const response = await api.get(query);
-      // console.log("response", response);
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -34,7 +34,6 @@ const createClient = (
   const dele = async (query: string) => {
     try {
       const response = await api.delete(query);
-      // console.log("response", response);
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -43,66 +42,33 @@ const createClient = (
   };
 
   return {
-    getProducts: async (): Promise<any> => {
-      const response = await get("products");
-      return response;
-    },
+    getProducts: async (): Promise<any> => await get("products"),
 
-    getProduct: async (productId: string): Promise<any> => {
-      const response = await get(`products/${productId}`);
-      return response;
-    },
+    getProduct: async (productId: string): Promise<any> =>
+      await get(`products/${productId}`),
 
-    addToCart: async (i: any): Promise<any> => {
-      const response = await post("cart/add-to-cart", {
-        data: { ...i },
-      });
-      return response;
-    },
+    addToCart: async (i: any): Promise<any> =>
+      await post("cart/add-to-cart", { ...i }),
 
-    getCart: async (userId: string): Promise<any> => {
-      const response = await get(`cart/${userId}`);
-      return response;
-    },
+    getCart: async (userId: string): Promise<any> =>
+      await get(`cart/${userId}`),
 
-    getOrders: async (userId: any): Promise<any> => {
-      const response = await get(`orders/${userId}`);
-      return response;
-    },
+    getOrders: async (userId: any): Promise<any> =>
+      await get(`orders/${userId}`),
 
-    deleteCartItem: async (itemId: any): Promise<any> => {
-      const response = await dele(`cart/${itemId}`);
-      return response;
-    },
+    deleteCartItem: async (itemId: any): Promise<any> =>
+      await dele(`cart/${itemId}`),
 
-    resetCart: async (userId: any): Promise<any> => {
-      const response = await dele(`cart/reset/${userId}`);
-      return response;
-    },
+    resetCart: async (userId: any): Promise<any> =>
+      await dele(`cart/reset/${userId}`),
 
-    login: async (i: any): Promise<any> => {
-      const response = await post("auth/login", { ...i },
-      );
-      return response;
-    },
+    login: async (i: any): Promise<any> => await post("auth/login", { ...i }),
 
-    logout: async (): Promise<any> => {
-      const response = await post('auth/logout', {});
-      return response;
-    },
-    get,
-    post,
+    register: async (i: any): Promise<any> =>
+      await post("auth/signup", { ...i }),
+
+    logout: async (): Promise<any> => await post("auth/logout", {}),
   };
 };
 
 export default createClient;
-
-//export const setUserToken = (token: string): boolean => {
-//    try {
-//        //@ts-ignore
-//        window.localStorage.setItem(TOKEN_NAME, token);
-//        return true;
-//    } catch (error) {
-//        return false;
-//    }
-//};

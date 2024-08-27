@@ -2,65 +2,6 @@ import React from "react";
 import { Footer, Navbar } from "../../components";
 import createClient from "../../api";
 
-const orders = [
-  {
-    datePlaced: "January 22, 2021",
-    orderNumber: "WU88191111",
-    totalAmount: "$238.00",
-    products: [
-      {
-        id: 1,
-        name: "Throwback Hip Bag",
-        href: "#",
-        color: "Salmon",
-        status: "Delivered Jan 25, 2021	",
-        size: "xl",
-        price: "$90.00",
-        quantity: 1,
-        imageSrc:
-          "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-        imageAlt:
-          "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-      },
-      {
-        id: 2,
-        name: "Throwback Hip Bag",
-        href: "#",
-        color: "Salmon",
-        status: "Delivered Jan 25, 2021	",
-        size: "xl",
-        price: "$90.00",
-        quantity: 1,
-        imageSrc:
-          "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-02.jpg",
-        imageAlt:
-          "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-      },
-    ],
-  },
-  {
-    datePlaced: "January 22, 2021",
-    orderNumber: "WU88191111",
-    totalAmount: "$238.00",
-    products: [
-      {
-        id: 1,
-        name: "Throwback Hip Bag",
-        href: "#",
-        color: "Salmon",
-        status: "Delivered Jan 25, 2021	",
-        size: "xl",
-        price: "$90.00",
-        quantity: 1,
-        imageSrc:
-          "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-03.jpg",
-        imageAlt:
-          "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-      },
-    ],
-  },
-];
-
 const Orders = ({ data }: any) => {
   const { orders } = data;
   return (
@@ -74,7 +15,7 @@ const Orders = ({ data }: any) => {
           Check the status of recent orders, manage returns, and download
           invoices.
         </p>
-        {orders.map((order: any) => (
+        {orders?.map((order: any) => (
           <>
             <div className="bg-gray-100 p-8 lg:flex lg:justify-between lg:items-center sm-flex-col">
               <div className="lg:flex lg:justify-between lg:items-center sm-flex-col lg:w-2/5">
@@ -103,7 +44,7 @@ const Orders = ({ data }: any) => {
               <p className="text-gray-400">Status</p>
               <p className="text-gray-400">Info</p>
             </div>
-            {order.items.map((item: any) => (
+            {order?.items?.map((item: any) => (
               <div className="flex justify-between items-center py-10">
                 <div className="flex justify-between items-center lg:w-1/5 w-1/2">
                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">

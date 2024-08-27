@@ -33,7 +33,8 @@ const Navbar = () => {
 
   useEffect(() => {
     getCartItems();
-  }, [cartItems]);
+    console.log('cart items from nav', cartItems);
+  }, []);
 
   const cartItemCount = cartItems ? cartItems.length : 0;
   return (

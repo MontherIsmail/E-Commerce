@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   Popular,
@@ -9,7 +9,17 @@ import {
 } from "../components";
 import createClient from "../api";
 
-const Home = ({ data }: any) => {
+const Home = () => {
+  const [data, setData] = useState({});
+  const getProducts = async () => {
+    const { getProducts } = createClient("");
+    const data = await getProducts(1);
+    setData(data);
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
   return (
     <>
       <Navbar />
@@ -22,13 +32,13 @@ const Home = ({ data }: any) => {
   );
 };
 
-export async function getStaticProps() {
-  const { getProducts } = createClient("");
-  const data = await getProducts();
+// export async function getStaticProps() {
+//   const { getProducts } = createClient("");
+//   const data = await getProducts();
 
-  return {
-    props: { data },
-  };
-}
+//   return {
+//     props: { data },
+//   };
+// }
 
 export default Home;

@@ -10,10 +10,16 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import createClient from "../api";
 import getUserInfo from "../utils/userInfo/getUserInfo";
+import axios from "axios";
 
 interface AuthContextType {
   user: any;
   login: (email: string, password: string) => Promise<void>;
+  register: (
+    username: string,
+    email: string,
+    password: string
+  ) => Promise<void>;
   logout: () => void;
   loading: boolean;
 }
@@ -33,27 +39,58 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const token = Cookies.get("token");
     if (token) {
       const userInfo = getUserInfo();
-      const { username, role, id }: any = userInfo;
-      setUser({ username, role, id, token });
+      if (userInfo) {
+        const { username, role, id }: any = userInfo;
+        setUser({ username, role, id, token });
+      }
     }
     setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      const { login } = createClient("");
-      const data = await login({ email, password });
-      if (data.message === "login successfully") {
-        Cookies.set("token", data.token, { expires: 1 });
+      const response = await axios.post('http://localhost:5000/api/v1/auth/login', {
+        email,
+        password,
+      }, {
+        withCredentials: true,
+      })
+
+      // const { login } = createClient("");
+      // const data = await login({ email, password });
+      console.log("data", response.data);
+      if (response.data.message === "login successfully") {
+        console.log("data", response);
+        console.log('cooo', response.headers);
+        // Cookies.set("token", data.token, { expires: 1 });
         const userInfo = getUserInfo();
-        const { username, role, id }: any = userInfo;
         if (userInfo) {
+        const { username, role, id }: any = userInfo;
           setUser({ username, role, id });
         }
         router.push("/");
       }
     } catch (error) {
       console.log("login failed", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (
+    username: string,
+    email: string,
+    password: string
+  ) => {
+    try {
+      const { register } = createClient("");
+      const role = "user";
+      const data = await register({ username, email, password, role });
+      if (data.message === "Signed up") {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.log("registration failed", error);
     } finally {
       setLoading(false);
     }
@@ -66,7 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
