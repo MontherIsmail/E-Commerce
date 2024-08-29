@@ -23,22 +23,21 @@ const navigation = [
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const getCartItems = async () => {
     const { getCart } = createClient("");
-    const data = await getCart(1);
+    const data = await getCart(user?.id);
     return setCartItems(data.cartItems);
   };
 
   useEffect(() => {
     getCartItems();
-    console.log('cart items from nav', cartItems);
-  }, []);
+  }, [cartItems]);
 
   const cartItemCount = cartItems ? cartItems.length : 0;
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header className="absolute inset-x-0 top-0 z-2">
       <nav
         aria-label="Global"
         className="flex items-center justify-between p-6 lg:px-8"
@@ -61,7 +60,7 @@ const Navbar = () => {
           ))}
         </div>
         <div className="lg:flex lg:flex-1 lg:justify-end flex justify-between">
-          {true ? (
+          {user?.id ? (
             <>
               <div className="ml-4 flow-root lg:ml-6 mr-5">
                 <a href="/cart" className="group -m-2 flex items-center p-2">
@@ -139,14 +138,7 @@ const Navbar = () => {
                 ))}
               </div>
               <div className="py-6">
-                {false ? (
-                  <a
-                    href="/login"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    Log in
-                  </a>
-                ) : (
+                {user?.id ? (
                   <>
                     <a
                       href="/profile"
@@ -162,6 +154,13 @@ const Navbar = () => {
                       Log out
                     </a>
                   </>
+                ) : (
+                  <a
+                    href="/login"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Log in
+                  </a>
                 )}
               </div>
             </div>
