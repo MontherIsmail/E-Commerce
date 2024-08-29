@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Footer, Navbar } from "../../components";
 import createClient from "../../api";
+import { useAuth } from "../../context/AuthContext";
+import withAuth from "../../hoc/withAuth";
 
-const Orders = ({ data }: any) => {
-  const { orders } = data;
+const Orders = () => {
+  const [orders, setOrders] = useState([]);
+  const { user } = useAuth();
+  const getCartItems = async () => {
+    const { getOrders } = createClient("");
+    const data = await getOrders(user?.id);
+    const { orders } = data;
+    setOrders(orders);
+  };
+  useEffect(() => {
+    getCartItems();
+  }, [user?.id]);
   return (
     <>
       <Navbar />
@@ -16,7 +28,7 @@ const Orders = ({ data }: any) => {
           invoices.
         </p>
         {orders?.map((order: any) => (
-          <>
+          <div key={order.id}>
             <div className="bg-gray-100 p-8 lg:flex lg:justify-between lg:items-center sm-flex-col">
               <div className="lg:flex lg:justify-between lg:items-center sm-flex-col lg:w-2/5">
                 <div className="mb-3 flex justify-between items-center lg:flex-col lg:items-start lg:border-none border-b border-gray-300">
@@ -69,7 +81,7 @@ const Orders = ({ data }: any) => {
                 </button>
               </div>
             ))}
-          </>
+          </div>
         ))}
       </div>
       <Footer />
@@ -77,13 +89,4 @@ const Orders = ({ data }: any) => {
   );
 };
 
-export async function getStaticProps() {
-  const { getOrders } = createClient("");
-  const data = await getOrders(1);
-
-  return {
-    props: { data },
-  };
-}
-
-export default Orders;
+export default withAuth(Orders);

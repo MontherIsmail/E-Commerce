@@ -25,28 +25,12 @@ const login = async (req: Request, res: Response) => {
       role,
       username,
     });
-    // return res
-    // .status(201)
-    // .cookie("token", token, {
-    //   httpOnly: true,
-    //   secure: false, // Set to true if your site is HTTPS
-    //   sameSite: 'Lax', // Or 'None' if secure is true
-    // })
-    // .json({ message: "login successfully", token });
     return res
-  .status(201)
-  .cookie("token", token, {
-    httpOnly: true,
-  })
-  .json({ message: "login successfully", token });
-    // return res
-    //   .status(201)
-    //   .cookie("token", token, {
-    //     httpOnly: true,
-    //     secure: process.env.NODE_ENV === "production", // Only send cookies over HTTPS in production
-    //     sameSite: "None", // Allows cross-site cookies
-    //   })
-    //   .json({ message: "login successfully", token });
+      .status(201)
+      .cookie("token", token, {
+        httpOnly: false,
+      })
+      .json({ message: "login successfully", token });
   } catch (error) {
     return res.status(500).json("Internal Server Error");
   }

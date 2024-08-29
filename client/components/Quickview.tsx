@@ -11,6 +11,9 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
 import createClient from "../api";
+import { useAuth } from "../context/AuthContext";
+import Swal from "sweetalert2";
+import router from "next/router";
 
 const classNames = (...classes: any) => {
   return classes.filter(Boolean).join(" ");
@@ -18,11 +21,48 @@ const classNames = (...classes: any) => {
 
 const Quickview = ({ id }: any) => {
   const [open, setOpen] = useState<any>(false);
-  const [selectedColor, setSelectedColor] = useState();
-  const [selectedSize, setSelectedSize] = useState();
   const [product, setProduct] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<any>(
+    product?.productColors[0]?.selectedClass
+  );
+  const [selectedSize, setSelectedSize] = useState<any>(
+    product?.productSizes[0]?.selectedClass
+  );
+  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { user } = useAuth();
+
+  const addToCartFun = async (e: any) => {
+    e.preventDefault();
+    if (user?.id) {
+      const { addToCart } = createClient("");
+      const cartItem = {
+        productId: id,
+        userId: user?.id,
+        selectedColor: selectedColor.name,
+        selectedSize: selectedSize.name,
+        quantity,
+      };
+
+      try {
+        const response = await addToCart(cartItem);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Product Added to Cart",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        console.log("Product added to cart:", response);
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+      }
+    } else {
+      router.push("/login");
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -142,7 +182,7 @@ const Quickview = ({ id }: any) => {
                         Product options
                       </h3>
 
-                      <form>
+                      <form onSubmit={addToCartFun}>
                         {/* Colors */}
                         <fieldset aria-label="Choose a color">
                           <legend className="text-sm font-medium text-gray-900">
@@ -238,6 +278,28 @@ const Quickview = ({ id }: any) => {
                             ))}
                           </RadioGroup>
                         </fieldset>
+                        {/* Quantity */}
+                        <div className="mt-10">
+                          <h3 className="text-sm font-medium text-gray-900">
+                            Quantity
+                          </h3>
+                          <div className="relative mt-4">
+                            <select
+                              id="quantity"
+                              name="quantity"
+                              onChange={(e: any) =>
+                                setQuantity(parseInt(e.target.value))
+                              }
+                              className="block w-full rounded-md border border-gray-300 bg-white py-3 px-4 text-base leading-5 text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            >
+                              {[...Array(10).keys()].map((x) => (
+                                <option key={x + 1} value={x + 1}>
+                                  {x + 1}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
 
                         <button
                           type="submit"

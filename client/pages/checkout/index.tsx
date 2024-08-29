@@ -9,14 +9,28 @@ import {
 import createClient from "../../api";
 import { Footer, Navbar } from "../../components";
 import Swal from "sweetalert2";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
+import withAuth from "../../hoc/withAuth";
+import { useAuth } from "../../context/AuthContext";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
 );
 
-const CheckoutForm = ({ data }: any) => {
-  const { cartItems } = data;
+const CheckoutForm = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const { id } = user;
+  const getCartItems = async () => {
+    const { getCart } = createClient("");
+    const data = await getCart(id);
+    const { cartItems } = data;
+    setCartItems(cartItems);
+  };
+  useEffect(() => {
+    getCartItems();
+  }, []);
   const calculateSubTotal = (cartItems: any) => {
     if (!cartItems || !Array.isArray(cartItems)) return 0;
 
@@ -27,11 +41,11 @@ const CheckoutForm = ({ data }: any) => {
   };
   const [subTotal, setSubtotal] = useState(0);
   useEffect(() => {
-    if (data && data.cartItems) {
-      const total = calculateSubTotal(data.cartItems);
+    if (cartItems) {
+      const total = calculateSubTotal(cartItems);
       setSubtotal(total);
     }
-  }, [data]);
+  }, [cartItems]);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -41,7 +55,7 @@ const CheckoutForm = ({ data }: any) => {
   const amount = subTotal + (subTotal * 2) / 100 + 5;
   useEffect(() => {
     const products = cartItems;
-    const userId = 1;
+    const userId = id;
     // Create PaymentIntent as soon as the page loads
     fetch("http://localhost:5000/api/v1/payment/create-payment-intent", {
       method: "POST",
@@ -63,33 +77,48 @@ const CheckoutForm = ({ data }: any) => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    try {
+      setLoading(true);
+      console.log("stripe", stripe);
 
-    if (!stripe || !elements) {
-      return;
-    }
+      if (!stripe || !elements) return;
 
-    const cardElement: any = elements.getElement(CardElement);
+      const cardElement: any = elements.getElement(CardElement);
 
-    const { error, paymentIntent } = await stripe.confirmCardPayment(
-      clientSecret,
-      {
-        payment_method: {
-          card: cardElement,
-        },
+      const { error, paymentIntent } = await stripe.confirmCardPayment(
+        clientSecret,
+        {
+          payment_method: {
+            card: cardElement,
+          },
+        }
+      );
+
+      if (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          footer: `${error}`,
+        });
+        console.error(error);
+      } else if (paymentIntent.status === "succeeded") {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Payment succeeded",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        router.push("/orders");
       }
-    );
-
-    if (error) {
-      console.error(error);
-    } else if (paymentIntent.status === "succeeded") {
+    } catch (error) {
       Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Payment succeeded",
-        showConfirmButton: false,
-        timer: 1500
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+        footer: `${error}`,
       });
-      router.push('/orders');
     }
   };
 
@@ -144,7 +173,7 @@ const CheckoutForm = ({ data }: any) => {
           <button
             className="bg-green-500 text-white py-2 px-4 w-full hover:bg-green-600 disabled:bg-gray-400"
             type="submit"
-            disabled={!stripe}
+            disabled={!stripe || loading}
           >
             Pay
           </button>
@@ -236,25 +265,16 @@ const CheckoutForm = ({ data }: any) => {
   );
 };
 
-const Checkout = ({ data }: any) => {
+const Checkout = () => {
   return (
     <>
       <Navbar />
       <Elements stripe={stripePromise}>
-        <CheckoutForm data={data} />
+        <CheckoutForm />
       </Elements>
       <Footer />
     </>
   );
 };
 
-export async function getStaticProps() {
-  const { getCart } = createClient("");
-  const data = await getCart(1);
-
-  return {
-    props: { data },
-  };
-}
-
-export default Checkout;
+export default withAuth(Checkout);

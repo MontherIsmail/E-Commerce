@@ -49,23 +49,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/auth/login', {
-        email,
-        password,
-      }, {
-        withCredentials: true,
-      })
-
-      // const { login } = createClient("");
-      // const data = await login({ email, password });
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log("data", response.data);
       if (response.data.message === "login successfully") {
-        console.log("data", response);
-        console.log('cooo', response.headers);
-        // Cookies.set("token", data.token, { expires: 1 });
         const userInfo = getUserInfo();
         if (userInfo) {
-        const { username, role, id }: any = userInfo;
+          const { username, role, id }: any = userInfo;
           setUser({ username, role, id });
         }
         router.push("/");

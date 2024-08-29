@@ -4,11 +4,12 @@ import createClient from "../../api";
 import { Footer, Navbar } from "../../components";
 import Swal from "sweetalert2";
 import withAuth from "../../hoc/withAuth";
+import { useAuth } from "../../context/AuthContext";
 
 const Cart = () => {
   const [subTotal, setSubtotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
-
+  const { user } = useAuth();
   const calculateSubTotal = (cartItems: any) => {
     if (!cartItems || !Array.isArray(cartItems)) return 0;
 
@@ -19,8 +20,9 @@ const Cart = () => {
   };
 
   const getCartItems = async () => {
+    const { id } = user;
     const { getCart } = createClient("");
-    const data = await getCart(1);
+    const data = await getCart(id);
     setCartItems(data.cartItems);
   };
 
@@ -272,13 +274,4 @@ const Cart = () => {
   );
 };
 
-// export async function getStaticProps() {
-//   const { getCart } = createClient("");
-//   const data = await getCart(1);
-
-//   return {
-//     props: { data },
-//   };
-// }
-
-export default Cart;
+export default withAuth(Cart);

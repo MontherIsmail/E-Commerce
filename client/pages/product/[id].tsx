@@ -8,6 +8,7 @@ import createClient from "../../api";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
+import { useAuth } from "../../context/AuthContext";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -19,19 +20,21 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>();
   const [products, setProducts] = useState<any>();
-  const [selectedColor, setSelectedColor] = useState<any>();
-  const [selectedSize, setSelectedSize] = useState<any>();
+  const [selectedColor, setSelectedColor] = useState<any>(
+    product?.productColors[0]?.selectedClass
+  );
+  const [selectedSize, setSelectedSize] = useState<any>(
+    product?.productSizes[0]?.selectedClass
+  );
 
   const router = useRouter();
-
   const { id } = router.query;
-  const userId = 1;
+  const { user } = useAuth();
 
   const getProduct = async () => {
     try {
       const { getProduct } = createClient("");
       const data = await getProduct(id);
-      console.log("product in product page", product, "kk", data);
       return setProduct(data.product);
     } catch (error) {
       console.log("error", error);
@@ -41,7 +44,7 @@ const Product = () => {
   const getProducts = async () => {
     try {
       const { getProducts } = createClient("");
-      const data = await getProducts(userId);
+      const data = await getProducts(user?.id);
       setProducts(data);
     } catch (error) {
       console.log("error", error);
@@ -55,27 +58,31 @@ const Product = () => {
 
   const addToCartFun = async (e: any) => {
     e.preventDefault();
-    const { addToCart } = createClient("");
-    const cartItem = {
-      productId: id,
-      userId,
-      selectedColor: selectedColor.name,
-      selectedSize: selectedSize.name,
-      quantity,
-    };
+    if (user?.id) {
+      const { addToCart } = createClient("");
+      const cartItem = {
+        productId: id,
+        userId: user?.id,
+        selectedColor: selectedColor.name,
+        selectedSize: selectedSize.name,
+        quantity,
+      };
 
-    try {
-      const response = await addToCart(cartItem);
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Product Added to Cart",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      console.log("Product added to cart:", response);
-    } catch (error) {
-      console.error("Error adding to cart:", error);
+      try {
+        const response = await addToCart(cartItem);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Product Added to Cart",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        console.log("Product added to cart:", response);
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+      }
+    } else {
+      router.push("/login");
     }
   };
 
@@ -96,7 +103,7 @@ const Product = () => {
                       href="/men"
                       className="mr-2 text-sm font-medium text-gray-900"
                     >
-                      men
+                      {product?.productCategory}
                     </a>
                     <svg
                       fill="currentColor"
@@ -360,52 +367,11 @@ const Product = () => {
         <h2 style={{ margin: "100px" }}>Product Not Found</h2>
       )}
       <div style={{ padding: "0 70px" }}>
-        <RelatedProducts products={products} />
+        <RelatedProducts products={products?.products} />
       </div>
       <Footer />
     </>
   );
 };
-
-// interface ProductPageProps {
-//   product: any;
-// }
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const { getProducts } = createClient("");
-//   const data = await getProducts();
-//   const { products } = data;
-
-//   const paths = products ? products.map((product: { id: string }) => ({
-//     params: { id: product.id.toString() },
-//   })) : [];
-
-//   return {
-//     paths,
-//     fallback: false,
-//   };
-// };
-
-// export const getStaticProps: GetStaticProps<ProductPageProps> = async (
-//   context
-// ) => {
-//   const { id } = context.params!;
-
-//   const { getProduct, getProducts } = createClient("");
-//   const productData = await getProduct(id);
-//   const { product } = productData;
-//   const productsData = await getProducts();
-//   const { products } = productsData;
-
-//   const userId = 1;
-
-//   return {
-//     props: {
-//       product,
-//       products,
-//       userId,
-//     },
-//   };
-// };
 
 export default Product;

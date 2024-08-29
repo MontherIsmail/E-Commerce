@@ -10,8 +10,6 @@ const checkAuth = async (
   next: NextFunction
 ) => {
   try {
-    console.log('Request Headers:', req.headers.cookie);
-    
     const cookies = req.headers.cookie
       ?.split(";")
       .reduce((acc: any, cookie: any) => {
