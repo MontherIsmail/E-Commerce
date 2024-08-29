@@ -31,6 +31,16 @@ const createClient = (
     }
   };
 
+  const put = async (query: string, data: any) => {
+    try {
+      const response = await api.put(query, data);
+      return response;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   const dele = async (query: string) => {
     try {
       const response = await api.delete(query);
@@ -52,6 +62,15 @@ const createClient = (
 
     getCart: async (userId: string): Promise<any> =>
       await get(`cart/${userId}`),
+
+    getProfile: async (userId: string): Promise<any> =>
+      await get(`profile/${userId}`),
+
+    editProfile: async (userId: string, i: any): Promise<any> =>
+      await put(`profile/${userId}`, {...i}),
+
+    editPassword: async (userId: string, i: any): Promise<any> =>
+      await put(`profile/password/${userId}`, {...i}),
 
     getOrders: async (userId: any): Promise<any> =>
       await get(`orders/${userId}`),
