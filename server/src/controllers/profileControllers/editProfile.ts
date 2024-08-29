@@ -5,7 +5,7 @@ import { createToken } from "../../utils/jwt";
 
 const editProfile = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { userEmail, userName } = req.body;
+  const { email, username } = req.body;
   await editProfileSchema.validateAsync(req.body);
   try {
     const data = await prisma.users.findUnique({
@@ -16,7 +16,7 @@ const editProfile = async (req: Request, res: Response) => {
     }
     const { role } = data;
     const emailData = await prisma.users.findUnique({
-      where: { email: userEmail },
+      where: { email: email },
     });
     if (!emailData) {
       return res
@@ -26,15 +26,15 @@ const editProfile = async (req: Request, res: Response) => {
     const updatedProfile = await prisma.users.update({
       where: { id: parseInt(id) },
       data: {
-        email: userEmail,
-        username: userName,
+        email: email,
+        username: username,
       },
     });
 
     const token = await createToken({
       id,
       role,
-      userName,
+      username,
     });
     return res
       .status(201)

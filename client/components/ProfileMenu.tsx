@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 const ProfileMenu = () => {
   const { logout } = useAuth();
   const solutions = [
-    { name: "Profile", href: "/profile/1", icon: UserIcon },
+    { name: "Profile", href: "/profile", icon: UserIcon },
     {
       name: "Logout",
       href: "/login",

@@ -5,8 +5,7 @@ import { comparePassword, hashPassword } from "../../utils/password";
 
 const editPassword = async (req: Request, res: Response) => {
   const { id } = req.params;
-
-  const { oldPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
   await editPassSchema.validateAsync(req.body);
   try {
     const currentProfileData = await prisma.users.findUnique({
@@ -15,13 +14,13 @@ const editPassword = async (req: Request, res: Response) => {
     if (!currentProfileData) {
       return res.status(404).json({ message: "user not found" });
     }
-    if (oldPassword === newPassword) {
+    if (currentPassword === newPassword) {
       return res
         .status(400)
         .json({ message: "your new password matching your old password" });
     }
     const { password }: any = currentProfileData;
-    const isMatch = await comparePassword(oldPassword, password);
+    const isMatch = await comparePassword(currentPassword, password);
     if (!isMatch) {
       return res.status(400).json({ message: "wrong password !" });
     }
