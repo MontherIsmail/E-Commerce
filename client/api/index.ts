@@ -2,7 +2,8 @@ import axios from "axios";
 
 const createClient = (
   userToken: string,
-  baseURL = "http://localhost:5000/api/v1/"
+  baseURL = "https://e-commerce-1-fdtm.onrender.com/api/v1"
+  // baseURL = "http://localhost:5000/api/v1/"
 ): any => {
   const api = axios.create({
     baseURL,
@@ -67,10 +68,10 @@ const createClient = (
       await get(`profile/${userId}`),
 
     editProfile: async (userId: string, i: any): Promise<any> =>
-      await put(`profile/${userId}`, {...i}),
+      await put(`profile/${userId}`, { ...i }),
 
     editPassword: async (userId: string, i: any): Promise<any> =>
-      await put(`profile/password/${userId}`, {...i}),
+      await put(`profile/password/${userId}`, { ...i }),
 
     getOrders: async (userId: any): Promise<any> =>
       await get(`orders/${userId}`),
