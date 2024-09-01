@@ -27,7 +27,7 @@ app.use([
 
 app.use("/api/v1", router);
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'production') {
   // Serve static files from the client/build directory
   app.use(express.static(join(__dirname, '..', '..', 'client', 'build')));
 
