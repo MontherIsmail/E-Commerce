@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import createClient from "../api";
 import getUserInfo from "../utils/userInfo/getUserInfo";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 interface AuthContextType {
   user: any;
@@ -68,7 +69,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         router.push("/");
       }
-    } catch (error) {
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${error.response.data.message}`,
+      });
       console.log("login failed", error);
     } finally {
       setLoading(false);
