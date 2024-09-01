@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from 'express';
 import * as dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { clientError, serverError } from "./controllers/errorsControllers";
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(join(__dirname, '..', '..', 'client', 'build')));
 
   // For any other routes, send back the index.html file
-  app.get('*', (req, res) => {
+  app.get('*', (req: Request, res: Response) => {
     res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
   });
 }
