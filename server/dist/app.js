@@ -48,7 +48,7 @@ app.use([
     (0, cookie_parser_1.default)(),
 ]);
 app.use("/api/v1", routes_1.default);
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'production') {
     // Serve static files from the client/build directory
     app.use(express_1.default.static((0, path_1.join)(__dirname, '..', '..', 'client', 'build')));
     // For any other routes, send back the index.html file
