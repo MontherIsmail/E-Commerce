@@ -7,9 +7,9 @@ const getProducts = async (req: Request, res: Response) => {
     if(products.length === 0){
         return res.status(404).json({message: "No Products Found"})
     }
-    return res.status(200).json({ messgae: "successfully", products });
+    return res.status(200).json({ message: "successfully", products });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 
