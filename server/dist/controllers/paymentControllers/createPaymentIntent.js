@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -8,12 +17,12 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const prisma_1 = __importDefault(require("../../middleware/prisma"));
 dotenv_1.default.config();
 const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY || "");
-const createPaymentIntent = async (req, res) => {
+const createPaymentIntent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { amount: floatAmount, userId, products } = req.body;
     const amount = Math.floor(floatAmount);
     try {
         // Check if all products exist
-        const existingProducts = await prisma_1.default.products.findMany({
+        const existingProducts = yield prisma_1.default.products.findMany({
             where: {
                 id: {
                     in: products.map((p) => p.products.id),
@@ -27,13 +36,13 @@ const createPaymentIntent = async (req, res) => {
             });
         }
         // Create Stripe PaymentIntent
-        const paymentIntent = await stripe.paymentIntents.create({
+        const paymentIntent = yield stripe.paymentIntents.create({
             amount,
             currency: "usd",
             payment_method_types: ["card"],
         });
         // Create Payment record
-        const payment = await prisma_1.default.payment.create({
+        const payment = yield prisma_1.default.payment.create({
             data: {
                 status: paymentIntent.status,
                 method: paymentIntent.payment_method_types[0],
@@ -42,13 +51,13 @@ const createPaymentIntent = async (req, res) => {
             },
         });
         // Create Order with associated OrderItems
-        const order = await prisma_1.default.order.create({
+        const order = yield prisma_1.default.order.create({
             data: {
                 userId,
                 paymentId: payment.id,
                 amount,
                 items: {
-                    create: products?.map((product) => ({
+                    create: products === null || products === void 0 ? void 0 : products.map((product) => ({
                         products: { connect: { id: product.products.id } },
                         quantity: product.quantity,
                     })),
@@ -66,5 +75,5 @@ const createPaymentIntent = async (req, res) => {
         //   error: { message: error.message },
         // });
     }
-};
+});
 exports.default = createPaymentIntent;
