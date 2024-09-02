@@ -52,10 +52,10 @@ const Filters = ({ data }: any) => {
   const sortedProducts = () => {
     let filteredProducts =
       productsCategory !== "all"
-        ? data.products.filter(
+        ? data?.products?.filter(
             (product: any) => product.productCategory === productsCategory
           )
-        : data.products;
+        : data?.products;
 
     switch (sortOption) {
       case "rating":
