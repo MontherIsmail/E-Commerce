@@ -17,7 +17,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
   // Filter products based on the selected category
   const filteredProducts =
     productsCategory !== "all"
-      ? sortedData.filter(
+      ? sortedData?.filter(
           (product: any) => product.productCategory === productsCategory
         )
       : sortedData;
