@@ -16,11 +16,11 @@ const Popular = ({data}: any) => {
             <button className="see-more">See More</button>
           </a>
         </div>
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        {products ? <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products?.slice(0, 4).map((product: any) => (
             <Card key={product?.id} product={product} />
           ))}
-        </div>
+        </div> : <h2 style={{marginTop: "50px"}}>No Products</h2>}
       </div>
       <style jsx>{`
         .p-style {
