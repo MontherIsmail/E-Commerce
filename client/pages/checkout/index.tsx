@@ -57,7 +57,7 @@ const CheckoutForm = () => {
     const products = cartItems;
     const userId = id;
     // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:5000/api/v1/payment/create-payment-intent", {
+    fetch("https://e-commerce-1-fdtm.onrender.com/api/v1/payment/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount, userId, products }),
