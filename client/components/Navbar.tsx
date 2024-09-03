@@ -27,8 +27,11 @@ const Navbar = () => {
 
   const getCartItems = async () => {
     const { getCart } = createClient("");
-    const data = await getCart(user?.id);
-    return setCartItems(data.cartItems);
+    if (user?.id) {
+      const data = await getCart(user?.id);
+      return setCartItems(data.cartItems);
+    }
+    return console.log("No Token");
   };
 
   useEffect(() => {
