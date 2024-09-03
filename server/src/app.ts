@@ -12,11 +12,25 @@ const {
 } = process;
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:3000', 
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-}));
+const allowedOrigins = [
+  'https://e-commerce-lgd16cxk1-montherismails-projects.vercel.app', // Your Vercel app URL
+  'http://localhost:3000', // Local development URL
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+);
 
 app.set("port", PORT || 5000);
 app.use([
