@@ -95,9 +95,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const role = "user";
       const data = await register({ username, email, password, role });
       if (data.message === "Signed up") {
-        router.push("/login");
+        router.push("/");
+      } else if (data.response?.data?.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${
+            data?.response?.data?.message ||
+            data?.message ||
+            "Somthing went wrong!"
+          }`,
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${
+          error?.response?.data?.message ||
+          error.message ||
+          "Somthing went wrong!"
+        }`,
+      });
       console.log("registration failed", error);
     } finally {
       setLoading(false);
