@@ -13,7 +13,7 @@ const {
 const app = express();
 
 const allowedOrigins = [
-  'https://e-commerce-lgd16cxk1-montherismails-projects.vercel.app', // Your Vercel app URL
+  'https://e-commerce-ten-puce.vercel.app', // Your Vercel app URL
   'http://localhost:3000', // Local development URL
 ];
 
