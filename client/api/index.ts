@@ -6,7 +6,7 @@ const createClient = (
 ): any => {
   const api = axios.create({
     baseURL,
-    timeout: 1000,
+    timeout: 5000,
     headers: { authorization: userToken },
     withCredentials: true,
   });
@@ -27,7 +27,7 @@ const createClient = (
       return response?.data;
     } catch (error) {
       console.log(error);
-      return [];
+      return error;
     }
   };
 
