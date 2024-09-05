@@ -8,7 +8,7 @@ import { join } from "path";
 
 dotenv.config();
 const {
-  env: { PORT, NODE_ENV },
+  env: { PORT },
 } = process;
 const app = express();
 
