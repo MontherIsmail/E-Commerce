@@ -25,7 +25,7 @@ const login = async (req: Request, res: Response) => {
       role,
       username,
     });
-    const isProduction = process.env.NODE_ENV === "production";
+    const isProduction = process.env.NODE_ENV === "development";
 
     res
       .status(201)
