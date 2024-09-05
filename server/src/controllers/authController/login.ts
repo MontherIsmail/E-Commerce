@@ -25,14 +25,13 @@ const login = async (req: Request, res: Response) => {
       role,
       username,
     });
-    const isProduction = process.env.NODE_ENV === "development";
 
     res
       .status(201)
       .cookie("token", token, {
         httpOnly: true,
-        secure: isProduction, // Only send cookie over HTTPS in production
-        sameSite: isProduction ? "None" : "Lax", // 'None' for cross-site, 'Lax' or 'Strict' based on your needs
+        secure: true, //remove it in local
+        sameSite: "none", //remove it in local
       })
       .json({ message: "login successfully" });
     return res;
