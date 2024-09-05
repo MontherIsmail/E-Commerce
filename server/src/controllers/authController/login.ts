@@ -25,12 +25,17 @@ const login = async (req: Request, res: Response) => {
       role,
       username,
     });
-    return res
+    const isProduction = process.env.NODE_ENV === "production";
+
+    res
       .status(201)
       .cookie("token", token, {
-        httpOnly: false,
+        httpOnly: true,
+        secure: isProduction, // Only send cookie over HTTPS in production
+        sameSite: isProduction ? "None" : "Lax", // 'None' for cross-site, 'Lax' or 'Strict' based on your needs
       })
-      .json({ message: "login successfully", token });
+      .json({ message: "login successfully" });
+    return res;
   } catch (error) {
     return res.status(500).json("Internal Server Error");
   }
