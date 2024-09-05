@@ -32,6 +32,7 @@ const login = async (req: Request, res: Response) => {
         httpOnly: true,
         secure: true, //remove it in local
         sameSite: "none", //remove it in local
+        maxAge: 1000 * 60 * 60 * 24,
       })
       .json({ message: "login successfully" });
     return res;
