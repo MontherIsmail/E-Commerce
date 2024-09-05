@@ -51,8 +51,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/login",
-        // "https://e-commerce-1-fdtm.onrender.com/api/v1/auth/login",
+        // "http://localhost:5000/api/v1/auth/login",
+        "https://e-commerce-1-fdtm.onrender.com/api/v1/auth/login",
         {
           email,
           password,
