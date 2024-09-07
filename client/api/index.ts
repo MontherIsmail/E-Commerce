@@ -9,7 +9,7 @@ const createClient = (
     baseURL,
     timeout: 1000,
     headers: { authorization: userToken },
-    withCredentials: true,
+    // withCredentials: true,
   });
 
   const get = async (query: string) => {
