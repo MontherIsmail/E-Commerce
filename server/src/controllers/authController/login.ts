@@ -26,16 +26,12 @@ const login = async (req: Request, res: Response) => {
       username,
     });
 
-    res
+    return res
       .status(201)
       .cookie("token", token, {
-        httpOnly: true,
-        secure: true, //remove it in local
-        sameSite: "none", //remove it in local
-        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: false,
       })
       .json({ message: "login successfully" });
-    return res;
   } catch (error) {
     return res.status(500).json("Internal Server Error");
   }
