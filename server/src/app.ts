@@ -13,7 +13,7 @@ const {
 const app = express();
 
 const allowedOrigins = [
-  'https://e-commerce-ngxtkabwj-montherismails-projects.vercel.app', // Your Vercel app URL
+  'https://e-commerce-ten-puce.vercel.app/', // Your Vercel app URL
   'http://localhost:3000', // Local development URL
 ];
 
@@ -26,7 +26,7 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    // credentials: true, // Allow cookies to be sent
+    credentials: true, // Allow cookies to be sent
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
