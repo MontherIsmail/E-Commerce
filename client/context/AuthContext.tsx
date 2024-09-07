@@ -57,9 +57,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email,
           password,
         },
-        // {
-        //   withCredentials: true,
-        // }
+        {
+          withCredentials: true,
+        }
       );
       console.log("data", response.data);
       if (response.data.message === "login successfully") {
