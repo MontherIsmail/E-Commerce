@@ -43,6 +43,11 @@ const Sidebar: React.FC = () => {
               </Link>
             </li>
             <li className="my-2">
+              <Link href="/users" className="block p-2 rounded hover:bg-gray-700">
+                Users
+              </Link>
+            </li>
+            <li className="my-2">
               <Link href="/settings" className="block p-2 rounded hover:bg-gray-700">
                 Settings
               </Link>
