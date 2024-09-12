@@ -28,18 +28,8 @@ const Sidebar: React.FC = () => {
         <nav className="flex-1 p-4">
           <ul>
             <li className="my-2">
-              <Link href="/" className="block p-2 rounded hover:bg-gray-700">
-                Dashboard
-              </Link>
-            </li>
-            <li className="my-2">
               <Link href="/products" className="block p-2 rounded hover:bg-gray-700">
                 Products
-              </Link>
-            </li>
-            <li className="my-2">
-              <Link href="/profile" className="block p-2 rounded hover:bg-gray-700">
-                Profile
               </Link>
             </li>
             <li className="my-2">
@@ -48,8 +38,8 @@ const Sidebar: React.FC = () => {
               </Link>
             </li>
             <li className="my-2">
-              <Link href="/settings" className="block p-2 rounded hover:bg-gray-700">
-                Settings
+              <Link href="/profile" className="block p-2 rounded hover:bg-gray-700">
+                Profile
               </Link>
             </li>
             <li className="my-2">

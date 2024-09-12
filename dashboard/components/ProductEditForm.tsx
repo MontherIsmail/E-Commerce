@@ -1,34 +1,48 @@
-// components/ProductEditForm.tsx
 import { FC } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { productSchema } from '../utils/validation/productSchema';
+import * as Yup from 'yup';
 import { Product } from '../types/product';
 
 interface ProductEditFormProps {
-  product: Product;
+  product: any;
   onClose: () => void;
-  onSave: (values: Product) => void;
+  onSave: any;
 }
+
+const productSchema = Yup.object().shape({
+  productName: Yup.string().required('Product name is required'),
+  productPrice: Yup.number().required('Product price is required').positive('Product price must be positive'),
+  productImages: Yup.string().required('Product images are required'),
+  productColors: Yup.string().required('Product colors are required'),
+  productSizes: Yup.string().required('Product sizes are required'),
+});
 
 const ProductEditForm: FC<ProductEditFormProps> = ({ product, onClose, onSave }) => {
   const initialValues = {
     productName: product.productName,
     productPrice: product.productPrice,
-    productImages: product.productImages,
-    productColors: product.productColors,
-    productSizes: product.productSizes,
+    productImages: product.productImages.join(', '),
+    productColors: product.productColors.map((color: any) => color.name).join(', '),
+    productSizes: product.productSizes.map((size: any) => size.name).join(', '),
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-lg">
+      <div className="bg-white p-6 w-full max-w-lg">
         <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
 
         <Formik
           initialValues={initialValues}
           validationSchema={productSchema}
-          onSubmit={(values: any) => {
-            onSave(values);
+          onSubmit={(values) => {
+            // Convert comma-separated values back to arrays
+            const updatedProduct = {
+              ...values,
+              productImages: values.productImages.split(',').map((img: any) => img.trim()),
+              productColors: values.productColors.split(',').map((name: any) => ({ name, class: '', selectedClass: '' })), // Customize as needed
+              productSizes: values.productSizes.split(',').map((name: any) => ({ name, inStock: true })), // Customize as needed
+            };
+            onSave(updatedProduct as Product);
             onClose();
           }}
         >
@@ -42,7 +56,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ product, onClose, onSave })
                   type="text"
                   name="productName"
                   id="productName"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
                 <ErrorMessage name="productName" component="div" className="text-red-500 text-sm mt-1" />
               </div>
@@ -68,33 +82,33 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ product, onClose, onSave })
                   type="text"
                   name="productImages"
                   id="productImages"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
                 <ErrorMessage name="productImages" component="div" className="text-red-500 text-sm mt-1" />
               </div>
 
               <div>
                 <label htmlFor="productColors" className="block text-sm font-medium text-gray-700">
-                  Product Colors (comma-separated)
+                  Product Colors (comma-separated names)
                 </label>
                 <Field
                   type="text"
                   name="productColors"
                   id="productColors"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
                 <ErrorMessage name="productColors" component="div" className="text-red-500 text-sm mt-1" />
               </div>
 
               <div>
                 <label htmlFor="productSizes" className="block text-sm font-medium text-gray-700">
-                  Product Sizes (comma-separated)
+                  Product Sizes (comma-separated names)
                 </label>
                 <Field
                   type="text"
                   name="productSizes"
                   id="productSizes"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
                 <ErrorMessage name="productSizes" component="div" className="text-red-500 text-sm mt-1" />
               </div>

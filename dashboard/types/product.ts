@@ -1,10 +1,12 @@
-// types/product.ts
 export interface Product {
-    id: string;
+    productCategory: any;
+    id: number;
     productName: string;
     productPrice: number;
     productImages: string[];
-    productColors: string[];
-    productSizes: string[];
+    productColors: object[];
+    productSizes: object[];
+    productDescription: string;
+    stock: number;
   }
   

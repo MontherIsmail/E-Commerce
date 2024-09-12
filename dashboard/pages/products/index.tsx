@@ -1,288 +1,299 @@
-import { FC, useState } from "react";
+import { FC, useState, ChangeEvent } from "react";
+import Link from "next/link";
 import { Product } from "../../types/product";
-import ProductEditForm from "../../components/ProductEditForm";
 import DashboardLayout from "../../components/DashboardLayout";
 import Image from "next/image";
 
 const productsData: Product[] = [
   {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
+    id: 1,
+    productName: "T-shirt",
     productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
-  },
-
-  {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+    productPrice: 49,
+    productDescription: "Nice t-shirt with many colors",
+    productCategory: "men",
+    productColors: [
+      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
+      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
+    productSizes: [
+      { name: "XS", inStock: true },
+      { name: "S", inStock: true },
+      { name: "M", inStock: true },
+    ],
+    stock: 500,
   },
   {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
+    id: 2,
+    productName: "T-shirt",
     productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
+    productPrice: 49,
+    productDescription: "Nice t-shirt with many colors",
+    productCategory: "men",
+    productColors: [
+      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
+      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+    ],
+    productSizes: [
+      { name: "XS", inStock: true },
+      { name: "S", inStock: true },
+      { name: "M", inStock: true },
+    ],
+    stock: 500,
   },
   {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
+    id: 3,
+    productName: "T-shirt",
     productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
+    productPrice: 49,
+    productDescription: "Nice t-shirt with many colors",
+    productCategory: "men",
+    productColors: [
+      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
+      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+    ],
+    productSizes: [
+      { name: "XS", inStock: true },
+      { name: "S", inStock: true },
+      { name: "M", inStock: true },
+    ],
+    stock: 500,
   },
   {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
+    id: 4,
+    productName: "T-shirt",
     productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
+    productPrice: 49,
+    productDescription: "Nice t-shirt with many colors",
+    productCategory: "men",
+    productColors: [
+      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
+      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+    ],
+    productSizes: [
+      { name: "XS", inStock: true },
+      { name: "S", inStock: true },
+      { name: "M", inStock: true },
+    ],
+    stock: 500,
   },
   {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
+    id: 5,
+    productName: "test",
     productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
+    productPrice: 49,
+    productDescription: "Nice t-shirt with many colors",
+    productCategory: "men",
+    productColors: [
+      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
+      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+    ],
+    productSizes: [
+      { name: "XS", inStock: true },
+      { name: "S", inStock: true },
+      { name: "M", inStock: true },
+    ],
+    stock: 500,
   },
   {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
+    id: 6,
+    productName: "T-shirt",
     productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
+    productPrice: 49,
+    productDescription: "Nice t-shirt with many colors",
+    productCategory: "men",
+    productColors: [
+      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
+      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+    ],
+    productSizes: [
+      { name: "XS", inStock: true },
+      { name: "S", inStock: true },
+      { name: "M", inStock: true },
+    ],
+    stock: 500,
   },
   {
-    id: "1",
-    productName: "T-Shirt",
-    productPrice: 19.99,
+    id: 7,
+    productName: "mm",
     productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
-      "https://cdn.pixabay.com/photo/2017/01/13/04/56/t-shirt-1976334_1280.png",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcAUioMRqtwqMnztNK9CB98U35MmEMw4qVQg&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
     ],
-    productColors: ["Red", "Blue"],
-    productSizes: ["S", "M", "L"],
+    productPrice: 49,
+    productDescription: "Nice t-shirt with many colors",
+    productCategory: "women",
+    productColors: [
+      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
+      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+    ],
+    productSizes: [
+      { name: "XS", inStock: true },
+      { name: "S", inStock: true },
+      { name: "M", inStock: true },
+    ],
+    stock: 500,
   },
-  
-  // Add more products here
+  // Add more product data as needed...
 ];
 
 const ProductsPage: FC = () => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [isViewProductOpen, setIsViewProductOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortOrder, setSortOrder] = useState("newest");
 
-  const handleDelete = (productId: string) => {
+  const handleDelete = (productId: number) => {
     console.log(`Delete product with id: ${productId}`);
   };
 
-  const handleEdit = (product: Product) => {
-    setSelectedProduct(product);
-    setIsEditFormOpen(true);
-  };
+  // Filter and sort products
+  const filteredAndSortedProducts = productsData
+    .filter((product) => {
+      const matchesSearch = product.productName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
 
-  const handleViewProduct = (product: Product) => {
-    setSelectedProduct(product);
-    setCurrentImageIndex(0);
-    setIsViewProductOpen(true);
-  };
+      const matchesCategory =
+        selectedCategory === "all" ||
+        product.productCategory === selectedCategory;
 
-  const handleClosePopup = () => {
-    setSelectedProduct(null);
-    setIsEditFormOpen(false);
-    setIsViewProductOpen(false);
-  };
-
-  const handleSaveProduct = (updatedProduct: Product) => {
-    console.log("Saving updated product:", updatedProduct);
-    // Update the product in your state or make an API call to save changes
-    setIsEditFormOpen(false);
-  };
-
-  const handleNextImage = () => {
-    if (selectedProduct) {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === selectedProduct.productImages.length - 1
-          ? 0
-          : prevIndex + 1
-      );
-    }
-  };
-
-  const handlePreviousImage = () => {
-    if (selectedProduct) {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === 0
-          ? selectedProduct.productImages.length - 1
-          : prevIndex - 1
-      );
-    }
-  };
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      if (sortOrder === "newest") {
+        return b.id - a.id;
+      } else if (sortOrder === "oldest") {
+        return a.id - b.id;
+      }
+      return 0;
+    });
 
   return (
     <DashboardLayout>
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 relative">
+        {/* Add Product Button */}
+        <Link href="/add-product">
+          <button className="absolute top-4 right-4 bg-green-500 text-white px-4 py-2 hover:bg-green-600">
+            Add Product
+          </button>
+        </Link>
+
         <h1 className="text-3xl font-bold mb-4">Products</h1>
 
-        {/* Product Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {productsData.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white shadow-md p-4 flex space-x-4"
-            >
-              {/* Product Image */}
-              <Image
-                src={product.productImages[0]}
-                alt={product.productName}
-                width={150}
-                height={150}
-                className="rounded-lg"
-              />
+        {/* Search and Filter */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={searchQuery}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSearchQuery(e.target.value)
+            }
+            className="border p-2 mr-4"
+          />
 
-              {/* Product Info */}
-              <div className="flex flex-col justify-between">
-                <div>
-                  <h2 className="text-xl font-bold">{product.productName}</h2>
-                  <p className="text-gray-700">
-                    Price: ${product.productPrice}
-                  </p>
-                  <p className="text-gray-700">
-                    Colors: {product.productColors.join(", ")}
-                  </p>
-                  <p className="text-gray-700">
-                    Sizes: {product.productSizes.join(", ")}
-                  </p>
-                </div>
+          <select
+            value={selectedCategory}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+              setSelectedCategory(e.target.value)
+            }
+            className="border p-2 mr-4"
+          >
+            <option value="all">All</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="kids">Kids</option>
+          </select>
 
-                {/* Action Buttons */}
-                <div className="mt-4 flex space-x-2">
-                  <button
-                    onClick={() => handleEdit(product)}
-                    className="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product.id)}
-                    className="bg-red-500 text-white px-4 py-2 hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => handleViewProduct(product)}
-                    className="bg-green-500 text-white px-4 py-2 hover:bg-green-600"
-                  >
-                    View
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+          <select
+            value={sortOrder}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+              setSortOrder(e.target.value)
+            }
+            className="border p-2"
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
         </div>
 
-        {/* Edit Product Form Popup */}
-        {isEditFormOpen && selectedProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg w-full max-w-lg">
-              <ProductEditForm
-                product={selectedProduct}
-                onClose={handleClosePopup}
-                onSave={handleSaveProduct}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* View Product Popup with Image Slider */}
-        {isViewProductOpen && selectedProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg w-full max-w-lg">
-              <h2 className="text-2xl font-bold mb-4">
-                {selectedProduct.productName}
-              </h2>
-
-              {/* Image Slider */}
-              <div className="relative">
-                <Image
-                  src={selectedProduct.productImages[currentImageIndex]}
-                  alt={selectedProduct.productName}
-                  width={400}
-                  height={300}
-                  className="rounded-lg mb-2"
-                />
-                <button
-                  onClick={handlePreviousImage}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white px-2 py-1 rounded-r-lg hover:bg-gray-900"
-                >
-                  &#8592;
-                </button>
-                <button
-                  onClick={handleNextImage}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white px-2 py-1 rounded-l-lg hover:bg-gray-900"
-                >
-                  &#8594;
-                </button>
-              </div>
-
-              <p className="text-gray-700 mb-2">
-                Price: ${selectedProduct.productPrice}
-              </p>
-              <p className="text-gray-700 mb-2">
-                Colors: {selectedProduct.productColors.join(", ")}
-              </p>
-              <p className="text-gray-700 mb-2">
-                Sizes: {selectedProduct.productSizes.join(", ")}
-              </p>
-              <button
-                onClick={handleClosePopup}
-                className="mt-4 bg-red-500 text-white px-4 py-2 hover:bg-red-600"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
+        {/* Product Table */}
+        <table className="min-w-full table-auto bg-white shadow-md rounded-lg">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">Image</th>
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Price</th>
+              <th className="px-4 py-2">Category</th>
+              <th className="px-4 py-2">Colors</th>
+              <th className="px-4 py-2">Sizes</th>
+              <th className="px-4 py-2">Stock</th>
+              <th className="px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAndSortedProducts.map((product) => (
+              <tr key={product.id}>
+                <td className="border px-4 py-2">
+                  <Image
+                    src={product.productImages[0]}
+                    alt={product.productName}
+                    width={50}
+                    height={50}
+                    className="rounded-lg"
+                  />
+                </td>
+                <td className="border px-4 py-2 w-40 overflow-hidden text-ellipsis whitespace-nowrap">{product.productName}</td>
+                <td className="border px-4 py-2 overflow-hidden">${product.productPrice}</td>
+                <td className="border px-4 py-2 overflow-hidden">{product.productCategory}</td>
+                <td className="border px-4 py-2 overflow-hidden">
+                  {product.productColors.map((color: any) => color.name).join(", ")}
+                </td>
+                <td className="border px-4 py-2 overflow-hidden">
+                  {product.productSizes
+                    .filter((size: any) => size.inStock)
+                    .map((size: any) => size.name)
+                    .join(", ")}
+                </td>
+                <td className="border px-4 py-2 overflow-hidden">{product.stock}</td>
+                <td className="border px-4 py-2 overflow-hidden">
+                  <div className="flex space-x-2 overflow-hidden">
+                    <Link
+                      href={`/products/${product.id}`}
+                      className="bg-green-500 text-white px-4 py-2 hover:bg-green-600"
+                    >
+                      View
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      className="bg-red-500 text-white px-4 py-2 hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </DashboardLayout>
   );
