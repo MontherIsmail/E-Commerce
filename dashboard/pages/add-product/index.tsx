@@ -1,41 +1,8 @@
 import { FC } from "react";
 import { Formik, Field, Form, FieldArray } from "formik";
-import * as Yup from "yup";
 import { useRouter } from "next/router";
 import DashboardLayout from "@/components/DashboardLayout";
-
-// Validation Schema
-const validationSchema = Yup.object({
-  productName: Yup.string().required("Product Name is required"),
-  productImages: Yup.array()
-    .of(Yup.string().url("Invalid URL").required("Image URL is required"))
-    .min(1, "At least one image is required"),
-  productPrice: Yup.number()
-    .required("Product Price is required")
-    .positive("Price must be positive"),
-  productDescription: Yup.string().required("Product Description is required"),
-  productCategory: Yup.string().required("Product Category is required"),
-  productColors: Yup.array()
-    .of(
-      Yup.object({
-        name: Yup.string().required("Color Name is required"),
-        class: Yup.string().required("Color Class is required"),
-        selectedClass: Yup.string().required("Selected Class is required"),
-      })
-    )
-    .min(1, "At least one color is required"),
-  productSizes: Yup.array()
-    .of(
-      Yup.object({
-        name: Yup.string().required("Size Name is required"),
-        inStock: Yup.boolean().required("In Stock status is required"),
-      })
-    )
-    .min(1, "At least one size is required"),
-  stock: Yup.number()
-    .required("Stock is required")
-    .positive("Stock must be positive"),
-});
+import addProductSchema from "@/utils/validation/addProductSchema";
 
 interface AddProductPageProps {}
 
@@ -66,7 +33,7 @@ const AddProductPage: FC<AddProductPageProps> = () => {
             productSizes: [{ name: "", inStock: false }],
             stock: 0,
           }}
-          validationSchema={validationSchema}
+          validationSchema={addProductSchema}
           onSubmit={handleSubmit}
         >
           {({ values, setFieldValue }) => (
@@ -315,13 +282,13 @@ const AddProductPage: FC<AddProductPageProps> = () => {
                 <button
                   type="button"
                   onClick={() => router.push("/products")}
-                  className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                  className="bg-gray-500 text-white px-4 py-2"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                  className="bg-blue-500 text-white px-4 py-2"
                 >
                   Submit
                 </button>
