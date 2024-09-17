@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import Link from 'next/link';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { useState } from "react";
+import Link from "next/link";
+import { FiMenu, FiX } from "react-icons/fi";
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,28 +22,46 @@ const Sidebar: React.FC = () => {
       {/* Sidebar - hidden on small screens, visible on large screens */}
       <div
         className={`${
-          isOpen ? 'block' : 'hidden'
-        } lg:block w-64 h-screen bg-gray-800 text-white flex flex-col fixed lg:static`}>
+          isOpen ? "block" : "hidden"
+        } lg:block w-64 h-screen bg-gray-800 text-white flex flex-col fixed lg:static`}
+      >
         <div className="text-2xl font-bold p-4">Dashboard</div>
         <nav className="flex-1 p-4">
           <ul>
             <li className="my-2">
-              <Link href="/products" className="block p-2 rounded hover:bg-gray-700">
+              <Link href="/" className="block p-2 rounded hover:bg-gray-700">
+                Analysis
+              </Link>
+            </li>
+            <li className="my-2">
+              <Link
+                href="/products"
+                className="block p-2 rounded hover:bg-gray-700"
+              >
                 Products
               </Link>
             </li>
             <li className="my-2">
-              <Link href="/users" className="block p-2 rounded hover:bg-gray-700">
+              <Link
+                href="/users"
+                className="block p-2 rounded hover:bg-gray-700"
+              >
                 Users
               </Link>
             </li>
             <li className="my-2">
-              <Link href="/profile" className="block p-2 rounded hover:bg-gray-700">
+              <Link
+                href="/profile"
+                className="block p-2 rounded hover:bg-gray-700"
+              >
                 Profile
               </Link>
             </li>
             <li className="my-2">
-              <Link href="/logout" className="block p-2 rounded hover:bg-gray-700">
+              <Link
+                href="/logout"
+                className="block p-2 rounded hover:bg-gray-700"
+              >
                 Logout
               </Link>
             </li>
