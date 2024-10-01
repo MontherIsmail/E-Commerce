@@ -3,17 +3,46 @@ import { Formik, Field, Form, FieldArray } from "formik";
 import { useRouter } from "next/router";
 import DashboardLayout from "@/components/DashboardLayout";
 import addProductSchema from "@/utils/validation/addProductSchema";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 interface AddProductPageProps {}
 
 const AddProductPage: FC<AddProductPageProps> = () => {
   const router = useRouter();
 
-  const handleSubmit = (values: any) => {
-    // Here you would typically send values to your backend
-    console.log(values);
-
-    // Redirect to products page or display a success message
+  const handleSubmit = async (values: any) => {
+    const {
+      productName,
+      productImages,
+      productPrice,
+      productDescription,
+      productCategory,
+      productColors,
+      productSizes,
+      stock,
+    } = values;
+    try {
+      await axios.post("http://localhost:5000/api/v1/products/add-product", {
+        productName,
+        productImages,
+        productPrice,
+        productDescription,
+        productCategory,
+        productColors,
+        productSizes,
+        stock,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Product Added Successfully",
+      showConfirmButton: false,
+      timer: 1500,
+    });
     router.push("/products");
   };
 

@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 router.use("/auth", authRouter);
 router.use("/payment", paymentRoutes);
 router.use("/products", productRoutes);
-router.use(asyncMiddleware(checkAuth));
+// router.use(asyncMiddleware(checkAuth));
 router.use("/profile", profileRoutes);
 router.use("/cart", cartRoutes);
 router.use("/orders", ordersRoutes);
