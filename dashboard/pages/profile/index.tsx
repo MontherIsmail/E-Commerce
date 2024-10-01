@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import DashboardLayout from "@/components/DashboardLayout";
+import axios from "axios";
 
 interface AdminProfile {
   username: string;
@@ -9,15 +10,25 @@ interface AdminProfile {
   role: string;
 }
 
-const initialProfile: AdminProfile = {
-  username: "adminUser",
-  email: "admin@example.com",
-  role: "Administrator",
-};
-
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [profile, setProfile] = useState<AdminProfile>(initialProfile);
+  const [profile, setProfile] = useState<AdminProfile | null>(null);
+
+  const getProfile = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/v1/profile/1"
+      );
+      console.log("profile", response.data.profileData);
+      setProfile(response.data.profileData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   const handleEditProfile = (values: AdminProfile) => {
     setProfile(values);
@@ -32,6 +43,10 @@ const Profile: React.FC = () => {
     setIsEditing(false);
   };
 
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <DashboardLayout>
       <div className="container mx-auto p-4">
@@ -42,15 +57,15 @@ const Profile: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4">Profile Details</h2>
           <div className="mb-4">
             <strong className="text-gray-700">Username:</strong>
-            <p className="text-gray-900">{profile.username}</p>
+            <p className="text-gray-900">{profile?.username}</p>
           </div>
           <div className="mb-4">
             <strong className="text-gray-700">Email:</strong>
-            <p className="text-gray-900">{profile.email}</p>
+            <p className="text-gray-900">{profile?.email}</p>
           </div>
           <div className="mb-4">
             <strong className="text-gray-700">Role:</strong>
-            <p className="text-gray-900">{profile.role}</p>
+            <p className="text-gray-900">{profile?.role}</p>
           </div>
           <button
             onClick={handleEditClick}
@@ -66,7 +81,11 @@ const Profile: React.FC = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md">
               <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
               <Formik
-                initialValues={profile}
+                initialValues={{
+                  username: profile.username || "",
+                  email: profile.email || "",
+                  role: profile.role || "",
+                }}
                 validationSchema={Yup.object({
                   username: Yup.string().required("Required"),
                   email: Yup.string()

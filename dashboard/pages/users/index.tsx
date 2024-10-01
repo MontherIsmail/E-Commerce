@@ -1,32 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../../types/user"; // Update the path based on your project structure
 import DashboardLayout from "@/components/DashboardLayout";
-
-const fakeUsers: User[] = [
-  { id: "1", name: "Alice Johnson", email: "alice.johnson@example.com" },
-  { id: "2", name: "Bob Smith", email: "bob.smith@example.com" },
-  { id: "3", name: "Charlie Brown", email: "charlie.brown@example.com" },
-  { id: "4", name: "Alice Johnson", email: "alice.johnson@example.com" },
-  { id: "5", name: "Bob Smith", email: "bob.smith@example.com" },
-  { id: "6", name: "Charlie Brown", email: "charlie.brown@example.com" },
-  { id: "7", name: "Alice Johnson", email: "alice.johnson@example.com" },
-  { id: "8", name: "Bob Smith", email: "bob.smith@example.com" },
-  { id: "9", name: "Charlie Brown", email: "charlie.brown@example.com" },
-];
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const UsersPage: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>(fakeUsers);
+  const [users, setUsers] = useState<User[]>();
   const [searchId, setSearchId] = useState<string>("");
   const [filterName, setFilterName] = useState<string>("");
   const [searchEmail, setSearchEmail] = useState<string>("");
 
+  const getUsers = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/v1/auth/users"
+      );
+      console.log("responseeee", response.data);
+      setUsers(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   // Filter and search logic
-  const filteredUsers = users.filter(
+  const filteredUsers = users?.filter(
     (user) =>
-      user.name.toLowerCase().includes(filterName.toLowerCase()) &&
-      (searchId === "" || user.id === searchId) &&
-      user.email.toLowerCase().includes(searchEmail.toLowerCase())
+      user?.username?.toLowerCase().includes(filterName.toLowerCase()) &&
+      (searchId === "" || String(user.id) === searchId) &&
+      user?.email?.toLowerCase().includes(searchEmail.toLowerCase())
   );
 
   const handleViewUser = (user: User) => {
@@ -34,7 +40,38 @@ const UsersPage: React.FC = () => {
   };
 
   const handleDeleteUser = (userId: string) => {
-    setUsers(users.filter((user) => user.id !== userId));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Make API call to delete the product
+          // await axios.delete(
+          //   `http://localhost:5000/api/v1/users/${userId}`
+          // );
+          setUsers(users?.filter((user) => user.id !== userId));
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your product has been deleted.",
+            icon: "success",
+          });
+          // Optionally, redirect or refresh the page
+        } catch (error) {
+          Swal.fire({
+            title: "Error!",
+            text: "Something went wrong. The product could not be deleted.",
+            icon: "error",
+          });
+          console.error(error);
+        }
+      }
+    });
   };
 
   const handleClosePopup = () => {
@@ -115,11 +152,11 @@ const UsersPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {filteredUsers?.map((user) => (
                 <tr key={user.id}>
                   <td className="border px-4 py-2 text-left">{user.id}</td>
                   <td className="border px-4 py-2 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                    {user.name}
+                    {user.username}
                   </td>
                   <td className="border px-4 py-2 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                     {user.email}
@@ -151,7 +188,9 @@ const UsersPage: React.FC = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-4 w-full max-w-lg rounded-md">
               <h2 className="text-2xl font-bold mb-4">User Details</h2>
-              <p className="text-gray-700 mb-2">Name: {selectedUser.name}</p>
+              <p className="text-gray-700 mb-2">
+                Name: {selectedUser.username}
+              </p>
               <p className="text-gray-700 mb-2">Email: {selectedUser.email}</p>
               <button
                 onClick={handleClosePopup}

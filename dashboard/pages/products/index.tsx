@@ -1,167 +1,47 @@
-import { FC, useState, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "../../types/product";
 import DashboardLayout from "../../components/DashboardLayout";
 import Image from "next/image";
-
-const productsData: Product[] = [
-  {
-    id: 1,
-    productName: "T-shirt",
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
-    ],
-    productPrice: 49,
-    productDescription: "Nice t-shirt with many colors",
-    productCategory: "men",
-    productColors: [
-      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
-      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-    ],
-    productSizes: [
-      { name: "XS", inStock: true },
-      { name: "S", inStock: true },
-      { name: "M", inStock: true },
-    ],
-    stock: 500,
-  },
-  {
-    id: 2,
-    productName: "T-shirt",
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
-    ],
-    productPrice: 49,
-    productDescription: "Nice t-shirt with many colors",
-    productCategory: "men",
-    productColors: [
-      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
-      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-    ],
-    productSizes: [
-      { name: "XS", inStock: true },
-      { name: "S", inStock: true },
-      { name: "M", inStock: true },
-    ],
-    stock: 500,
-  },
-  {
-    id: 3,
-    productName: "T-shirt",
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
-    ],
-    productPrice: 49,
-    productDescription: "Nice t-shirt with many colors",
-    productCategory: "men",
-    productColors: [
-      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
-      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-    ],
-    productSizes: [
-      { name: "XS", inStock: true },
-      { name: "S", inStock: true },
-      { name: "M", inStock: true },
-    ],
-    stock: 500,
-  },
-  {
-    id: 4,
-    productName: "T-shirt",
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
-    ],
-    productPrice: 49,
-    productDescription: "Nice t-shirt with many colors",
-    productCategory: "men",
-    productColors: [
-      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
-      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-    ],
-    productSizes: [
-      { name: "XS", inStock: true },
-      { name: "S", inStock: true },
-      { name: "M", inStock: true },
-    ],
-    stock: 500,
-  },
-  {
-    id: 5,
-    productName: "test",
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
-    ],
-    productPrice: 49,
-    productDescription: "Nice t-shirt with many colors",
-    productCategory: "men",
-    productColors: [
-      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
-      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-    ],
-    productSizes: [
-      { name: "XS", inStock: true },
-      { name: "S", inStock: true },
-      { name: "M", inStock: true },
-    ],
-    stock: 500,
-  },
-  {
-    id: 6,
-    productName: "T-shirt",
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
-    ],
-    productPrice: 49,
-    productDescription: "Nice t-shirt with many colors",
-    productCategory: "men",
-    productColors: [
-      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
-      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-    ],
-    productSizes: [
-      { name: "XS", inStock: true },
-      { name: "S", inStock: true },
-      { name: "M", inStock: true },
-    ],
-    stock: 500,
-  },
-  {
-    id: 7,
-    productName: "mm",
-    productImages: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuvq66T2bVxg9fi1ovJww5kDy5icC0v2xUpBMrk_M8QAn4cl4K7223QuwtWLy_SAWquk&usqp=CAU",
-    ],
-    productPrice: 49,
-    productDescription: "Nice t-shirt with many colors",
-    productCategory: "women",
-    productColors: [
-      { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-      { name: "Gray", class: "bg-gray-400", selectedClass: "ring-gray-400" },
-      { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-    ],
-    productSizes: [
-      { name: "XS", inStock: true },
-      { name: "S", inStock: true },
-      { name: "M", inStock: true },
-    ],
-    stock: 500,
-  },
-  // Add more product data as needed...
-];
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const ProductsPage: FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
+  const [productsData, setProductsData] = useState<Product[]>([]);
 
-  const handleDelete = (productId: number) => {
-    console.log(`Delete product with id: ${productId}`);
+  const handleDelete = async (productId: number) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Make API call to delete the product
+          await axios.delete(`http://localhost:5000/api/v1/products/${productId}`);
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your product has been deleted.",
+            icon: "success",
+          });
+          // Optionally, redirect or refresh the page
+        } catch (error) {
+          Swal.fire({
+            title: "Error!",
+            text: "Something went wrong. The product could not be deleted.",
+            icon: "error",
+          });
+          console.error(error);
+        }
+      }
+    });
   };
 
   // Filter and sort products
@@ -185,6 +65,20 @@ const ProductsPage: FC = () => {
       }
       return 0;
     });
+
+  const getProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/v1/products");
+      setProductsData(response.data.products);
+      console.log("response", response.data.products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -254,18 +148,26 @@ const ProductsPage: FC = () => {
               <tr key={product.id}>
                 <td className="border px-4 py-2">
                   <Image
-                    src={product.productImages[0]}
+                    src={product.productUrlImgs[0]}
                     alt={product.productName}
                     width={50}
                     height={50}
                     className="rounded-lg"
                   />
                 </td>
-                <td className="border px-4 py-2 w-40 overflow-hidden text-ellipsis whitespace-nowrap">{product.productName}</td>
-                <td className="border px-4 py-2 overflow-hidden">${product.productPrice}</td>
-                <td className="border px-4 py-2 overflow-hidden">{product.productCategory}</td>
+                <td className="border px-4 py-2 w-40 overflow-hidden text-ellipsis whitespace-nowrap">
+                  {product.productName}
+                </td>
                 <td className="border px-4 py-2 overflow-hidden">
-                  {product.productColors.map((color: any) => color.name).join(", ")}
+                  ${product.productPrice}
+                </td>
+                <td className="border px-4 py-2 overflow-hidden">
+                  {product.productCategory}
+                </td>
+                <td className="border px-4 py-2 overflow-hidden">
+                  {product.productColors
+                    .map((color: any) => color.name)
+                    .join(", ")}
                 </td>
                 <td className="border px-4 py-2 overflow-hidden">
                   {product.productSizes
@@ -273,7 +175,9 @@ const ProductsPage: FC = () => {
                     .map((size: any) => size.name)
                     .join(", ")}
                 </td>
-                <td className="border px-4 py-2 overflow-hidden">{product.stock}</td>
+                <td className="border px-4 py-2 overflow-hidden">
+                  {product.stock}
+                </td>
                 <td className="border px-4 py-2 overflow-hidden">
                   <div className="flex space-x-2 overflow-hidden">
                     <Link
