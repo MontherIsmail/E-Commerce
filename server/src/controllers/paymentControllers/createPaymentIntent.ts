@@ -38,10 +38,10 @@ const createPaymentIntent = async (req: Request, res: Response) => {
     // Create Payment record
     const payment = await prisma.payment.create({
       data: {
+        amount,
+        currency: "usd",
         status: paymentIntent.status,
-        method: paymentIntent.payment_method_types[0],
-        transactionId: paymentIntent.id,
-        userId,
+        paymentIntentId: paymentIntent.id,
       },
     });
 
@@ -56,6 +56,9 @@ const createPaymentIntent = async (req: Request, res: Response) => {
             (product: { products: any; id: number; quantity: number }) => ({
               products: { connect: { id: product.products.id } },
               quantity: product.quantity,
+              price:
+                existingProducts.find((p) => p.id === product.products.id)
+                  ?.productPrice ?? 0,
             })
           ),
         },

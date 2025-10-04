@@ -8,15 +8,15 @@ datasource db {
 }
 
 model users {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username      String?
-  password      String?
-  role      String?
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  username    String?
+  password    String?
+  role        String?
+  permissions Json?
   carts       cart[]
-  orders     Order[]   
-  payments   Payment[] 
-  createdAt DateTime @default(now())
+  orders      Order[]   
+  createdAt   DateTime @default(now())
 }
  
 model products {
@@ -59,24 +59,22 @@ model Order {
   updatedAt DateTime   @updatedAt
 }
 
-model Payment {
-  id             Int       @id @default(autoincrement())
-  status         String    
-  method         String    
-  transactionId  String?   
-  userId         Int       
-  users          users     @relation(fields: [userId], references: [id])
-  orderId        Int?      @unique // Optional, since it's one-to-one
-  order          Order?    @relation
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-}
-
 model OrderItem {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   orderId   Int
   productId Int
-  quantity  Int      // Quantity of the specific product in the order
-  order     Order    @relation(fields: [orderId], references: [id])
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
   products  products @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id             Int       @id @default(autoincrement())
+  amount         Int
+  currency       String
+  status         String
+  paymentIntentId String
+  order          Order?
+  createdAt      DateTime  @default(now())
 }

@@ -1,4 +1,3 @@
-// context/AuthContext.tsx
 import React, {
   createContext,
   useContext,
@@ -6,22 +5,21 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import createClient from "../api";
-import getUserInfo from "../utils/userInfo/getUserInfo";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { API_CONFIG } from "../config/api";
+import type { User } from "../types";
 
 interface AuthContextType {
-  user: any;
+  user: User | null;
   login: (email: string, password: string) => Promise<void>;
   register: (
     username: string,
     email: string,
     password: string
   ) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
@@ -32,27 +30,36 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      const userInfo = getUserInfo();
-      if (userInfo) {
-        const { username, role, id }: any = userInfo;
-        setUser({ username, role, id, token });
+    const bootstrap = async () => {
+      try {
+        const { data } = await axios.get(
+          `${API_CONFIG.BASE_URL}/auth/me`,
+          { withCredentials: true }
+        );
+        const { id, username, role } = data.user || {};
+        if (id) {
+          setUser({ id, username, role });
+        } else {
+          setUser(null);
+        }
+      } catch (e: any) {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+    bootstrap();
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(
-        // "http://localhost:5000/api/v1/auth/login",
-        "https://e-commerce-1-fdtm.onrender.com/api/v1/auth/login",
+        `${API_CONFIG.BASE_URL}/auth/login`,
         {
           email,
           password,
@@ -61,14 +68,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           withCredentials: true,
         }
       );
-      console.log("data", response.data);
       if (response.data.message === "login successfully") {
-        const userInfo = getUserInfo();
-        if (userInfo) {
-          const { username, role, id }: any = userInfo;
-          setUser({ username, role, id });
+        const { user: u } = response.data || {};
+        if (u?.id) {
+          setUser({ id: u.id, username: u.username, role: u.role });
+          setLoading(false);
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Login successful!",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            router.push("/");
+          });
         }
-        router.push("/");
       }
     } catch (error: any) {
       Swal.fire({
@@ -81,7 +95,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }`,
       });
       console.log("login failed", error);
-    } finally {
       setLoading(false);
     }
   };
@@ -92,21 +105,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     password: string
   ) => {
     try {
-      const { register } = createClient("");
-      const role = "user";
-      const data = await register({ username, email, password, role });
-      if (data.message === "Signed up") {
-        router.push("/");
-      } else if (data.response?.data?.message) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `${
-            data?.response?.data?.message ||
-            data?.message ||
-            "Somthing went wrong!"
-          }`,
-        });
+      const response = await axios.post(
+        `${API_CONFIG.BASE_URL}/auth/signup`,
+        {
+          username,
+          email,
+          password,
+          role: "user",
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.data.message === "Signed up") {
+        const { user: u } = response.data || {};
+        if (u?.id) {
+          setUser({ id: u.id, username: u.username, role: u.role });
+          setLoading(false);          
+          router.push("/");
+        }
       }
     } catch (error: any) {
       Swal.fire({
@@ -119,15 +136,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }`,
       });
       console.log("registration failed", error);
-    } finally {
       setLoading(false);
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    Cookies.remove("token");
-    router.push("/login");
+  const logout = async () => {
+    try {
+      await axios.post(
+        `${API_CONFIG.BASE_URL}/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+      setUser(null);
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      setUser(null);
+      router.push("/login");
+    }
   };
 
   return (

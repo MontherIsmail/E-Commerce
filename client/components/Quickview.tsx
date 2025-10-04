@@ -12,30 +12,59 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
 import createClient from "../api";
 import { useAuth } from "../context/AuthContext";
-import Swal from "sweetalert2";
+import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
 import router from "next/router";
+import { classNames } from "../utils/classNames";
 
-const classNames = (...classes: any) => {
-  return classes.filter(Boolean).join(" ");
-};
+interface QuickviewProps {
+  id: string;
+}
 
-const Quickview = ({ id }: any) => {
-  const [open, setOpen] = useState<any>(false);
-  const [product, setProduct] = useState<any>(null);
-  const [selectedColor, setSelectedColor] = useState<any>(
-    product?.productColors[0]?.selectedClass
-  );
-  const [selectedSize, setSelectedSize] = useState<any>(
-    product?.productSizes[0]?.selectedClass
-  );
+interface Product {
+  id: string;
+  productName: string;
+  productPrice: number;
+  productUrlImgs: string[];
+  productDescription: string;
+  productColors: Array<{ name: string; value: string }>;
+  productSizes: Array<{ name: string; value: string }>;
+  productRating: number;
+  productReviews: number;
+}
+
+interface Color {
+  name: string;
+  value: string;
+}
+
+interface Size {
+  name: string;
+  value: string;
+}
+
+
+const Quickview = ({ id }: QuickviewProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [selectedColor, setSelectedColor] = useState<Color | null>(null);
+  const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const { user } = useAuth();
+  const { refreshCart } = useCart();
 
-  const addToCartFun = async (e: any) => {
+  const addToCartFun = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate that color and size are selected
+    if (!selectedColor || !selectedSize) {
+      toast.warning("Please select both color and size before adding to cart");
+      return;
+    }
+    
     if (user?.id) {
       const { addToCart } = createClient("");
       const cartItem = {
@@ -48,16 +77,11 @@ const Quickview = ({ id }: any) => {
 
       try {
         const response = await addToCart(cartItem);
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Product Added to Cart",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        console.log("Product added to cart:", response);
+        await refreshCart(); // Refresh cart count in navbar
+        toast.success("Product added to cart successfully!");
+        setOpen(false); // Close the quickview modal
       } catch (error) {
-        console.error("Error adding to cart:", error);
+        toast.error("Failed to add product to cart");
       }
     } else {
       router.push("/login");
@@ -69,7 +93,17 @@ const Quickview = ({ id }: any) => {
       try {
         const { getProduct } = createClient("");
         const data = await getProduct(id);
-        return setProduct(data.product);
+        const product = (data as any).product || data.data?.product;
+        setProduct(product);
+        
+        // Set initial selected color and size
+        if (product?.productColors && product.productColors.length > 0) {
+          setSelectedColor(product.productColors[0]);
+        }
+        if (product?.productSizes && product.productSizes.length > 0) {
+          const firstInStock = product.productSizes.find((size: any) => size.inStock);
+          setSelectedSize(firstInStock || product.productSizes[0]);
+        }
       } catch (error: any) {
         setError(error.message);
       } finally {
@@ -85,26 +119,19 @@ const Quickview = ({ id }: any) => {
   return (
     <div>
       <button
-        style={{
-          padding: "3px 0",
-          width: "100%",
-          border: "none",
-          backgroundColor: "#000",
-          color: "white",
-          fontSize: "1rem",
-          marginTop: "10px",
-        }}
+        className="modern-btn"
         onClick={() => setOpen(true)}
       >
-        Quickview
+        <span className="btn-text">Quick View</span>
+        <div className="btn-shine"></div>
       </button>
-      <Dialog open={open} onClose={setOpen} className="relative z-10">
+      <Dialog open={open} onClose={setOpen} className="relative z-[60]">
         <DialogBackdrop
           transition
           className="fixed inset-0 hidden bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in md:block"
         />
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="fixed inset-0 z-[60] w-screen overflow-y-auto">
           <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
             <DialogPanel
               transition
@@ -208,8 +235,22 @@ const Quickview = ({ id }: any) => {
                                   aria-hidden="true"
                                   className={classNames(
                                     color.class,
-                                    "h-8 w-8 rounded-full border border-black border-opacity-10"
+                                    "h-8 w-8 rounded-full border-2 border-gray-300"
                                   )}
+                                  style={{
+                                    backgroundColor: color.name === 'Black' ? '#000000' : 
+                                                   color.name === 'Red' ? '#ef4444' :
+                                                   color.name === 'Pink' ? '#ec4899' :
+                                                   color.name === 'Purple' ? '#a855f7' :
+                                                   color.name === 'Yellow' ? '#eab308' :
+                                                   color.name === 'Blue' ? '#3b82f6' :
+                                                   color.name === 'Green' ? '#22c55e' :
+                                                   color.name === 'Orange' ? '#f97316' :
+                                                   color.name === 'Gray' ? '#6b7280' :
+                                                   color.name === 'White' ? '#ffffff' :
+                                                   color.name === 'Indigo' ? '#6366f1' :
+                                                   color.name === 'Teal' ? '#14b8a6' : '#6b7280'
+                                  }}
                                 />
                               </Radio>
                             ))}
@@ -303,9 +344,10 @@ const Quickview = ({ id }: any) => {
 
                         <button
                           type="submit"
-                          className="mt-6 flex w-full items-center justify-center border border-transparent bg-green-600 px-8 py-3 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="modern-btn mt-6 w-full"
                         >
-                          Add to Cart
+                          <span className="btn-text">Add to Cart</span>
+                          <div className="btn-shine"></div>
                         </button>
                       </form>
                     </section>

@@ -22,6 +22,7 @@ const Promo = () => {
           width: 100%;
           height: fit-content;
           padding: 0 30px;
+          animation: fadeInUp 1s ease-out;
         } 
         .promo-info {
           display: flex;
@@ -39,6 +40,7 @@ const Promo = () => {
           font-family: "Poppins", sans-serif;
           font-size: 0.8rem;
           margin-bottom: 30px;
+          animation: fadeIn 0.8s ease-out 0.3s both;
         }
         .h3-style {
           line-height: 1.4em;
@@ -47,12 +49,68 @@ const Promo = () => {
           font-weight: 600;
           font-family: "Poppins", sans-serif;
           margin-bottom: 30px;
+          animation: fadeInScale 1s ease-out 0.5s both;
         }
-
+        .img-container {
+          animation: slideInRight 1s ease-out 0.7s both;
+        }
+        .Image-style {
+          transition: all 0.3s ease;
+          animation: float 4s ease-in-out infinite;
+        }
+        .Image-style:hover {
+          transform: scale(1.05);
+        }
         .image-container{
           height: fit-content;
         }
 
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes fadeInScale {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
         @media (max-width: 640px) {
           .promo-style {
             margin-top: 80px;

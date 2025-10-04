@@ -40,7 +40,13 @@ const LoginPage = () => {
           }
         );
         console.log("Login response:", response.data);
-        router.push("/");
+        
+        // Check if user is admin
+        if (response.data.user && response.data.user.role === 'admin') {
+          router.push("/");
+        } else {
+          setErrorMessage("Access denied. Only admins can access the dashboard.");
+        }
       } catch (error: any) {
         console.error("Error logging in:", error);
         setErrorMessage(

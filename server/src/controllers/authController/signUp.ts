@@ -23,21 +23,25 @@ const signUp = async (req: Request, res: Response) => {
           role: role,
         },
       });
-      const resData = {
-        status: "success",
-        message: "Signed up",
-        data: newUser,
-      };
       const { id } = newUser;
       const token = await createToken({
         id,
         role,
         username,
       });
+      
+      const isProduction = process.env.NODE_ENV === 'production';
+      
       return res
         .status(201)
-        .cookie("token", token, { httpOnly: false })
-        .json(resData);
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? "none" : "lax",
+          maxAge: 1000 * 60 * 60 * 24,
+          path: '/',
+        })
+        .json({ message: "Signed up", user: { id, username, role } });
     } catch (error) {
       return res.status(500).json({ error: "Internal Server Error" });
     }

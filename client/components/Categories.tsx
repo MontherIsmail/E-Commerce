@@ -3,24 +3,24 @@ import men from "../../assets/men.png"
 const callouts = [
     {
       name: 'All Products',
-      description: 'All products that we have to you',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-01.jpg',
-      imageAlt: 'Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.',
-      href: '#',
+      description: 'Browse our complete collection of products',
+      imageSrc: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      imageAlt: 'Modern shopping store with various products displayed',
+      href: '/products',
     },
     {
       name: 'Men',
-      description: 'Men products that we have to you',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-02.jpg',
-      imageAlt: 'Wood table with porcelain mug, leather journal, brass pen, leather key ring, and a houseplant.',
-      href: '#',
+      description: 'Stylish clothing and accessories for men',
+      imageSrc: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      imageAlt: 'Fashionable men\'s clothing and accessories',
+      href: '/men',
     },
     {
       name: 'Women',
-      description: 'Women products that we have to you',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-02-edition-03.jpg',
-      imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
-      href: '#',
+      description: 'Elegant fashion and accessories for women',
+      imageSrc: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      imageAlt: 'Beautiful women\'s fashion and accessories',
+      href: '/women',
     },
   ]
   

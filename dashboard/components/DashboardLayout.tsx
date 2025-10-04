@@ -7,12 +7,12 @@ interface LayoutProps {
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="lg:flex">
+    <div className="lg:flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar />
       
       {/* Main content */}
-      <main className="flex-1 p-4 max-h-screen overflow-y-auto">{children}</main>
+      <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
   );
 };
