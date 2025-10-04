@@ -1,22 +1,19 @@
 import Link from "next/link";
 import React from "react";
 
-const CustomButton = ({ btnText }: any) => {
+interface CustomButtonProps {
+  btnText: string;
+}
+
+const CustomButton = ({ btnText }: CustomButtonProps) => {
   return (
     <Link href="/products">
-      <button style={customBtnStyle}>
-        {btnText}
+      <button className="modern-btn">
+        <span className="btn-text">{btnText}</span>
+        <div className="btn-shine"></div>
       </button>
-      ;
     </Link>
   );
 };
 
-const customBtnStyle = {
-  padding: "10px 25px",
-  border: "none",
-  backgroundColor: "#000",
-  color: "white",
-  fontSize: "1rem",
-};
 export default CustomButton;

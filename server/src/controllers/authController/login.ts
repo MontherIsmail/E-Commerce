@@ -30,11 +30,14 @@ const login = async (req: Request, res: Response) => {
       .status(201)
       .cookie("token", token, {
         httpOnly: true,
-        secure: true, //remove it in local
-        sameSite: "none", //remove it in local
+        secure: process.env.NODE_ENV === 'production', // Only secure in production
+        sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // Only none in production
         maxAge: 1000 * 60 * 60 * 24,
       })
-      .json({ message: "login successfully" });
+      .json({ 
+        message: "login successfully",
+        user: { id, username, role }
+      });
     return res;
   } catch (error) {
     return res.status(500).json("Internal Server Error");

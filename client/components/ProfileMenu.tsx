@@ -6,11 +6,14 @@ import { useAuth } from "../context/AuthContext";
 const ProfileMenu = () => {
   const { logout } = useAuth();
   const solutions = [
-    { name: "Profile", href: "/profile", icon: UserIcon },
+    { name: "Profile", href: "/profile", icon: UserIcon, onClick: undefined },
     {
       name: "Logout",
-      href: "/login",
-      onClick: () => logout(),
+      href: "#",
+      onClick: (e: any) => {
+        e.preventDefault();
+        logout();
+      },
       icon: CursorArrowRaysIcon,
     },
   ];
@@ -34,7 +37,6 @@ const ProfileMenu = () => {
             {solutions.map((item) => (
               <div
                 key={item.name}
-                onClick={item.onClick}
                 className="group relative pr-5 pl-2 py-1.5 flex gap-x-2 rounded-lg p-0 hover:bg-gray-50"
               >
                 <div className="mt-1 flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -44,7 +46,11 @@ const ProfileMenu = () => {
                   />
                 </div>
                 <div className="mt-3">
-                  <a href={item.href} className="font-semibold text-gray-900">
+                  <a 
+                    href={item.href} 
+                    onClick={item.onClick}
+                    className="font-semibold text-gray-900"
+                  >
                     {item.name}
                     <span className="absolute inset-0" />
                   </a>

@@ -14,7 +14,8 @@ const app = express();
 
 const allowedOrigins = [
   'https://e-commerce-ten-puce.vercel.app', // Your Vercel app URL
-  'http://localhost:3000', // Local development URL
+  'http://localhost:3000', // Dashboard URL
+  'http://localhost:3001', // Client URL
 ];
 
 app.use(

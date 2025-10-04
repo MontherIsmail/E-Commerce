@@ -6,9 +6,10 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { Footer, Navbar, RelatedProducts } from "../../components";
 import createClient from "../../api";
 import { GetStaticPaths, GetStaticProps } from "next";
-import Swal from "sweetalert2";
-import { useRouter } from "next/router";
 import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -20,34 +21,44 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>();
   const [products, setProducts] = useState<any>();
-  const [selectedColor, setSelectedColor] = useState<any>(
-    product?.productColors[0]?.selectedClass
-  );
-  const [selectedSize, setSelectedSize] = useState<any>(
-    product?.productSizes[0]?.selectedClass
-  );
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [selectedColor, setSelectedColor] = useState<any>(null);
+  const [selectedSize, setSelectedSize] = useState<any>(null);
 
   const router = useRouter();
   const { id } = router.query;
   const { user } = useAuth();
+  const { refreshCart } = useCart();
 
   const getProduct = async () => {
     try {
+      if (!id || typeof id !== "string") return;
       const { getProduct } = createClient("");
       const data = await getProduct(id);
-      return setProduct(data.product);
+      const product = (data as any).product || data.data?.product;
+      setProduct(product);
+      
+      // Set initial color and size after product is loaded
+      if (product?.productColors && product.productColors.length > 0) {
+        setSelectedColor(product.productColors[0]);
+      }
+      if (product?.productSizes && product.productSizes.length > 0) {
+        const firstInStock = product.productSizes.find((size: any) => size.inStock);
+        setSelectedSize(firstInStock || product.productSizes[0]);
+      }
     } catch (error) {
-      console.log("error", error);
     }
   };
 
   const getProducts = async () => {
     try {
+      setLoadingProducts(true);
       const { getProducts } = createClient("");
-      const data = await getProducts(user?.id);
+      const data = await getProducts();
       setProducts(data);
     } catch (error) {
-      console.log("error", error);
+    } finally {
+      setLoadingProducts(false);
     }
   };
 
@@ -58,11 +69,18 @@ const Product = () => {
 
   const addToCartFun = async (e: any) => {
     e.preventDefault();
-    if (user?.id) {
+    
+    // Validate selections
+    if (!selectedColor || !selectedSize) {
+      toast.warning("Please select both color and size before adding to cart");
+      return;
+    }
+    
+    if (user?.id && id && typeof id === "string") {
       const { addToCart } = createClient("");
       const cartItem = {
         productId: id,
-        userId: user?.id,
+        userId: user.id,
         selectedColor: selectedColor.name,
         selectedSize: selectedSize.name,
         quantity,
@@ -70,16 +88,10 @@ const Product = () => {
 
       try {
         const response = await addToCart(cartItem);
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Product Added to Cart",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        console.log("Product added to cart:", response);
+        await refreshCart(); // Refresh cart count in navbar
+        toast.success("Product added to cart successfully!");
       } catch (error) {
-        console.error("Error adding to cart:", error);
+        toast.error("Failed to add product to cart");
       }
     } else {
       router.push("/login");
@@ -195,8 +207,22 @@ const Product = () => {
                               aria-hidden="true"
                               className={classNames(
                                 color.class,
-                                "h-8 w-8 rounded-full border border-black border-opacity-10"
+                                "h-8 w-8 rounded-full border-2 border-gray-300"
                               )}
+                              style={{
+                                backgroundColor: color.name === 'Black' ? '#000000' : 
+                                               color.name === 'Red' ? '#ef4444' :
+                                               color.name === 'Pink' ? '#ec4899' :
+                                               color.name === 'Purple' ? '#a855f7' :
+                                               color.name === 'Yellow' ? '#eab308' :
+                                               color.name === 'Blue' ? '#3b82f6' :
+                                               color.name === 'Green' ? '#22c55e' :
+                                               color.name === 'Orange' ? '#f97316' :
+                                               color.name === 'Gray' ? '#6b7280' :
+                                               color.name === 'White' ? '#ffffff' :
+                                               color.name === 'Indigo' ? '#6366f1' :
+                                               color.name === 'Teal' ? '#14b8a6' : '#6b7280'
+                              }}
                             />
                           </Radio>
                         ))}
@@ -303,47 +329,60 @@ const Product = () => {
 
               <div className="lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pr-8 lg:pt-6">
                 <div className="mx-auto max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
+                  {/* Main Image */}
                   <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
-                    <img
-                      alt={
-                        product?.productUrlImgs
-                          ? product?.productUrlImgs[1]
-                          : ""
-                      }
-                      src={
-                        product?.productUrlImgs
-                          ? product?.productUrlImgs[1]
-                          : ""
-                      }
-                      className="h-full w-full object-cover object-center"
-                    />
+                    {product?.productUrlImgs && product.productUrlImgs[0] ? (
+                      <img
+                        alt={product?.productName || "Product Image"}
+                        src={product.productUrlImgs[0]}
+                        className="h-full w-full object-cover object-center"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-400">No Image</span>
+                      </div>
+                    )}
                   </div>
+                  
+                  {/* Secondary Images */}
                   <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
                     <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-                      <img
-                        alt={
-                          product?.productUrlImgs
-                            ? product?.productUrlImgs[1]
-                            : ""
-                        }
-                        src={
-                          product?.productUrlImgs
-                            ? product?.productUrlImgs[1]
-                            : ""
-                        }
-                        className="h-full w-full object-cover object-center"
-                      />
+                      {product?.productUrlImgs && product.productUrlImgs[1] ? (
+                        <img
+                          alt={product?.productName || "Product Image"}
+                          src={product.productUrlImgs[1]}
+                          className="h-full w-full object-cover object-center"
+                        />
+                      ) : product?.productUrlImgs && product.productUrlImgs[0] ? (
+                        <img
+                          alt={product?.productName || "Product Image"}
+                          src={product.productUrlImgs[0]}
+                          className="h-full w-full object-cover object-center"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-400">No Image</span>
+                        </div>
+                      )}
                     </div>
                     <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-                      <img
-                        alt="Product Image"
-                        src={
-                          product?.productUrlImgs
-                            ? product?.productUrlImgs[2]
-                            : ""
-                        }
-                        className="h-full w-full object-cover object-center"
-                      />
+                      {product?.productUrlImgs && product.productUrlImgs[2] ? (
+                        <img
+                          alt={product?.productName || "Product Image"}
+                          src={product.productUrlImgs[2]}
+                          className="h-full w-full object-cover object-center"
+                        />
+                      ) : product?.productUrlImgs && product.productUrlImgs[0] ? (
+                        <img
+                          alt={product?.productName || "Product Image"}
+                          src={product.productUrlImgs[0]}
+                          className="h-full w-full object-cover object-center"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-400">No Image</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -367,7 +406,7 @@ const Product = () => {
         <h2 style={{ margin: "100px" }}>Product Not Found</h2>
       )}
       <div style={{ padding: "0 70px" }}>
-        <RelatedProducts products={products?.products} />
+        <RelatedProducts products={products?.products} loading={loadingProducts} />
       </div>
       <Footer />
     </>

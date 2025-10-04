@@ -10,6 +10,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/20/solid";
 import ProductsList from "./ProductsList";
+import { classNames } from "../utils/classNames";
 
 const sortOptions = [
   { name: "Most Popular", value: "popular", current: true },
@@ -19,13 +20,10 @@ const sortOptions = [
   { name: "Price: High to Low", value: "priceDesc", current: false },
 ];
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
 
-const Filters = ({ data }: any) => {
+const Filters = ({ data, loading = false, defaultCategory = "all" }: any) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [productsCategory, setProductsCategory] = useState("all");
+  const [productsCategory, setProductsCategory] = useState(defaultCategory);
   const [sortOption, setSortOption] = useState("popular");
 
   const handleCategoryChange = (value: string) => {
@@ -270,6 +268,7 @@ const Filters = ({ data }: any) => {
                   data={data}
                   sortedProducts={() => sortedProducts()}
                   productsCategory={productsCategory}
+                  loading={loading}
                 />
               </div>
             </div>
