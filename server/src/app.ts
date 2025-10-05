@@ -12,23 +12,30 @@ const {
 } = process;
 const app = express();
 
-const allowedOrigins = [
-  'https://e-commerce-ten-puce.vercel.app', // Your Vercel app URL
-  'http://localhost:3000', // Dashboard URL
-  'http://localhost:3001', // Client URL
-];
+// Build allowed origins list from CORS_ORIGIN env (comma-separated)
+const corsEnv = process.env.CORS_ORIGIN || '';
+const allowedOrigins = corsEnv
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
+      // Allow server-to-server or same-origin requests with no Origin header
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true, // Allow cookies to be sent
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
   })
 );
 
