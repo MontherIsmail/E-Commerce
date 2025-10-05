@@ -8,7 +8,6 @@ import axios from "axios";
 import { getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
 import { ProductPageSkeleton } from "../../components/Skeletons";
-import { getApiUrl } from "../../config/api";
 
 const ProductsPage: FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
