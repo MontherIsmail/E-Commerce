@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { Product } from "../types/product";
 import axios from "axios";
 import { EditFormSkeleton } from "./Skeletons";
+import { getApiUrl } from "../config/api";
 import Swal from "sweetalert2";
 
 interface ProductEditFormProps {
@@ -82,7 +83,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({
 
       // Make API call to update the product
       const response = await axios.put(
-        `http://localhost:5000/api/v1/products/${product.id}`,
+        getApiUrl(`/products/${product.id}`),
         requestData,
         { withCredentials: true }
       );

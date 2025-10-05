@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
 interface AdminUser {
   id: number;
   username: string;
@@ -41,7 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/v1/auth/me', {
+      const response = await axios.get(`${API_BASE_URL}/auth/me`, {
         withCredentials: true,
       });
       
