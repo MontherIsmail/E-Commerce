@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import axios from 'axios';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+import { API_CONFIG, API_ENDPOINTS, getApiUrl } from '../config/api';
 
 interface AdminUser {
   id: number;
@@ -43,7 +42,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/auth/me`, {
+      const response = await axios.get(getApiUrl(API_ENDPOINTS.ME), {
         withCredentials: true,
       });
       
