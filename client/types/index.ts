@@ -17,6 +17,9 @@ export interface Product {
   productDescription: string;
   productPrice: number;
   productUrlImgs: string[];
+  productCategory?: string;
+  productRating?: number;
+  productReviews?: number;
   productColors?: ProductColor[];
   productSizes?: ProductSize[];
   createdAt?: string;

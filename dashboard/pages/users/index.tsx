@@ -30,6 +30,7 @@ const UsersPage: React.FC = () => {
   const [filterName, setFilterName] = useState<string>("");
   const [searchEmail, setSearchEmail] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<keyof User>('username');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');

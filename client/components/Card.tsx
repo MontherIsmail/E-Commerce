@@ -1,15 +1,6 @@
 import React from "react";
 import Quickview from "./Quickview";
-
-interface Product {
-  id: string;
-  productName: string;
-  productPrice: number;
-  productUrlImgs: string[];
-  productCategory: string;
-  productRating: number;
-  productReviews: number;
-}
+import { Product } from "../types";
 
 interface CardProps {
   product: Product;
@@ -25,7 +16,7 @@ const Card = ({ product }: CardProps) => {
           src={product?.productUrlImgs?.[0] || "https://via.placeholder.com/400x400?text=No+Image"}
           className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
         />
-        
+
         {/* Quick View Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
@@ -34,16 +25,16 @@ const Card = ({ product }: CardProps) => {
             </div>
           </div>
         </div>
-        
+
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white text-gray-800 shadow-sm">
             {product?.productCategory || "Product"}
           </span>
         </div>
-        
+
         {/* Stock Badge */}
-        {product?.stock > 0 ? (
+        {product?.productSizes && product.productSizes.length > 0 ? (
           <div className="absolute top-3 right-3">
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
               In Stock
@@ -57,7 +48,7 @@ const Card = ({ product }: CardProps) => {
           </div>
         )}
       </div>
-      
+
       {/* Product Info */}
       <div className="p-4">
         {/* Product Name */}
@@ -66,14 +57,14 @@ const Card = ({ product }: CardProps) => {
             {product?.productName || "Product Name"}
           </a>
         </h3>
-        
+
         {/* Product Description */}
         {product?.productDescription && (
           <p className="text-sm text-gray-600 mb-3 line-clamp-2">
             {product.productDescription}
           </p>
         )}
-        
+
         {/* Colors */}
         {product?.productColors && product.productColors.length > 0 && (
           <div className="mb-3">
@@ -81,22 +72,22 @@ const Card = ({ product }: CardProps) => {
             <div className="flex flex-wrap gap-2">
               {product.productColors.slice(0, 4).map((color: any, index: number) => (
                 <div key={index} className="flex items-center space-x-1">
-                  <div 
+                  <div
                     className={`w-4 h-4 rounded-full border border-gray-300 ${color.class || 'bg-gray-300'}`}
                     title={color.name}
                     style={{
-                      backgroundColor: color.name === 'Black' ? '#000000' : 
-                                     color.name === 'Red' ? '#ef4444' :
-                                     color.name === 'Pink' ? '#ec4899' :
-                                     color.name === 'Purple' ? '#a855f7' :
-                                     color.name === 'Yellow' ? '#eab308' :
-                                     color.name === 'Blue' ? '#3b82f6' :
-                                     color.name === 'Green' ? '#22c55e' :
-                                     color.name === 'Orange' ? '#f97316' :
-                                     color.name === 'Gray' ? '#6b7280' :
-                                     color.name === 'White' ? '#ffffff' :
-                                     color.name === 'Indigo' ? '#6366f1' :
-                                     color.name === 'Teal' ? '#14b8a6' : '#6b7280'
+                      backgroundColor: color.name === 'Black' ? '#000000' :
+                        color.name === 'Red' ? '#ef4444' :
+                          color.name === 'Pink' ? '#ec4899' :
+                            color.name === 'Purple' ? '#a855f7' :
+                              color.name === 'Yellow' ? '#eab308' :
+                                color.name === 'Blue' ? '#3b82f6' :
+                                  color.name === 'Green' ? '#22c55e' :
+                                    color.name === 'Orange' ? '#f97316' :
+                                      color.name === 'Gray' ? '#6b7280' :
+                                        color.name === 'White' ? '#ffffff' :
+                                          color.name === 'Indigo' ? '#6366f1' :
+                                            color.name === 'Teal' ? '#14b8a6' : '#6b7280'
                     }}
                   ></div>
                   <span className="text-xs text-gray-600">{color.name}</span>
@@ -111,7 +102,7 @@ const Card = ({ product }: CardProps) => {
             </div>
           </div>
         )}
-        
+
         {/* Price and Actions */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -123,7 +114,7 @@ const Card = ({ product }: CardProps) => {
             )}
           </div>
         </div>
-        
+
         {/* Rating (if available) */}
         <div className="mt-3 flex items-center">
           <div className="flex items-center">
