@@ -15,12 +15,7 @@ import {
   FiBell
 } from "react-icons/fi";
 
-// Dynamic base path based on environment
-const getBasePath = () => {
-  return process.env.NODE_ENV === 'production' ? '/admin' : '';
-};
-
-const basePath = getBasePath();
+// Use Next.js basePath configured in next.config.mjs; provide app-relative paths
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,41 +29,48 @@ const Sidebar: React.FC = () => {
   const navigationItems = [
     {
       name: "Dashboard",
-      href: `${basePath}/`,
+      href: `/`,
       icon: FiHome,
       description: "Overview & Analytics"
     },
     {
       name: "Products",
-      href: `${basePath}/products`,
+      href: `/products`,
       icon: FiBox,
       description: "Manage Inventory"
     },
     {
       name: "Users",
-      href: `${basePath}/users`,
+      href: `/users`,
       icon: FiUsers,
       description: "User Management"
     },
     {
       name: "Admins",
-      href: `${basePath}/admins`,
+      href: `/admins`,
       icon: FiLock,
       description: "Admin Panel"
     },
     {
       name: "Profile",
-      href: `${basePath}/profile`,
+      href: `/profile`,
       icon: FiUser,
       description: "Account Settings"
     }
   ];
 
   const isActive = (href: string) => {
-    if (href === "/") {
-      return router.pathname === "/";
-    }
-    return router.pathname.startsWith(href);
+    const asPath = router.asPath.split('?')[0];
+    const basePath = (router as any).basePath || '';
+    const current = basePath && asPath.startsWith(basePath)
+      ? asPath.slice(basePath.length)
+      : asPath;
+
+    const target = href === '/' ? '/' : href.replace(/\/$/, '');
+    const curr = current.replace(/\/$/, '') || '/';
+
+    if (target === '/') return curr === '/';
+    return curr === target || curr.startsWith(`${target}/`);
   };
 
   return (
