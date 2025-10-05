@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import withAuth from "../../hoc/withAuth";
 import axios from "axios";
+import { getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
 
 interface Admin {
@@ -40,7 +41,7 @@ const AdminsPage = () => {
   const fetchAdmins = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/v1/auth/users", {
+      const response = await axios.get(getApiUrl("/auth/users"), {
         withCredentials: true,
       });
       // Filter only admin users
@@ -103,7 +104,7 @@ const AdminsPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/create-admin",
+        getApiUrl("/auth/create-admin"),
         newAdmin,
         { withCredentials: true }
       );
