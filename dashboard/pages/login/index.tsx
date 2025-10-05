@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import "tailwindcss/tailwind.css";
 import { useRouter } from "next/router";
+import { getApiUrl } from "../../config/api";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,7 @@ const LoginPage = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/v1/auth/login",
+          getApiUrl("/auth/login"),
           {
             email: values.email,
             password: values.password,

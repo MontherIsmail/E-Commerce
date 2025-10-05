@@ -1,6 +1,7 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import withAuth from "../hoc/withAuth";
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../config/api";
 import {
   Chart,
   CategoryScale,
@@ -54,7 +55,7 @@ const AnalysisPage = () => {
     const fetchAnalytics = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/v1/analytics', {
+        const response = await fetch(getApiUrl('/analytics'), {
           credentials: 'include',
         });
         

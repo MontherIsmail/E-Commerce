@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import withAuth from "../../hoc/withAuth";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { getApiUrl } from "../../config/api";
 import { 
   FiSearch, 
   FiFilter, 
@@ -41,7 +42,7 @@ const UsersPage: React.FC = () => {
       // Add minimum delay to show skeleton loaders
       await new Promise((resolve) => setTimeout(resolve, 800));
       const response = await axios.get(
-        "http://localhost:5000/api/v1/auth/users"
+        getApiUrl("/auth/users")
       );
       console.log("responseeee", response.data);
       // Filter out admin users - only show regular users

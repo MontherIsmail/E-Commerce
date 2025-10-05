@@ -7,6 +7,7 @@ import Image from "next/image";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { ProductPageSkeleton } from "../../components/Skeletons";
+import { getApiUrl } from "../../config/api";
 
 const ProductsPage: FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -151,7 +152,7 @@ const ProductsPage: FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("http://localhost:5000/api/v1/products");
+      const response = await axios.get(getApiUrl("/products"));
       setProductsData(response.data.products);
       console.log("response", response.data.products);
     } catch (error: any) {
