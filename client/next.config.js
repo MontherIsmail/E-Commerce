@@ -2,8 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  distDir: "build",
-  basePath: '/ecommerce'
+  distDir: "build"
 }
 
 module.exports = nextConfig
