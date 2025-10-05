@@ -46,9 +46,18 @@ if (process.env.NODE_ENV === 'production') {
   // Serve static files from the client/build directory
   app.use(express.static(join(__dirname, '..', '..', 'client', 'build')));
 
-  // For any other routes, send back the index.html file
+  // For any other routes (except API routes), send back the index.html file
   app.get('*', (req: Request, res: Response) => {
-    res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ message: 'API route not found' });
+    }
+    
+    try {
+      res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
   });
 }
 
