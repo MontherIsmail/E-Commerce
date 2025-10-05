@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import withAuth from "../../hoc/withAuth";
 import axios from "axios";
+import { getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
 
 interface AdminProfile {
@@ -32,7 +33,7 @@ const Profile: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:5000/api/v1/auth/me",
+        getApiUrl("/auth/me"),
         { withCredentials: true }
       );
       console.log("profile", response.data.user);
@@ -78,7 +79,7 @@ const Profile: React.FC = () => {
       if (!profile?.id) return;
 
       const response = await axios.put(
-        `http://localhost:5000/api/v1/profile/${profile.id}`,
+        getApiUrl(`/profile/${profile.id}`),
         userData,
         { withCredentials: true }
       );
@@ -126,7 +127,7 @@ const Profile: React.FC = () => {
       if (!profile?.id) return;
 
       const response = await axios.put(
-        `http://localhost:5000/api/v1/profile/${profile.id}/password`,
+        getApiUrl(`/profile/${profile.id}/password`),
         {
           currentPassword: password.currentPassword,
           newPassword: password.newPassword,
