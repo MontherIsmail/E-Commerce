@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import withAuth from "../../hoc/withAuth";
 import addProductSchema from "@/utils/validation/addProductSchema";
 import axios from "axios";
+import { getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
 
 interface AddProductPageProps {}
@@ -45,7 +46,7 @@ const AddProductPage: FC<AddProductPageProps> = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/v1/products/add-product",
+        getApiUrl("/products/add-product"),
         {
           productName,
           productImages,

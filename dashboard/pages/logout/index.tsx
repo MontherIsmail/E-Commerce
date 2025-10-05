@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { getApiUrl } from "@/config/api";
 
 const LogoutPage = () => {
   const router = useRouter();
@@ -10,7 +11,7 @@ const LogoutPage = () => {
       try {
         // Call the logout API
         await axios.post(
-          "http://localhost:5000/api/v1/auth/logout",
+          getApiUrl("/auth/logout"),
           {},
           { withCredentials: true }
         );

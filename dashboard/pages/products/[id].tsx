@@ -6,6 +6,7 @@ import ProductEditForm from "../../components/ProductEditForm";
 import { Product } from "@/types/product";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { ProductPageSkeleton } from "../../components/Skeletons";
@@ -27,7 +28,7 @@ const ProductPage: FC = () => {
         setLoading(true);
         setError(null);
         const response = await axios.get(
-          `http://localhost:5000/api/v1/products/${id}`
+          getApiUrl(`/products/${id}`)
         );
         console.log("product", response.data.product);
         setProduct(response.data.product);
@@ -91,7 +92,7 @@ const ProductPage: FC = () => {
       if (result.isConfirmed) {
         try {
           // Make API call to delete the product
-          await axios.delete(`http://localhost:5000/api/v1/products/${productId}`, {
+          await axios.delete(getApiUrl(`/products/${productId}`), {
             withCredentials: true,
           });
           

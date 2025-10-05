@@ -5,6 +5,7 @@ import DashboardLayout from "../../components/DashboardLayout";
 import withAuth from "../../hoc/withAuth";
 import Image from "next/image";
 import axios from "axios";
+import { getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
 import { ProductPageSkeleton } from "../../components/Skeletons";
 import { getApiUrl } from "../../config/api";
@@ -32,7 +33,7 @@ const ProductsPage: FC = () => {
       if (result.isConfirmed) {
         try {
           // Make API call to delete the product
-          await axios.delete(`http://localhost:5000/api/v1/products/${productId}`, {
+          await axios.delete(getApiUrl(`/products/${productId}`), {
             withCredentials: true,
           });
           
@@ -73,7 +74,7 @@ const ProductsPage: FC = () => {
           // Delete all selected products
           await Promise.all(
             selectedProducts.map(id => 
-              axios.delete(`http://localhost:5000/api/v1/products/${id}`, {
+              axios.delete(getApiUrl(`/products/${id}`), {
                 withCredentials: true,
               })
             )
