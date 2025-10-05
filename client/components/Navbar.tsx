@@ -13,11 +13,18 @@ import ProfileMenu from "./ProfileMenu";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const navigation = [
-  { name: "Products", href: "/products" },
-  { name: "Men", href: "/men" },
-  { name: "Women", href: "/women" },
-  { name: "About Us", href: "/about" },
+  { name: "Products", href: `${basePath}/products` },
+  { name: "Men", href: `${basePath}/men` },
+  { name: "Women", href: `${basePath}/women` },
+  { name: "About Us", href: `${basePath}/about` },
 ];
 
 const Navbar = () => {
@@ -43,7 +50,7 @@ const Navbar = () => {
       >
         <div className="navbar-content">
           <div className="logo-container">
-            <a href="/" className="logo-link">
+            <a href={`${basePath}/`} className="logo-link">
               <span className="sr-only">Your Company</span>
               <Image alt="" src={logo} className="logo-image" />
             </a>
@@ -63,7 +70,7 @@ const Navbar = () => {
             {user?.id ? (
               <>
                 <div className="cart-container">
-                  <a href="/cart" className="cart-link">
+                  <a href={`${basePath}/cart`} className="cart-link">
                     <ShoppingBagIcon
                       aria-hidden="true"
                       className="cart-icon"
@@ -81,7 +88,7 @@ const Navbar = () => {
             ) : (
               <div className="auth-links">
                 <a
-                  href="/login"
+                  href={`${basePath}/login`}
                   className="login-link"
                 >
                   Log in <span aria-hidden="true">&rarr;</span>
@@ -147,7 +154,7 @@ const Navbar = () => {
             }}
           >
           <div className="mobile-menu-header" style={{position: 'relative', zIndex: 1}}>
-            <a href="#" className="mobile-logo">
+            <a href={`${basePath}/`} className="mobile-logo">
               <span className="sr-only">Your Company</span>
               <Image alt="" src={logo} className="h-8 w-auto" />
             </a>
@@ -201,7 +208,7 @@ const Navbar = () => {
                 {user?.id ? (
                   <>
                     <a
-                      href="/cart"
+                      href={`${basePath}/cart`}
                       className="mobile-cart-link"
                       onClick={() => setMobileMenuOpen(false)}
                       style={{
@@ -234,7 +241,7 @@ const Navbar = () => {
                       Cart ({cartCount})
                     </a>
                     <a
-                      href="/profile"
+                      href={`${basePath}/profile`}
                       className="mobile-auth-link"
                       onClick={() => setMobileMenuOpen(false)}
                       style={{
@@ -301,7 +308,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <a
-                    href="/login"
+                    href={`${basePath}/login`}
                     className="mobile-auth-link"
                     onClick={() => setMobileMenuOpen(false)}
                     style={{

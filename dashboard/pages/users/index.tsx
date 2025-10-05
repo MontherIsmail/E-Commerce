@@ -318,7 +318,7 @@ const UsersPage: React.FC = () => {
                           <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                         </div>
                         <div className="h-8 bg-gray-200 rounded w-20"></div>
-                      </div>
+                        </div>
                     ))}
                   </div>
                 </div>
@@ -467,8 +467,8 @@ const UsersPage: React.FC = () => {
                     ? "There are no users in the system yet."
                     : "No users match your current search criteria. Try adjusting your filters."}
                 </p>
-              </div>
-              )}
+            </div>
+          )}
             </div>
           </div>
         </div>

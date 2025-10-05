@@ -11,6 +11,13 @@ import { useCart } from "../../context/CartContext";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
 const classNames = (...classes: any) => {
@@ -94,7 +101,7 @@ const Product = () => {
         toast.error("Failed to add product to cart");
       }
     } else {
-      router.push("/login");
+      router.push(`${basePath}/login`);
     }
   };
 

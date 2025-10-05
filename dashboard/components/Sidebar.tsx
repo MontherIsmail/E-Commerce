@@ -15,6 +15,13 @@ import {
   FiBell
 } from "react-icons/fi";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/admin' : '';
+};
+
+const basePath = getBasePath();
+
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -27,31 +34,31 @@ const Sidebar: React.FC = () => {
   const navigationItems = [
     {
       name: "Dashboard",
-      href: "/",
+      href: `${basePath}/`,
       icon: FiHome,
       description: "Overview & Analytics"
     },
     {
       name: "Products",
-      href: "/products",
+      href: `${basePath}/products`,
       icon: FiBox,
       description: "Manage Inventory"
     },
     {
       name: "Users",
-      href: "/users",
+      href: `${basePath}/users`,
       icon: FiUsers,
       description: "User Management"
     },
     {
       name: "Admins",
-      href: "/admins",
+      href: `${basePath}/admins`,
       icon: FiLock,
       description: "Admin Panel"
     },
     {
       name: "Profile",
-      href: "/profile",
+      href: `${basePath}/profile`,
       icon: FiUser,
       description: "Account Settings"
     }

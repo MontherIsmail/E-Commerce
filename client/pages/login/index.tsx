@@ -8,6 +8,13 @@ import logo from "../../assets/logo.png";
 import { loginValidation } from "../../utils/validation";
 import { useAuth } from "../../context/AuthContext";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const Login = () => {
   const { login, user, loading } = useAuth();
   const router = useRouter();
@@ -16,7 +23,7 @@ const Login = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push("/");
+      router.push(`${basePath}/`);
     }
   }, [user, loading, router]);
   const submitLogin = async (i: any) => {

@@ -12,6 +12,13 @@ import { toast } from "react-toastify";
 import { API_CONFIG } from "../config/api";
 import type { User } from "../types";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
@@ -81,7 +88,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             showConfirmButton: false,
             timer: 1500,
           }).then(() => {
-            router.push("/");
+            router.push(`${basePath}/`);
           });
         }
       }
@@ -122,7 +129,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (u?.id) {
           setUser({ id: u.id, username: u.username, role: u.role });
           setLoading(false);          
-          router.push("/");
+          router.push(`${basePath}/`);
         }
       }
     } catch (error: any) {
@@ -147,11 +154,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         { withCredentials: true }
       );
       setUser(null);
-      router.push("/login");
+      router.push(`${basePath}/login`);
     } catch (error) {
       toast.error("Logout failed. Please try again.");
       setUser(null);
-      router.push("/login");
+      router.push(`${basePath}/login`);
     }
   };
 
