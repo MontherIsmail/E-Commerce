@@ -53,9 +53,13 @@ if (process.env.NODE_ENV === 'production') {
       return res.status(404).json({ message: 'API route not found' });
     }
     
+    const indexPath = join(__dirname, '..', '..', 'client', 'build', 'index.html');
+    console.log('Looking for index.html at:', indexPath);
+    
     try {
-      res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
+      res.sendFile(indexPath);
     } catch (error) {
+      console.error('Error serving index.html:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
