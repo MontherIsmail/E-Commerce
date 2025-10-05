@@ -46,22 +46,15 @@ if (process.env.NODE_ENV === 'production') {
   // Serve static files from the client/build directory
   app.use(express.static(join(__dirname, '..', '..', 'client', 'build')));
 
-  // For any other routes (except API routes), send back the index.html file
+  // For any other routes (except API routes), redirect to client app
   app.get('*', (req: Request, res: Response) => {
     // Skip API routes
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ message: 'API route not found' });
     }
     
-    const indexPath = join(__dirname, '..', '..', 'client', 'build', 'index.html');
-    console.log('Looking for index.html at:', indexPath);
-    
-    try {
-      res.sendFile(indexPath);
-    } catch (error) {
-      console.error('Error serving index.html:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
+    // Redirect to client app (which should be running on port 3000)
+    res.redirect('http://localhost:3000' + req.path);
   });
 }
 
