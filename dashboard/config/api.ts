@@ -1,6 +1,6 @@
 // API Configuration for Dashboard
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || '/api',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || '/ecommerce-api',
   TIMEOUT: 10000, // 10 seconds
 } as const;
 

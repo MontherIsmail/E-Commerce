@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Serve dashboard under /ecommerce-admin subpath in production
+  basePath: '/ecommerce-admin',
+  assetPrefix: '/ecommerce-admin',
   images: {
     remotePatterns: [
       {
