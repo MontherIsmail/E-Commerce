@@ -154,9 +154,7 @@ const ProductsPage: FC = () => {
       setError(null);
       const response = await axios.get(getApiUrl("/products"));
       setProductsData(response.data.products);
-      console.log("response", response.data.products);
     } catch (error: any) {
-      console.error("Error fetching products:", error);
       setError(error?.response?.data?.message || "Failed to load products");
     } finally {
       setLoading(false);

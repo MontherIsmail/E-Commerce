@@ -8,6 +8,7 @@ import React, {
 import { useRouter } from "next/router";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 import { API_CONFIG } from "../config/api";
 import type { User } from "../types";
 
@@ -94,7 +95,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           "Somthing went wrong!"
         }`,
       });
-      console.log("login failed", error);
       setLoading(false);
     }
   };
@@ -135,7 +135,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           "Somthing went wrong!"
         }`,
       });
-      console.log("registration failed", error);
       setLoading(false);
     }
   };
@@ -150,7 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(null);
       router.push("/login");
     } catch (error) {
-      console.error("Logout error:", error);
+      toast.error("Logout failed. Please try again.");
       setUser(null);
       router.push("/login");
     }

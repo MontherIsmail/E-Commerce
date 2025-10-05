@@ -30,19 +30,15 @@ async function main() {
       },
     });
 
-    console.log('✅ Admin user created successfully!');
-    console.log('📧 Email: admin@gmail.com');
-    console.log('🔑 Password: 123456789');
-    console.log('👤 User:', admin);
+    // Admin user created successfully
   } else {
-    console.log('ℹ️  Admin user already exists');
+    // Admin user already exists
   }
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error seeding database:', e);
-    process.exit(1);
+    throw e;
   })
   .finally(async () => {
     await prisma.$disconnect();

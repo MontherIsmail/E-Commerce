@@ -40,7 +40,6 @@ const LoginPage = () => {
             withCredentials: true,
           }
         );
-        console.log("Login response:", response.data);
         
         // Check if user is admin
         if (response.data.user && response.data.user.role === 'admin') {
@@ -49,7 +48,6 @@ const LoginPage = () => {
           setErrorMessage("Access denied. Only admins can access the dashboard.");
         }
       } catch (error: any) {
-        console.error("Error logging in:", error);
         setErrorMessage(
           error.response?.data?.message || "Failed to login. Please try again."
         );

@@ -44,12 +44,11 @@ const UsersPage: React.FC = () => {
       const response = await axios.get(
         getApiUrl("/auth/users")
       );
-      console.log("responseeee", response.data);
       // Filter out admin users - only show regular users
       const regularUsers = response.data.filter((user: any) => user.role !== "admin");
       setUsers(regularUsers);
     } catch (error) {
-      console.log(error);
+      setError("Failed to load users");
     } finally {
       setLoading(false);
     }

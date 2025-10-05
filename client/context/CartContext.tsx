@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import createClient from "../api";
 import { useAuth } from "./AuthContext";
+import { toast } from "react-toastify";
 import type { CartItem } from "../types";
 
 interface CartContextType {
@@ -39,7 +40,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       const data = await getCart(user.id);
       setCartItems(data.cartItems || []);
     } catch (error) {
-      console.error("Error fetching cart items:", error);
+      toast.error("Failed to load cart items");
       setCartItems([]);
     } finally {
       setLoading(false);
