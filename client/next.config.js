@@ -4,7 +4,8 @@ const nextConfig = {
   swcMinify: true,
   distDir: "build",
   basePath: '/ecommerce',
-  assetPrefix: '/ecommerce'
+  assetPrefix: '/ecommerce',
+  trailingSlash: true
 }
 
 module.exports = nextConfig

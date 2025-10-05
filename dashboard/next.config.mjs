@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   basePath: '/admin',
   assetPrefix: '/admin',
+  trailingSlash: true,
   images: {
     remotePatterns: [
       {
