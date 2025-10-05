@@ -33,6 +33,9 @@ const login = async (req: Request, res: Response) => {
         secure: process.env.NODE_ENV === 'production', // Only secure in production
         sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // Only none in production
         maxAge: 1000 * 60 * 60 * 24,
+        // Ensure cookie is sent on all subpaths and across subdomains
+        domain: process.env.COOKIE_DOMAIN || '.montheralzamli.com',
+        path: '/',
       })
       .json({ 
         message: "login successfully",
