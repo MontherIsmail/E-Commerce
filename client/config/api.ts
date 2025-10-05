@@ -1,6 +1,8 @@
 // API Configuration
+// Prefer same-origin relative path in production to avoid CORS and cookie issues.
+// If NEXT_PUBLIC_API_URL is provided, it will be used; otherwise fall back to '/api/v1'.
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || '/api/v1',
   TIMEOUT: 10000, // 10 seconds
 } as const;
 
