@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import DashboardLayout from "@/components/DashboardLayout";
-import withAuth from "../../hoc/withAuth";
+import withPermission from "../../hoc/withPermission";
 import ProductEditForm from "../../components/ProductEditForm";
 import { Product } from "@/types/product";
 import { useRouter } from "next/router";
@@ -417,4 +417,4 @@ const ProductPage: FC = () => {
   );
 };
 
-export default withAuth(ProductPage);
+export default withPermission('manageProducts')(ProductPage);

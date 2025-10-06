@@ -2,7 +2,7 @@ import { FC, useState, ChangeEvent, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "../../types/product";
 import DashboardLayout from "../../components/DashboardLayout";
-import withAuth from "../../hoc/withAuth";
+import withPermission from "../../hoc/withPermission";
 import Image from "next/image";
 import axios from "axios";
 import { getApiUrl } from "@/config/api";
@@ -630,4 +630,4 @@ const ProductsPage: FC = () => {
   );
 };
 
-export default withAuth(ProductsPage);
+export default withPermission('manageProducts')(ProductsPage);

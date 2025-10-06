@@ -23,6 +23,7 @@ const me = async (req: Request, res: Response) => {
         email: true,
         username: true,
         role: true,
+        permissions: true,
       },
     });
     

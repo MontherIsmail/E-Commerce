@@ -125,7 +125,15 @@ const Sidebar: React.FC = () => {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navigationItems.map((item) => {
+          {navigationItems
+            .filter((item) => {
+              if (!user) return true;
+              if (item.href === '/users') return Boolean((user.permissions as any)?.manageUsers);
+              if (item.href === '/products') return Boolean((user.permissions as any)?.manageProducts);
+              if (item.href === '/admins') return Boolean((user.permissions as any)?.manageAdmins);
+              return true;
+            })
+            .map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
             
