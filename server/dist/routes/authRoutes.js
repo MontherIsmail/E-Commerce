@@ -7,11 +7,14 @@ const express_1 = __importDefault(require("express"));
 const authController_1 = require("../controllers/authController");
 const asyncMiddleware_1 = __importDefault(require("../middleware/asyncMiddleware"));
 const checkAuth_1 = __importDefault(require("../middleware/checkAuth"));
+const checkAdmin_1 = __importDefault(require("../middleware/checkAdmin"));
+const requirePermission_1 = __importDefault(require("../middleware/requirePermission"));
 const router = (0, express_1.default)();
 router.post('/signup', (0, asyncMiddleware_1.default)(authController_1.signUp));
 router.post('/login', (0, asyncMiddleware_1.default)(authController_1.login));
 router.post('/logout', (0, asyncMiddleware_1.default)(authController_1.logout));
-router.get('/users', (0, asyncMiddleware_1.default)(authController_1.getUsers));
+// Restrict listing users/admins to admins with manageAdmins permission
+router.get('/users', checkAuth_1.default, checkAdmin_1.default, (0, requirePermission_1.default)('manageAdmins'), (0, asyncMiddleware_1.default)(authController_1.getUsers));
 router.get('/me', (0, asyncMiddleware_1.default)(authController_1.me));
-router.post('/create-admin', checkAuth_1.default, (0, asyncMiddleware_1.default)(authController_1.createAdmin));
+router.post('/create-admin', checkAuth_1.default, (0, requirePermission_1.default)('manageAdmins'), (0, asyncMiddleware_1.default)(authController_1.createAdmin));
 exports.default = router;

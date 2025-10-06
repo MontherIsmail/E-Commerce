@@ -36,22 +36,30 @@ const path_1 = require("path");
 dotenv.config();
 const { env: { PORT, NODE_ENV }, } = process;
 const app = (0, express_1.default)();
-const allowedOrigins = [
-    'https://e-commerce-ten-puce.vercel.app', // Your Vercel app URL
-    'http://localhost:3000', // Dashboard URL
-    'http://localhost:3001', // Client URL
-];
+// Build allowed origins list from CORS_ORIGIN env (comma-separated)
+const corsEnv = process.env.CORS_ORIGIN || '';
+const allowedOrigins = corsEnv
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
 app.use((0, cors_1.default)({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error("Not allowed by CORS"));
-        }
+        // Allow server-to-server or same-origin requests with no Origin header
+        if (!origin)
+            return callback(null, true);
+        if (allowedOrigins.includes(origin))
+            return callback(null, true);
+        return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true, // Allow cookies to be sent
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "Accept",
+        "Origin",
+    ],
 }));
 app.set("port", PORT || 5000);
 app.use([
@@ -63,18 +71,14 @@ app.use("/api/v1", routes_1.default);
 if (process.env.NODE_ENV === 'production') {
     // Serve static files from the client/build directory
     app.use(express_1.default.static((0, path_1.join)(__dirname, '..', '..', 'client', 'build')));
-    // For any other routes (except API routes), send back the index.html file
+    // For any other routes (except API routes), redirect to client app
     app.get('*', (req, res) => {
         // Skip API routes
         if (req.path.startsWith('/api/')) {
             return res.status(404).json({ message: 'API route not found' });
         }
-        try {
-            res.sendFile((0, path_1.join)(__dirname, '..', '..', 'client', 'build', 'index.html'));
-        }
-        catch (error) {
-            res.status(500).json({ message: 'Internal server error' });
-        }
+        // Redirect to client app (which should be running on port 3000)
+        res.redirect('http://localhost:3000' + req.path);
     });
 }
 app.use(errorsControllers_1.clientError);

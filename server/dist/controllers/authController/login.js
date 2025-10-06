@@ -44,6 +44,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             secure: process.env.NODE_ENV === 'production', // Only secure in production
             sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // Only none in production
             maxAge: 1000 * 60 * 60 * 24,
+            // Ensure cookie is sent on all subpaths (host-only cookie)
+            path: '/',
         })
             .json({
             message: "login successfully",

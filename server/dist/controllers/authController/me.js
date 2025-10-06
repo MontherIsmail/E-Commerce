@@ -35,6 +35,7 @@ const me = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 email: true,
                 username: true,
                 role: true,
+                permissions: true,
             },
         });
         if (!user) {
