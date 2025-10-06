@@ -1,5 +1,5 @@
 import DashboardLayout from "@/components/DashboardLayout";
-import withAuth from "../hoc/withAuth";
+import withPermission from "../hoc/withPermission";
 import { useState, useEffect } from "react";
 import { getApiUrl } from "../config/api";
 import {
@@ -253,4 +253,4 @@ const AnalysisPage = () => {
   );
 };
 
-export default withAuth(AnalysisPage);
+export default withPermission('viewAnalytics')(AnalysisPage);

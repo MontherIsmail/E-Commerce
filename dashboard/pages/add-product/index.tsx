@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { Formik, Field, Form, FieldArray, ErrorMessage } from "formik";
 import { useRouter } from "next/router";
 import DashboardLayout from "@/components/DashboardLayout";
-import withAuth from "../../hoc/withAuth";
+import withPermission from "../../hoc/withPermission";
 import addProductSchema from "@/utils/validation/addProductSchema";
 import axios from "axios";
 import { getApiUrl } from "@/config/api";
@@ -449,4 +449,4 @@ const AddProductPage: FC<AddProductPageProps> = () => {
   );
 };
 
-export default withAuth(AddProductPage);
+export default withPermission('manageProducts')(AddProductPage);

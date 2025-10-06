@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import withAuth from "../../hoc/withAuth";
+import withPermission from "../../hoc/withPermission";
 import axios from "axios";
 import { getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
@@ -385,5 +385,5 @@ const AdminsPage = () => {
   );
 };
 
-export default withAuth(AdminsPage);
+export default withPermission('manageAdmins')(AdminsPage);
 

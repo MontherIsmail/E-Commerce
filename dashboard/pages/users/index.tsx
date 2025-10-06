@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { User } from "../../types/user"; // Update the path based on your project structure
 import DashboardLayout from "@/components/DashboardLayout";
-import withAuth from "../../hoc/withAuth";
+import withPermission from "../../hoc/withPermission";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { getApiUrl } from "../../config/api";
@@ -581,4 +581,4 @@ const UsersPage: React.FC = () => {
   );
 };
 
-export default withAuth(UsersPage);
+export default withPermission('manageUsers')(UsersPage);
