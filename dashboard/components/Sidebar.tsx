@@ -125,9 +125,9 @@ const Sidebar: React.FC = () => {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navigationItems
+          {!loading && user && navigationItems
             .filter((item) => {
-              if (!user) return true;
+              // Only show items when user is available; hide during loading to prevent flash
               if (item.href === '/users') return Boolean((user.permissions as any)?.manageUsers);
               if (item.href === '/products') return Boolean((user.permissions as any)?.manageProducts);
               if (item.href === '/admins') return Boolean((user.permissions as any)?.manageAdmins);

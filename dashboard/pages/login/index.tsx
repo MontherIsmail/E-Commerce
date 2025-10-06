@@ -5,11 +5,13 @@ import { useState } from "react";
 import "tailwindcss/tailwind.css";
 import { useRouter } from "next/router";
 import { getApiUrl } from "../../config/api";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+  const { refreshUser } = useAuth();
 
   // Formik setup with Yup validation
   const formik = useFormik({
@@ -43,6 +45,8 @@ const LoginPage = () => {
         
         // Check if user is admin
         if (response.data.user && response.data.user.role === 'admin') {
+          // Ensure context is refreshed so permissions reflect immediately
+          await refreshUser();
           router.push("/");
         } else {
           setErrorMessage("Access denied. Only admins can access the dashboard.");
