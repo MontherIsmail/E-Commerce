@@ -1,23 +1,32 @@
 import React, { useState } from "react";
+import Link from "next/link";
+
+// Determine base URL from environment for client-side links
+const isProd = (process.env.NEXT_PUBLIC_ENV || process.env.NODE_ENV) === 'production';
+const BASE_URL = isProd
+  ? (process.env.NEXT_PUBLIC_PROD_BASE_URL || '')
+  : (process.env.NEXT_PUBLIC_DEV_BASE_URL || '');
+
+const withBase = (path: string) => `${BASE_URL}${path}`;
 
 const navigation = {
   shop: [
-  { name: "Products", href: "/products" },
-    { name: "Men", href: "/products?category=men" },
-    { name: "Women", href: "/products?category=women" },
-    { name: "New Arrivals", href: "/products?sort=newest" },
+  { name: "Products", href: withBase("/products") },
+    { name: "Men", href: withBase("/products?category=men") },
+    { name: "Women", href: withBase("/products?category=women") },
+    { name: "New Arrivals", href: withBase("/products?sort=newest") },
   ],
   support: [
-  { name: "About Us", href: "/about" },
-    { name: "Contact", href: "/contact" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Shipping", href: "/shipping" },
+  { name: "About Us", href: withBase("/about") },
+    { name: "Contact", href: withBase("/contact") },
+    { name: "FAQ", href: withBase("/faq") },
+    { name: "Shipping", href: withBase("/shipping") },
   ],
   legal: [
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Terms of Service", href: "/terms-of-service" },
-    { name: "Returns", href: "/returns" },
-    { name: "Refunds", href: "/refunds" },
+    { name: "Privacy Policy", href: withBase("/privacy-policy") },
+    { name: "Terms of Service", href: withBase("/terms-of-service") },
+    { name: "Returns", href: withBase("/returns") },
+    { name: "Refunds", href: withBase("/refunds") },
   ],
 };
 
@@ -113,9 +122,9 @@ const Footer = () => {
               <ul className="footer-links">
                 {navigation.shop.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className="footer-link">
+                    <Link href={item.href} className="footer-link">
                       {item.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -127,9 +136,9 @@ const Footer = () => {
               <ul className="footer-links">
                 {navigation.support.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className="footer-link">
+                    <Link href={item.href} className="footer-link">
                       {item.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -141,9 +150,9 @@ const Footer = () => {
               <ul className="footer-links">
                 {navigation.legal.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className="footer-link">
-              {item.name}
-            </a>
+                    <Link href={item.href} className="footer-link">
+                      {item.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
