@@ -10,6 +10,7 @@ import withAuth from "../../hoc/withAuth";
 import type { CartItem } from "../../types";
 
 const Cart = () => {
+  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   const [subTotal, setSubtotal] = useState(0);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -247,7 +248,7 @@ const Cart = () => {
                 {/* Checkout Button */}
                 <div className="pt-4">
                   <a
-                    href="/checkout"
+                    href={`${basePath}/checkout`}
                     className="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,8 +292,8 @@ const Cart = () => {
           <p className="text-gray-500 text-center max-w-md mb-8">
             Looks like you haven't added anything to your cart yet. Start shopping to find amazing products!
           </p>
-          <a
-            href="/products"
+            <a
+              href={`${basePath}/products`}
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-lg transform hover:scale-105"
           >
             <svg

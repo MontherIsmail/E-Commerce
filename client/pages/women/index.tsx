@@ -6,6 +6,7 @@ import createClient from "../../api";
 import { useRouter } from "next/router";
 
 const WomenProducts = () => {
+  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -93,7 +94,7 @@ const WomenProducts = () => {
                         We couldn't find any women's products at the moment. Please check back later!
                       </p>
                       <a
-                        href="/products"
+                        href={`${basePath}/products`}
                         className="inline-flex items-center px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
                       >
                         <svg
@@ -126,7 +127,7 @@ const WomenProducts = () => {
               We're currently updating our women's collection. Please check back soon!
             </p>
             <a
-              href="/products"
+              href={`${basePath}/products`}
               style={{
                 display: 'inline-block',
                 padding: '12px 30px',

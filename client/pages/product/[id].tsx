@@ -119,7 +119,7 @@ const Product = () => {
                 <li>
                   <div className="flex items-center">
                     <a
-                      href="/men"
+                      href={`${basePath}/men`}
                       className="mr-2 text-sm font-medium text-gray-900"
                     >
                       {product?.productCategory}

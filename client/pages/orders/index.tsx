@@ -7,6 +7,7 @@ import withAuth from "../../hoc/withAuth";
 import type { Order } from "../../types";
 
 const Orders = () => {
+  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
@@ -125,7 +126,7 @@ const Orders = () => {
               You haven't placed any orders yet. Start shopping to see your order history here!
             </p>
             <a
-              href="/products"
+              href={`${basePath}/products`}
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg transform hover:scale-105"
             >
               <svg

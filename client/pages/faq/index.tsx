@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navbar, Footer } from "../../components";
 
 const FAQ = () => {
+  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   const [openItems, setOpenItems] = useState<number[]>([]);
 
   const toggleItem = (index: number) => {
@@ -169,7 +170,7 @@ const FAQ = () => {
                 Can't find the answer you're looking for? Our customer support team is here to help.
               </p>
               <div className="support-actions">
-                <a href="/contact" className="modern-btn">
+                <a href={`${basePath}/contact`} className="modern-btn">
                   <span className="btn-text">Contact Support</span>
                   <div className="btn-shine"></div>
                 </a>

@@ -221,7 +221,7 @@ const Login = () => {
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
               <Link
-                href="/register"
+                href={`${basePath}/register`}
                 className="font-medium text-black hover:text-gray-600 transition-colors"
               >
                 Sign up for free
@@ -234,11 +234,11 @@ const Login = () => {
         <div className="text-center">
           <p className="text-xs text-gray-500">
             By signing in, you agree to our{" "}
-            <Link href="/terms-of-service" className="text-black hover:text-gray-600">
+            <Link href={`${basePath}/terms-of-service`} className="text-black hover:text-gray-600">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy-policy" className="text-black hover:text-gray-600">
+            <Link href={`${basePath}/privacy-policy`} className="text-black hover:text-gray-600">
               Privacy Policy
             </Link>
           </p>
