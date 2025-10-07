@@ -59,7 +59,14 @@ if (process.env.NODE_ENV === 'production') {
     if (req.path.includes('/api/')) {
       return res.status(404).json({ message: 'API route not found' });
     }
-    res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
+    // Serve the correct HTML file from server/pages directory
+    const indexPath = join(__dirname, '..', '..', 'client', 'build', 'server', 'pages', 'index.html');
+    res.sendFile(indexPath, (err) => {
+      if (err) {
+        console.error('Error serving index.html:', err);
+        res.status(404).send('Page not found');
+      }
+    });
   });
 
   // For root path, redirect to /ecommerce
