@@ -50,21 +50,34 @@ app.use([
 app.use("/api/v1", router);
 
 if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the client/build directory with /ecommerce prefix
-  app.use('/ecommerce', express.static(join(__dirname, '..', '..', 'client', 'build')));
+  const clientBuildPath = join(__dirname, '..', '..', 'client', 'build');
+  
+  // Serve static files (_next, static, etc.) from the build directory
+  app.use('/ecommerce/_next', express.static(join(clientBuildPath, '_next')));
+  app.use('/ecommerce/static', express.static(join(clientBuildPath, 'static')));
+  
+  // Serve all other static files
+  app.use('/ecommerce', express.static(clientBuildPath));
 
-  // Handle client-side routing for /ecommerce paths (but not API routes)
-  app.get('/ecommerce*', (req: Request, res: Response) => {
+  // Handle client-side routing for /ecommerce paths
+  app.get('/ecommerce*', (req: Request, res: Response, next) => {
     // Skip if it's trying to access API routes
     if (req.path.includes('/api/')) {
-      return res.status(404).json({ message: 'API route not found' });
+      return next();
     }
-    // Serve the correct HTML file from server/pages directory
-    const indexPath = join(__dirname, '..', '..', 'client', 'build', 'server', 'pages', 'index.html');
+    
+    // Check if it's a static file request
+    if (req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/)) {
+      return next();
+    }
+    
+    // Serve the HTML file from server/pages directory
+    const indexPath = join(clientBuildPath, 'server', 'pages', 'index.html');
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Error serving index.html:', err);
-        res.status(404).send('Page not found');
+        console.error('Tried to serve from:', indexPath);
+        res.status(500).send('Error loading page');
       }
     });
   });
