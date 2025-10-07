@@ -69,10 +69,10 @@ const Products = () => {
   }, []);
   
   useEffect(() => {
-    if ((data as any).products) {
+    if ((data as any).products && (data as any).products.length > 0) {
       applyFilters((data as any).products);
     }
-  }, [selectedCategory, selectedSort, priceRange]);
+  }, [selectedCategory, selectedSort, priceRange, data]);
   
   useEffect(() => {
     if (category) {
@@ -88,7 +88,7 @@ const Products = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)', overflowX: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#f5f5f5', overflowX: 'hidden' }}>
       <div style={{ flex: 1, width: '100%', overflowX: 'hidden' }}>
         <Navbar />
         {!isEmpty(data) || loading ? (
@@ -97,10 +97,10 @@ const Products = () => {
             <div className="products-hero">
               <div className="hero-content">
                 <h1 className="hero-title">
-                  Discover Our <span className="gradient-text">Collection</span>
+                  Discover Our Collection
                 </h1>
                 <p className="hero-subtitle">
-                  {loading ? 'Loading amazing products...' : `${filteredProducts.length} premium products available`}
+                  {loading ? 'Loading products...' : `${filteredProducts.length} premium products available`}
                 </p>
               </div>
             </div>
@@ -249,62 +249,39 @@ const Products = () => {
         }
 
         .products-hero {
-          background: linear-gradient(135deg, #faedeb 0%, #f0e6e3 100%);
-          padding: 6rem 2rem 4rem;
+          background: #f5ebe8;
+          padding: 5rem 2rem 3rem;
           text-align: center;
           position: relative;
           overflow: hidden;
-          animation: fadeInUp 0.8s ease-out;
           width: 100%;
-        }
-
-        .products-hero::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          opacity: 0.1;
-          background-image: radial-gradient(circle, rgba(0, 0, 0, 0.3) 1px, transparent 1px);
-          background-size: 20px 20px;
-          animation: float 6s ease-in-out infinite;
+          margin-top: 64px;
         }
 
         .hero-content {
           position: relative;
           z-index: 2;
-          max-width: 1200px;
+          max-width: 800px;
           margin: 0 auto;
         }
 
         .hero-title {
-          font-size: 3rem;
-          font-weight: 600;
+          font-size: 2.75rem;
+          font-weight: 700;
           font-family: 'Poppins', sans-serif;
           color: #000;
-          margin-bottom: 1rem;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
-          animation: slideInUp 0.6s ease-out 0.4s both;
-        }
-
-        .gradient-text {
-          background: linear-gradient(135deg, #000 0%, #333 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          margin-bottom: 0.75rem;
+          letter-spacing: -0.01em;
+          line-height: 1.2;
         }
 
         .hero-subtitle {
-          font-size: 1.25rem;
+          font-size: 1.125rem;
           color: rgba(0, 0, 0, 0.6);
           font-family: 'Poppins', sans-serif;
           font-weight: 400;
-          max-width: 600px;
           margin: 0 auto;
-          line-height: 1.6;
-          animation: slideInUp 0.6s ease-out 0.6s both;
+          line-height: 1.5;
         }
 
         .filters-wrapper {
