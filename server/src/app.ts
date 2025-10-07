@@ -53,8 +53,12 @@ if (process.env.NODE_ENV === 'production') {
   // Serve static files from the client/build directory with /ecommerce prefix
   app.use('/ecommerce', express.static(join(__dirname, '..', '..', 'client', 'build')));
 
-  // Handle client-side routing for /ecommerce paths
+  // Handle client-side routing for /ecommerce paths (but not API routes)
   app.get('/ecommerce*', (req: Request, res: Response) => {
+    // Skip if it's trying to access API routes
+    if (req.path.includes('/api/')) {
+      return res.status(404).json({ message: 'API route not found' });
+    }
     res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
   });
 
