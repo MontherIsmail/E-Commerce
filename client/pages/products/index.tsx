@@ -6,9 +6,9 @@ import createClient from "../../api";
 import { useRouter } from "next/router";
 
 const Products = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState(true);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedSort, setSelectedSort] = useState("default");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
