@@ -53,15 +53,15 @@ if (process.env.NODE_ENV === 'production') {
   // Serve static files from the client/build directory
   app.use(express.static(join(__dirname, '..', '..', 'client', 'build')));
 
-  // For any other routes (except API routes), redirect to client app
+  // For any other routes (except API routes), serve the client app
   app.get('*', (req: Request, res: Response) => {
     // Skip API routes
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ message: 'API route not found' });
     }
     
-    // Redirect to client app (which should be running on port 3000)
-    res.redirect('http://localhost:3000' + req.path);
+    // Serve the client app's index.html for all non-API routes
+    res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
   });
 }
 
