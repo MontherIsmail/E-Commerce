@@ -1,32 +1,31 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-// Determine base URL from environment for client-side links
-const isProd = (process.env.NEXT_PUBLIC_ENV || process.env.NODE_ENV) === 'production';
-const BASE_URL = isProd
-  ? (process.env.NEXT_PUBLIC_PROD_BASE_URL || '')
-  : (process.env.NEXT_PUBLIC_DEV_BASE_URL || '');
+// Dynamic base path based on environment (same as Navbar)
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
 
-const withBase = (path: string) => `${BASE_URL}${path}`;
+const basePath = getBasePath();
 
 const navigation = {
   shop: [
-  { name: "Products", href: withBase("/products") },
-    { name: "Men", href: withBase("/products?category=men") },
-    { name: "Women", href: withBase("/products?category=women") },
-    { name: "New Arrivals", href: withBase("/products?sort=newest") },
+  { name: "Products", href: `${basePath}/products` },
+    { name: "Men", href: `${basePath}/products?category=men` },
+    { name: "Women", href: `${basePath}/products?category=women` },
+    { name: "New Arrivals", href: `${basePath}/products?sort=newest` },
   ],
   support: [
-  { name: "About Us", href: withBase("/about") },
-    { name: "Contact", href: withBase("/contact") },
-    { name: "FAQ", href: withBase("/faq") },
-    { name: "Shipping", href: withBase("/shipping") },
+  { name: "About Us", href: `${basePath}/about` },
+    { name: "Contact", href: `${basePath}/contact` },
+    { name: "FAQ", href: `${basePath}/faq` },
+    { name: "Shipping", href: `${basePath}/shipping` },
   ],
   legal: [
-    { name: "Privacy Policy", href: withBase("/privacy-policy") },
-    { name: "Terms of Service", href: withBase("/terms-of-service") },
-    { name: "Returns", href: withBase("/returns") },
-    { name: "Refunds", href: withBase("/refunds") },
+    { name: "Privacy Policy", href: `${basePath}/privacy-policy` },
+    { name: "Terms of Service", href: `${basePath}/terms-of-service` },
+    { name: "Returns", href: `${basePath}/returns` },
+    { name: "Refunds", href: `${basePath}/refunds` },
   ],
 };
 
