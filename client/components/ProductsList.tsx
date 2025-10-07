@@ -14,6 +14,8 @@ const ProductsList: React.FC<ProductsListProps> = ({
   sortedProducts,
   loading = false,
 }) => {
+  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+  
   // Use sortedProducts to get the sorted list of products
   const sortedData = sortedProducts();
 
@@ -64,7 +66,7 @@ const ProductsList: React.FC<ProductsListProps> = ({
           </p>
           {productsCategory !== "all" && (
             <a
-              href="/products"
+              href={`${basePath}/products`}
               className="inline-flex items-center px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
             >
               <svg

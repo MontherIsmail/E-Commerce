@@ -6,8 +6,10 @@ interface CustomButtonProps {
 }
 
 const CustomButton = ({ btnText }: CustomButtonProps) => {
+  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+  
   return (
-    <Link href="/products">
+    <Link href={`${basePath}/products`}>
       <button className="modern-btn">
         <span className="btn-text">{btnText}</span>
         <div className="btn-shine"></div>

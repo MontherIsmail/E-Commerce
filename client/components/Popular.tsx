@@ -2,6 +2,7 @@ import Card from "./Card";
 import { ProductCardSkeleton } from "./Skeletons";
 
 const Popular = ({data, loading = false}: any) => {
+  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   const { products } = data
   return (
     <div className="bg-white">
@@ -13,7 +14,7 @@ const Popular = ({data, loading = false}: any) => {
               Popular T-Shirts
             </h2>
           </div>
-          <a href="/products">
+          <a href={`${basePath}/products`}>
             <button className="modern-btn">
               <span className="btn-text">See More</span>
               <div className="btn-shine"></div>
