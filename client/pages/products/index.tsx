@@ -51,23 +51,23 @@ const Products = () => {
       const { getProducts } = createClient("");
       const response = await getProducts();
       
-      console.log("API Response:", response);
+      // API returns products directly in the response, not in response.data
+      // Same structure as men/women pages use
+      const products = (response as any)?.products || [];
       
-      // API returns ApiResponse<{ products: Product[] }>
-      // So the structure is: { data: { products: [...] } }
-      const products = response?.data?.products || [];
-      
-      console.log("Extracted products:", products);
-      console.log("Number of products:", products.length);
+      console.log("Products fetched:", products.length);
+      if (products.length > 0) {
+        console.log("First product:", products[0]);
+      }
       
       setAllProducts(products);
       
       if (products.length === 0) {
-        setError("No products available at the moment.");
+        setError("No products available. The database might be empty.");
       }
     } catch (err) {
       console.error("Error fetching products:", err);
-      setError("Failed to load products. Please try again later.");
+      setError(`Failed to load products: ${err instanceof Error ? err.message : 'Unknown error'}`);
       setAllProducts([]);
     } finally {
       setLoading(false);
