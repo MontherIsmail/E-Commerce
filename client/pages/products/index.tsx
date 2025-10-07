@@ -88,8 +88,8 @@ const Products = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' }}>
-      <div style={{ flex: 1 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)', overflowX: 'hidden' }}>
+      <div style={{ flex: 1, width: '100%', overflowX: 'hidden' }}>
         <Navbar />
         {!isEmpty(data) || loading ? (
           <div className="products-container">
@@ -105,27 +105,13 @@ const Products = () => {
               </div>
             </div>
 
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-              {/* Modern Filters Section */}
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+              {/* Compact Filters Section */}
               <div className="filters-wrapper">
-                <div className="filters-header">
-                  <div className="filters-icon">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                    </svg>
-                  </div>
-                  <h3 className="filters-title">Filters</h3>
-                </div>
-
                 <div className="filters-grid">
                   {/* Category Filter */}
                   <div className="filter-item">
-                    <label className="filter-label">
-                      <svg className="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                      </svg>
-                      Category
-                    </label>
+                    <label className="filter-label">Category</label>
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
@@ -139,12 +125,7 @@ const Products = () => {
 
                   {/* Sort Filter */}
                   <div className="filter-item">
-                    <label className="filter-label">
-                      <svg className="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                      </svg>
-                      Sort By
-                    </label>
+                    <label className="filter-label">Sort By</label>
                     <select
                       value={selectedSort}
                       onChange={(e) => setSelectedSort(e.target.value)}
@@ -159,16 +140,8 @@ const Products = () => {
                   </div>
 
                   {/* Price Range Filter */}
-                  <div className="filter-item">
-                    <label className="filter-label">
-                      <svg className="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Price Range
-                    </label>
-                    <div className="price-range-display">
-                      ${priceRange.min} - ${priceRange.max}
-                    </div>
+                  <div className="filter-item filter-item-price">
+                    <label className="filter-label">Price Range: ${priceRange.min} - ${priceRange.max}</label>
                     <div className="price-inputs">
                       <input
                         type="number"
@@ -187,23 +160,24 @@ const Products = () => {
                       />
                     </div>
                   </div>
-                </div>
 
-                {/* Reset Button - Separate Row */}
-                <div className="reset-button-wrapper">
-                  <button
-                    onClick={() => {
-                      setSelectedCategory("all");
-                      setSelectedSort("default");
-                      setPriceRange({ min: 0, max: 10000 });
-                    }}
-                    className="reset-button"
-                  >
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    Reset Filters
-                  </button>
+                  {/* Reset Button */}
+                  <div className="filter-item filter-item-button">
+                    <label className="filter-label" style={{ opacity: 0, pointerEvents: 'none' }}>Actions</label>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("all");
+                        setSelectedSort("default");
+                        setPriceRange({ min: 0, max: 10000 });
+                      }}
+                      className="reset-button"
+                    >
+                      <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Reset
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -265,6 +239,8 @@ const Products = () => {
       <style jsx>{`
         .products-container {
           animation: fadeIn 0.5s ease-in;
+          width: 100%;
+          overflow-x: hidden;
         }
 
         @keyframes fadeIn {
@@ -279,6 +255,7 @@ const Products = () => {
           position: relative;
           overflow: hidden;
           animation: fadeInUp 0.8s ease-out;
+          width: 100%;
         }
 
         .products-hero::before {
@@ -331,52 +308,23 @@ const Products = () => {
         }
 
         .filters-wrapper {
-          background: rgba(255, 255, 255, 0.5);
-          border-radius: 1rem;
-          padding: 2rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          margin-bottom: 3rem;
-          border: 1px solid rgba(0, 0, 0, 0.1);
+          background: white;
+          border-radius: 0.75rem;
+          padding: 1.5rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          margin-bottom: 2.5rem;
+          border: 1px solid rgba(0, 0, 0, 0.08);
           transition: all 0.3s ease;
-        }
-
-        .filters-wrapper:hover {
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .filters-header {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          margin-bottom: 1.5rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .filters-icon {
-          width: 2.5rem;
-          height: 2.5rem;
-          background: #000;
-          border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-        }
-
-        .filters-title {
-          font-size: 1.5rem;
-          font-weight: 600;
-          font-family: 'Poppins', sans-serif;
-          color: #000;
-          margin: 0;
+          width: 100%;
+          max-width: 100%;
         }
 
         .filters-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 1.5rem;
+          grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+          gap: 1rem;
           align-items: end;
+          width: 100%;
         }
 
         .filter-item {
@@ -385,121 +333,110 @@ const Products = () => {
           gap: 0.5rem;
         }
 
-        .reset-button-wrapper {
-          margin-top: 1rem;
-          padding-top: 1rem;
-          border-top: 1px solid rgba(0, 0, 0, 0.1);
+        .filter-item-price {
+          grid-column: span 1;
+        }
+
+        .filter-item-button {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
         }
 
         .filter-label {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.875rem;
+          font-size: 0.8rem;
           font-weight: 600;
           font-family: 'Poppins', sans-serif;
-          color: rgba(0, 0, 0, 0.7);
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-
-        .filter-icon {
-          width: 1.25rem;
-          height: 1.25rem;
           color: rgba(0, 0, 0, 0.6);
+          margin-bottom: 0.25rem;
         }
 
         .filter-select {
           width: 100%;
-          padding: 0.75rem 1rem;
-          border: 1px solid rgba(0, 0, 0, 0.1);
+          padding: 0.65rem 0.875rem;
+          border: 1px solid rgba(0, 0, 0, 0.12);
           border-radius: 0.5rem;
-          font-size: 1rem;
+          font-size: 0.9rem;
           font-weight: 500;
           font-family: 'Poppins', sans-serif;
-          color: rgba(0, 0, 0, 0.7);
-          background-color: rgba(255, 255, 255, 0.8);
+          color: #000;
+          background-color: #fafafa;
           transition: all 0.2s ease;
           cursor: pointer;
           outline: none;
         }
 
         .filter-select:hover {
-          border-color: rgba(0, 0, 0, 0.2);
-          background-color: rgba(255, 255, 255, 1);
+          border-color: rgba(0, 0, 0, 0.25);
+          background-color: white;
         }
 
         .filter-select:focus {
-          border-color: rgba(0, 0, 0, 0.3);
+          border-color: #000;
           background-color: white;
           box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .price-range-display {
-          font-size: 0.875rem;
-          font-weight: 600;
-          font-family: 'Poppins', sans-serif;
-          color: #000;
-          padding: 0.5rem 0;
         }
 
         .price-inputs {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.5rem;
         }
 
         .price-input {
           flex: 1;
-          padding: 0.75rem 1rem;
-          border: 1px solid rgba(0, 0, 0, 0.1);
+          padding: 0.65rem 0.875rem;
+          border: 1px solid rgba(0, 0, 0, 0.12);
           border-radius: 0.5rem;
-          font-size: 1rem;
+          font-size: 0.9rem;
           font-weight: 500;
           font-family: 'Poppins', sans-serif;
-          color: rgba(0, 0, 0, 0.7);
-          background-color: rgba(255, 255, 255, 0.8);
+          color: #000;
+          background-color: #fafafa;
           transition: all 0.2s ease;
           outline: none;
+          min-width: 0;
         }
 
         .price-input:hover {
-          border-color: rgba(0, 0, 0, 0.2);
-          background-color: rgba(255, 255, 255, 1);
+          border-color: rgba(0, 0, 0, 0.25);
+          background-color: white;
         }
 
         .price-input:focus {
-          border-color: rgba(0, 0, 0, 0.3);
+          border-color: #000;
           background-color: white;
           box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
         }
 
         .price-separator {
-          color: rgba(0, 0, 0, 0.6);
-          font-weight: 600;
+          color: rgba(0, 0, 0, 0.4);
+          font-weight: 500;
+          font-size: 0.875rem;
+          flex-shrink: 0;
         }
 
         .reset-button {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 0.75rem 1.5rem;
+          padding: 0.65rem 1.25rem;
           background: #000;
           color: white;
           font-weight: 600;
           font-family: 'Poppins', sans-serif;
-          font-size: 0.9rem;
+          font-size: 0.875rem;
           border: none;
           border-radius: 0.5rem;
           cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          transition: all 0.2s ease;
+          width: 100%;
+          white-space: nowrap;
         }
 
         .reset-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-          background: #333;
+          background: #1a1a1a;
+          transform: translateY(-1px);
         }
 
         .reset-button:active {
@@ -508,9 +445,11 @@ const Products = () => {
 
         .products-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
           gap: 2rem;
           animation: slideUp 0.6s ease-out;
+          width: 100%;
+          max-width: 100%;
         }
 
         @keyframes slideUp {
@@ -635,11 +574,24 @@ const Products = () => {
 
           .filters-grid {
             grid-template-columns: 1fr;
+            gap: 0.875rem;
           }
 
           .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
             gap: 1.5rem;
+          }
+          
+          .filters-wrapper {
+            padding: 1.25rem;
+          }
+
+          .filter-item-button {
+            margin-top: 0.5rem;
+          }
+
+          .filter-label {
+            font-size: 0.75rem;
           }
         }
       `}</style>
