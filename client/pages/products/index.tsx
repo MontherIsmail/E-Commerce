@@ -7,14 +7,15 @@ import { useRouter } from "next/router";
 
 interface Product {
   id: string;
-  name?: string;
-  productName?: string;
-  price: number;
-  productPrice?: number;
-  productCategory: string;
-  createdAt: string;
-  productDescription?: string;
-  productUrlImgs?: string[];
+  productName: string;
+  productDescription: string;
+  productPrice: number;
+  productUrlImgs: string[];
+  productCategory?: string;
+  productRating?: number;
+  productReviews?: number;
+  createdAt?: string;
+  updatedAt?: string;
   [key: string]: any;
 }
 
@@ -48,9 +49,17 @@ const Products = () => {
       setError(null);
       
       const { getProducts } = createClient("");
-      const response = await getProducts() as ProductsResponse;
+      const response = await getProducts();
       
-      const products = response?.products || [];
+      console.log("API Response:", response);
+      
+      // API returns ApiResponse<{ products: Product[] }>
+      // So the structure is: { data: { products: [...] } }
+      const products = response?.data?.products || [];
+      
+      console.log("Extracted products:", products);
+      console.log("Number of products:", products.length);
+      
       setAllProducts(products);
       
       if (products.length === 0) {
@@ -69,36 +78,49 @@ const Products = () => {
   const filteredProducts = useMemo(() => {
     let filtered = [...allProducts];
 
+    console.log("Starting filter with", filtered.length, "products");
+
     // Filter by category
     if (selectedCategory !== "all") {
       filtered = filtered.filter(
         (product) => product.productCategory?.toLowerCase() === selectedCategory.toLowerCase()
       );
+      console.log("After category filter:", filtered.length);
     }
 
     // Filter by price range
     filtered = filtered.filter(
-      (product) => product.price >= priceRange.min && product.price <= priceRange.max
+      (product) => product.productPrice >= priceRange.min && product.productPrice <= priceRange.max
     );
+    console.log("After price filter:", filtered.length, "Range:", priceRange);
 
     // Sort products
     switch (selectedSort) {
       case "newest":
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        filtered.sort((a, b) => {
+          const dateA = new Date(a.createdAt || 0).getTime();
+          const dateB = new Date(b.createdAt || 0).getTime();
+          return dateB - dateA;
+        });
         break;
       case "oldest":
-        filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        filtered.sort((a, b) => {
+          const dateA = new Date(a.createdAt || 0).getTime();
+          const dateB = new Date(b.createdAt || 0).getTime();
+          return dateA - dateB;
+        });
         break;
       case "price-low":
-        filtered.sort((a, b) => a.price - b.price);
+        filtered.sort((a, b) => a.productPrice - b.productPrice);
         break;
       case "price-high":
-        filtered.sort((a, b) => b.price - a.price);
+        filtered.sort((a, b) => b.productPrice - a.productPrice);
         break;
       default:
         break;
     }
 
+    console.log("Final filtered products:", filtered.length);
     return filtered;
   }, [allProducts, selectedCategory, selectedSort, priceRange]);
 
