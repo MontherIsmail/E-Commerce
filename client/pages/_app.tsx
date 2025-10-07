@@ -6,6 +6,18 @@ import { CartProvider } from "../context/CartContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Dynamic base path based on environment variables
+const getBasePath = () => {
+  // Check for custom environment variable first
+  if (process.env.NEXT_PUBLIC_BASE_PATH) {
+    return process.env.NEXT_PUBLIC_BASE_PATH;
+  }
+  // Fallback to NODE_ENV check
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -13,12 +25,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>E-Commerce Store</title>
         <meta name="description" content="Your premier online shopping destination" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.svg?v=7" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.ico?v=4" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=4" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=4" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href={`${basePath}/favicon.svg?v=7`} type="image/svg+xml" />
+        <link rel="icon" href={`${basePath}/favicon.ico?v=4`} />
+        <link rel="apple-touch-icon" href={`${basePath}/apple-touch-icon.png?v=4`} />
+        <link rel="icon" type="image/png" sizes="192x192" href={`${basePath}/icon-192.png?v=4`} />
+        <link rel="icon" type="image/png" sizes="512x512" href={`${basePath}/icon-512.png?v=4`} />
+        <link rel="manifest" href={`${basePath}/manifest.json`} />
         <meta name="theme-color" content="#000000" />
       </Head>
       <AuthProvider>

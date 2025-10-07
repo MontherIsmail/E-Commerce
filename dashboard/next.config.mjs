@@ -2,8 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   // Serve dashboard under /ecommerce-admin subpath in production
-  basePath: '/ecommerce-admin',
-  assetPrefix: '/ecommerce-admin',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || (process.env.NODE_ENV === 'production' ? '/ecommerce-admin' : ''),
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || (process.env.NODE_ENV === 'production' ? '/ecommerce-admin' : ''),
   images: {
     remotePatterns: [
       {
