@@ -1,98 +1,134 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Navbar, Footer } from "../../components";
 import Card from "../../components/Card";
 import { ProductCardSkeleton } from "../../components/Skeletons";
 import createClient from "../../api";
 import { useRouter } from "next/router";
 
+interface Product {
+  id: string;
+  name?: string;
+  productName?: string;
+  price: number;
+  productPrice?: number;
+  productCategory: string;
+  createdAt: string;
+  productDescription?: string;
+  productUrlImgs?: string[];
+  [key: string]: any;
+}
+
+interface ProductsResponse {
+  products: Product[];
+}
+
+interface PriceRange {
+  min: number;
+  max: number;
+}
+
+type SortOption = "default" | "newest" | "oldest" | "price-low" | "price-high";
+
 const Products = () => {
-  const [data, setData] = useState<any>({});
-  const [loading, setLoading] = useState(true);
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSort, setSelectedSort] = useState("default");
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
   const router = useRouter();
   const { category, sort } = router.query;
 
-  const getProducts = async () => {
+  // State
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedSort, setSelectedSort] = useState<SortOption>("default");
+  const [priceRange, setPriceRange] = useState<PriceRange>({ min: 0, max: 10000 });
+
+  // Fetch products from API
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const { getProducts } = createClient("");
-      const data = await getProducts();
-      console.log("Products data:", data);
-      console.log("Products array:", (data as any).products);
-      setData(data);
-      applyFilters((data as any).products || []);
-    } catch (error) {
-      console.error("Error fetching products:", error);
+      const response = await getProducts() as ProductsResponse;
+      
+      const products = response?.products || [];
+      setAllProducts(products);
+      
+      if (products.length === 0) {
+        setError("No products available at the moment.");
+      }
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError("Failed to load products. Please try again later.");
+      setAllProducts([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const applyFilters = (products: any[]) => {
-    let filtered = [...products];
-    
+  // Filter and sort products using useMemo for performance
+  const filteredProducts = useMemo(() => {
+    let filtered = [...allProducts];
+
     // Filter by category
     if (selectedCategory !== "all") {
-      filtered = filtered.filter((product: any) => 
-        product.productCategory?.toLowerCase() === selectedCategory.toLowerCase()
+      filtered = filtered.filter(
+        (product) => product.productCategory?.toLowerCase() === selectedCategory.toLowerCase()
       );
     }
-    
-    // Filter by price range
-    filtered = filtered.filter((product: any) => 
-      product.price >= priceRange.min && product.price <= priceRange.max
-    );
-    
-    // Sort products
-    if (selectedSort === 'newest') {
-      filtered = filtered.sort((a: any, b: any) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-    } else if (selectedSort === 'oldest') {
-      filtered = filtered.sort((a: any, b: any) => 
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-    } else if (selectedSort === 'price-low') {
-      filtered = filtered.sort((a: any, b: any) => a.price - b.price);
-    } else if (selectedSort === 'price-high') {
-      filtered = filtered.sort((a: any, b: any) => b.price - a.price);
-    }
-    
-    setFilteredProducts(filtered);
-  };
 
-  useEffect(() => {
-    getProducts();
+    // Filter by price range
+    filtered = filtered.filter(
+      (product) => product.price >= priceRange.min && product.price <= priceRange.max
+    );
+
+    // Sort products
+    switch (selectedSort) {
+      case "newest":
+        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+      case "oldest":
+        filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        break;
+      case "price-low":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  }, [allProducts, selectedCategory, selectedSort, priceRange]);
+
+  // Reset all filters
+  const handleResetFilters = useCallback(() => {
+    setSelectedCategory("all");
+    setSelectedSort("default");
+    setPriceRange({ min: 0, max: 10000 });
   }, []);
-  
+
+  // Fetch products on mount
   useEffect(() => {
-    if ((data as any).products && (data as any).products.length > 0) {
-      applyFilters((data as any).products);
-    }
-  }, [selectedCategory, selectedSort, priceRange, data]);
-  
+    fetchProducts();
+  }, [fetchProducts]);
+
+  // Handle URL query parameters
   useEffect(() => {
-    if (category) {
-      setSelectedCategory(category.toString());
+    if (category && typeof category === "string") {
+      setSelectedCategory(category);
     }
-    if (sort) {
-      setSelectedSort(sort.toString());
+    if (sort && typeof sort === "string" && ["default", "newest", "oldest", "price-low", "price-high"].includes(sort)) {
+      setSelectedSort(sort as SortOption);
     }
   }, [category, sort]);
-
-  const isEmpty = (obj: object) => {
-    return Object.keys(obj).length === 0;
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#f5f5f5', overflowX: 'hidden' }}>
       <div style={{ flex: 1, width: '100%', overflowX: 'hidden' }}>
         <Navbar />
-        {!isEmpty(data) || loading ? (
-          <div className="products-container">
+        <div className="products-container">
             {/* Hero Header */}
             <div className="products-hero">
               <div className="hero-content">
@@ -128,7 +164,7 @@ const Products = () => {
                     <label className="filter-label">Sort By</label>
                     <select
                       value={selectedSort}
-                      onChange={(e) => setSelectedSort(e.target.value)}
+                      onChange={(e) => setSelectedSort(e.target.value as SortOption)}
                       className="filter-select"
                     >
                       <option value="default">Default</option>
@@ -165,12 +201,9 @@ const Products = () => {
                   <div className="filter-item filter-item-button">
                     <label className="filter-label" style={{ opacity: 0, pointerEvents: 'none' }}>Actions</label>
                     <button
-                      onClick={() => {
-                        setSelectedCategory("all");
-                        setSelectedSort("default");
-                        setPriceRange({ min: 0, max: 10000 });
-                      }}
+                      onClick={handleResetFilters}
                       className="reset-button"
+                      aria-label="Reset all filters"
                     >
                       <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -181,58 +214,64 @@ const Products = () => {
                 </div>
               </div>
 
-              {loading ? (
+              {/* Loading State */}
+              {loading && (
                 <div className="products-grid">
                   {[...Array(8)].map((_, index) => (
                     <ProductCardSkeleton key={index} />
                   ))}
                 </div>
-              ) : (
-                <>
-                  {filteredProducts.length > 0 ? (
-                    <div className="products-grid">
-                      {filteredProducts.map((product: any) => (
-                        <Card key={product.id} product={product} />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="empty-state">
-                      <div className="empty-state-icon">
-                        <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                      </div>
-                      <h3 className="empty-state-title">No products found</h3>
-                      <p className="empty-state-description">
-                        Try adjusting your filters or search criteria to find what you're looking for.
-                      </p>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("all");
-                          setSelectedSort("default");
-                          setPriceRange({ min: 0, max: 10000 });
-                        }}
-                        className="empty-state-button"
-                      >
-                        Clear All Filters
-                      </button>
-                    </div>
-                  )}
-                </>
+              )}
+
+              {/* Error State */}
+              {!loading && error && (
+                <div className="empty-state">
+                  <div className="empty-state-icon">
+                    <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="empty-state-title">{error}</h3>
+                  <button
+                    onClick={fetchProducts}
+                    className="empty-state-button"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+
+              {/* Products Grid */}
+              {!loading && !error && filteredProducts.length > 0 && (
+                <div className="products-grid">
+                  {filteredProducts.map((product) => (
+                    <Card key={product.id} product={product as any} />
+                  ))}
+                </div>
+              )}
+
+              {/* No Products Found */}
+              {!loading && !error && allProducts.length > 0 && filteredProducts.length === 0 && (
+                <div className="empty-state">
+                  <div className="empty-state-icon">
+                    <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                  </div>
+                  <h3 className="empty-state-title">No products found</h3>
+                  <p className="empty-state-description">
+                    Try adjusting your filters to find what you're looking for.
+                  </p>
+                  <button
+                    onClick={handleResetFilters}
+                    className="empty-state-button"
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
               )}
             </div>
           </div>
-        ) : (
-          <div className="empty-state-full">
-            <div className="empty-state-icon">
-              <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-            </div>
-            <h3 className="empty-state-title">No products available</h3>
-            <p className="empty-state-description">Check back soon for new arrivals!</p>
-          </div>
-        )}
       </div>
       <Footer />
 
