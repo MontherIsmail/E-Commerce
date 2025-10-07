@@ -19,8 +19,6 @@ const Products = () => {
     try {
       setLoading(true);
       const { getProducts } = createClient("");
-      // Add minimum delay to show skeleton loaders
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const data = await getProducts();
       console.log("Products data:", data);
       console.log("Products array:", (data as any).products);
@@ -189,23 +187,23 @@ const Products = () => {
                       />
                     </div>
                   </div>
+                </div>
 
-                  {/* Reset Button */}
-                  <div className="filter-item filter-item-center">
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("all");
-                        setSelectedSort("default");
-                        setPriceRange({ min: 0, max: 10000 });
-                      }}
-                      className="reset-button"
-                    >
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
-                      Reset Filters
-                    </button>
-                  </div>
+                {/* Reset Button - Separate Row */}
+                <div className="reset-button-wrapper">
+                  <button
+                    onClick={() => {
+                      setSelectedCategory("all");
+                      setSelectedSort("default");
+                      setPriceRange({ min: 0, max: 10000 });
+                    }}
+                    className="reset-button"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reset Filters
+                  </button>
                 </div>
               </div>
 
@@ -387,8 +385,10 @@ const Products = () => {
           gap: 0.5rem;
         }
 
-        .filter-item-center {
-          justify-content: flex-end;
+        .reset-button-wrapper {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .filter-label {
