@@ -50,18 +50,17 @@ app.use([
 app.use("/api/v1", router);
 
 if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the client/build directory
-  app.use(express.static(join(__dirname, '..', '..', 'client', 'build')));
+  // Serve static files from the client/build directory with /ecommerce prefix
+  app.use('/ecommerce', express.static(join(__dirname, '..', '..', 'client', 'build')));
 
-  // For any other routes (except API routes), serve the client app
-  app.get('*', (req: Request, res: Response) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/')) {
-      return res.status(404).json({ message: 'API route not found' });
-    }
-    
-    // Serve the client app's index.html for all non-API routes
+  // Handle client-side routing for /ecommerce paths
+  app.get('/ecommerce*', (req: Request, res: Response) => {
     res.sendFile(join(__dirname, '..', '..', 'client', 'build', 'index.html'));
+  });
+
+  // For root path, redirect to /ecommerce
+  app.get('/', (req: Request, res: Response) => {
+    res.redirect('/ecommerce');
   });
 }
 
