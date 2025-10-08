@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import createClient from "../../api";
+import Swal from "sweetalert2";
 import { Footer, Navbar } from "../../components";
 import { CartItemSkeleton } from "../../components/Skeletons";
 import { useAuth } from "../../context/AuthContext";
@@ -65,9 +66,22 @@ const Cart = () => {
     }
   };
 
-  const deleteItemSweet = (id: string) => {
-    if (window.confirm("Are you sure you want to remove this item from your cart?")) {
-      deleteFromCart(id);
+  const deleteItemSweet = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Remove this item?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, remove",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+      focusCancel: true,
+    });
+
+    if (result.isConfirmed) {
+      await deleteFromCart(id);
       toast.success("Item removed from cart");
     }
   };
@@ -82,9 +96,22 @@ const Cart = () => {
     }
   };
 
-  const resetCartSweet = (userId: string) => {
-    if (window.confirm("Are you sure you want to clear your entire cart?")) {
-      deleteAllFromCart(userId);
+  const resetCartSweet = async (userId: string) => {
+    const result = await Swal.fire({
+      title: "Clear entire cart?",
+      text: "All items will be removed.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, clear",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+      focusCancel: true,
+    });
+
+    if (result.isConfirmed && userId) {
+      await deleteAllFromCart(userId);
       toast.success("Cart cleared successfully");
     }
   };
