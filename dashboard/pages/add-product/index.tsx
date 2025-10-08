@@ -257,7 +257,7 @@ const AddProductPage: FC<AddProductPageProps> = () => {
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
                   <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
                     <h2 className="text-xl font-semibold text-gray-900">Colors</h2>
-                    <p className="text-sm text-gray-500 mt-1">Available color options</p>
+                    <p className="text-sm text-gray-500 mt-1">Choose colors using the color picker or enter hex codes</p>
                   </div>
                   <div className="p-6">
                     <FieldArray name="productColors">
@@ -290,13 +290,20 @@ const AddProductPage: FC<AddProductPageProps> = () => {
                                   />
                                 </div>
                                 <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-2">Hex Color Code</label>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
                                   <div className="flex items-center space-x-3">
+                                    <div className="flex-1">
+                                      <Field
+                                        name={`productColors.${index}.hex`}
+                                        type="color"
+                                        className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
+                                      />
+                                    </div>
                                     <Field
                                       name={`productColors.${index}.hex`}
                                       type="text"
                                       placeholder="#000000"
-                                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                      className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm font-mono"
                                     />
                                     <div 
                                       className="w-12 h-12 rounded-lg border-2 border-gray-300 flex-shrink-0"
