@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
 import { Product } from "../types/product";
 import axios from "axios";
@@ -24,7 +24,16 @@ const productSchema = Yup.object().shape({
     .required("Stock is required")
     .min(0, "Stock cannot be negative"),
   productImages: Yup.string().required("Product images are required"),
-  productColors: Yup.string().required("Product colors are required"),
+  productColors: Yup.array()
+    .of(
+      Yup.object({
+        name: Yup.string().required("Color Name is required"),
+        hex: Yup.string()
+          .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color format")
+          .required("Hex Color is required"),
+      })
+    )
+    .min(1, "At least one color is required"),
   productSizes: Yup.string().required("Product sizes are required"),
 });
 
@@ -36,6 +45,11 @@ const ProductEditForm: FC<ProductEditFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Helper function to validate hex color
+  const isValidHexColor = (hex: string) => {
+    return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex);
+  };
+
   const initialValues = {
     productName: product.productName || "",
     productPrice: product.productPrice || 0,
@@ -43,9 +57,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({
     productCategory: product.productCategory || "",
     stock: product.stock || 0,
     productImages: product.productUrlImgs?.join(", ") || "",
-    productColors: product.productColors
-      ?.map((color: any) => color.name)
-      .join(", ") || "",
+    productColors: product.productColors || [{ name: "", hex: "#000000" }],
     productSizes: product.productSizes?.map((size: any) => size.name).join(", ") || "",
   };
 
@@ -64,14 +76,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({
           .split(",")
           .map((img: string) => img.trim())
           .filter((img: string) => img.length > 0),
-        productColors: values.productColors
-          .split(",")
-          .map((name: string) => ({
-            name: name.trim(),
-            class: "",
-            selectedClass: "",
-          }))
-          .filter((color: any) => color.name.length > 0),
+        productColors: values.productColors.filter((color: any) => color.name.length > 0 && color.hex.length > 0),
         productSizes: values.productSizes
           .split(",")
           .map((name: string) => ({
@@ -300,22 +305,82 @@ const ProductEditForm: FC<ProductEditFormProps> = ({
 
                   {/* Product Colors Field */}
                   <div>
-                    <label
-                      htmlFor="productColors"
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                    >
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
                       Colors *
                     </label>
-                    <Field
-                      type="text"
-                      name="productColors"
-                      id="productColors"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                      placeholder="Red, Blue, Green"
-                    />
-                    <p className="text-sm text-gray-500 mt-1">
-                      Separate colors with commas
-                    </p>
+                    <FieldArray name="productColors">
+                      {({ push, remove }) => (
+                        <div className="space-y-4">
+                          {values.productColors.map((color: any, index: number) => (
+                            <div key={index} className="border border-gray-200 rounded-lg p-4">
+                              <div className="flex justify-between items-center mb-3">
+                                <span className="text-sm font-medium text-gray-700">Color {index + 1}</span>
+                                {values.productColors.length > 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                  </button>
+                                )}
+                              </div>
+                              <div className="space-y-3">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">Color Name</label>
+                                  <Field
+                                    name={`productColors.${index}.name`}
+                                    type="text"
+                                    placeholder="e.g., Midnight Blue, Cherry Red"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                                  <div className="flex items-center space-x-3">
+                                    <div className="flex-1">
+                                      <Field
+                                        name={`productColors.${index}.hex`}
+                                        type="color"
+                                        className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
+                                      />
+                                    </div>
+                                    <Field
+                                      name={`productColors.${index}.hex`}
+                                      type="text"
+                                      placeholder="#000000"
+                                      className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm font-mono"
+                                    />
+                                    <div 
+                                      className="w-12 h-12 rounded-lg border-2 border-gray-300 flex-shrink-0"
+                                      style={{ 
+                                        backgroundColor: isValidHexColor(color.hex) ? color.hex : '#f3f4f6',
+                                        borderColor: isValidHexColor(color.hex) ? color.hex : '#d1d5db'
+                                      }}
+                                    ></div>
+                                  </div>
+                                  {color.hex && !isValidHexColor(color.hex) && (
+                                    <p className="text-red-500 text-sm mt-1">Please enter a valid hex color (e.g., #FF0000)</p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => push({ name: "", hex: "#000000" })}
+                            className="w-full flex items-center justify-center px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border-2 border-dashed border-gray-300"
+                          >
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            Add Color
+                          </button>
+                        </div>
+                      )}
+                    </FieldArray>
                     <ErrorMessage
                       name="productColors"
                       component="div"

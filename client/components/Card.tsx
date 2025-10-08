@@ -75,21 +75,10 @@ const Card = ({ product }: CardProps) => {
               {product.productColors.slice(0, 4).map((color: any, index: number) => (
                 <div key={index} className="flex items-center space-x-1">
                   <div
-                    className={`w-4 h-4 rounded-full border border-gray-300 ${color.class || 'bg-gray-300'}`}
+                    className="w-4 h-4 rounded-full border border-gray-300"
                     title={color.name}
                     style={{
-                      backgroundColor: color.name === 'Black' ? '#000000' :
-                        color.name === 'Red' ? '#ef4444' :
-                          color.name === 'Pink' ? '#ec4899' :
-                            color.name === 'Purple' ? '#a855f7' :
-                              color.name === 'Yellow' ? '#eab308' :
-                                color.name === 'Blue' ? '#3b82f6' :
-                                  color.name === 'Green' ? '#22c55e' :
-                                    color.name === 'Orange' ? '#f97316' :
-                                      color.name === 'Gray' ? '#6b7280' :
-                                        color.name === 'White' ? '#ffffff' :
-                                          color.name === 'Indigo' ? '#6366f1' :
-                                            color.name === 'Teal' ? '#14b8a6' : '#6b7280'
+                      backgroundColor: color.hex || '#6b7280'
                     }}
                   ></div>
                   <span className="text-xs text-gray-600">{color.name}</span>
