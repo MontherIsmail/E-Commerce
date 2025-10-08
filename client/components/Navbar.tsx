@@ -72,13 +72,15 @@ const Navbar = () => {
               <>
                 <div className="cart-container">
                   <Link href="/cart" className="cart-link">
-                    <ShoppingBagIcon
-                      aria-hidden="true"
-                      className="cart-icon"
-                    />
-                    <span className="cart-count">
-                      {cartCount}
-                    </span>
+                    <div className="cart-icon-wrapper">
+                      <ShoppingBagIcon
+                        aria-hidden="true"
+                        className="cart-icon"
+                      />
+                      <span className="cart-count">
+                        {cartCount}
+                      </span>
+                    </div>
                     <span className="sr-only">items in cart, view bag</span>
                   </Link>
                 </div>
@@ -456,7 +458,8 @@ const Navbar = () => {
         .nav-actions {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 2rem;
+          margin-left: 3rem;
         }
         @media (max-width: 1023px) {
           .nav-actions {
@@ -474,13 +477,20 @@ const Navbar = () => {
         .cart-link {
           display: flex;
           align-items: center;
-          padding: 0.75rem;
-          border-radius: 50%;
+          padding: 0.5rem 0.75rem;
+          border-radius: 0.5rem;
           transition: var(--transition);
           position: relative;
+          background: rgba(0, 0, 0, 0.03);
         }
         .cart-link:hover {
-          background: rgba(0, 0, 0, 0.05);
+          background: rgba(0, 0, 0, 0.08);
+        }
+        .cart-icon-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .cart-icon {
           height: 1.25rem;
@@ -499,8 +509,8 @@ const Navbar = () => {
         }
         .cart-count {
           position: absolute;
-          top: 0.25rem;
-          right: 0.25rem;
+          top: -0.5rem;
+          right: -0.5rem;
           background: var(--primary-color);
           color: white;
           font-size: 0.65rem;
@@ -527,7 +537,6 @@ const Navbar = () => {
         }
         .auth-links {
           display: none;
-          margin-left: 2rem;
         }
         @media (min-width: 1024px) {
           .auth-links {
