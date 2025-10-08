@@ -15,6 +15,7 @@
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --border-radius: 8px;
   --transition: all 0.3s ease;
+  color-scheme: light only;
 }
 
 html,
@@ -28,6 +29,7 @@ body {
   color: var(--text-primary);
   background-color: var(--background);
   scroll-behavior: smooth;
+  color-scheme: light only;
 }
 
 #__next {
@@ -163,13 +165,21 @@ select:focus {
   }
 }
 
+/* Force light mode - disable automatic dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary-color: #fff;
-    --secondary-color: #000;
-    --text-primary: #fff;
-    --text-secondary: rgba(255, 255, 255, 0.6);
-    --background: #000;
-    --border-color: rgba(255, 255, 255, 0.1);
+    --primary-color: #000;
+    --secondary-color: #fff;
+    --text-primary: #000;
+    --text-secondary: rgba(0, 0, 0, 0.6);
+    --background: #fff;
+    --border-color: rgba(0, 0, 0, 0.1);
+    color-scheme: light only;
+  }
+  
+  html,
+  body {
+    background-color: #fff !important;
+    color: #000 !important;
   }
 }
