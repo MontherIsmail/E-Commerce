@@ -136,7 +136,7 @@ const Cart = () => {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>
-                            <a href={`/products/${item.id}`}>
+                            <a href={`${basePath}/product/${item.products.id}`}>
                               {item.products.productName}
                             </a>
                           </h3>

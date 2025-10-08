@@ -1,25 +1,31 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-// Navigation links - basePath is handled by Next.js config
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const navigation = {
   shop: [
-    { name: "Products", href: "/products" },
-    { name: "Men", href: "/products?category=men" },
-    { name: "Women", href: "/products?category=women" },
-    { name: "New Arrivals", href: "/products?sort=newest" },
+    { name: "Products", href: `${basePath}/products` },
+    { name: "Men", href: `${basePath}/men` },
+    { name: "Women", href: `${basePath}/women` },
+    { name: "New Arrivals", href: `${basePath}/products?sort=newest` },
   ],
   support: [
-    { name: "About Us", href: "/about" },
-    { name: "Contact", href: "/contact" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Shipping", href: "/shipping" },
+    { name: "About Us", href: `${basePath}/about` },
+    { name: "Contact", href: `${basePath}/contact` },
+    { name: "FAQ", href: `${basePath}/faq` },
+    { name: "Shipping", href: `${basePath}/shipping` },
   ],
   legal: [
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Terms of Service", href: "/terms-of-service" },
-    { name: "Returns", href: "/returns" },
-    { name: "Refunds", href: "/refunds" },
+    { name: "Privacy Policy", href: `${basePath}/privacy-policy` },
+    { name: "Terms of Service", href: `${basePath}/terms-of-service` },
+    { name: "Returns", href: `${basePath}/returns` },
+    { name: "Refunds", href: `${basePath}/refunds` },
   ],
 };
 

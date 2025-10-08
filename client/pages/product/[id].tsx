@@ -119,7 +119,7 @@ const Product = () => {
                 <li>
                   <div className="flex items-center">
                     <a
-                      href={`${basePath}/men`}
+                      href={`${basePath}/${product?.productCategory?.toLowerCase() || 'products'}`}
                       className="mr-2 text-sm font-medium text-gray-900"
                     >
                       {product?.productCategory}
@@ -137,13 +137,12 @@ const Product = () => {
                   </div>
                 </li>
                 <li className="text-sm">
-                  <a
-                    href={product?.href}
+                  <span
                     aria-current="page"
-                    className="font-medium text-gray-500 hover:text-gray-600"
+                    className="font-medium text-gray-500"
                   >
                     {product?.productName}
-                  </a>
+                  </span>
                 </li>
               </ol>
             </nav>
