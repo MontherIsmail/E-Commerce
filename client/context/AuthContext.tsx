@@ -74,15 +74,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (u?.id) {
           setUser({ id: u.id, username: u.username, role: u.role });
           setLoading(false);
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Login successful!",
-            showConfirmButton: false,
-            timer: 1500,
-          }).then(() => {
-            router.push('/');
-          });
+          toast.success("Login successful!");
+          router.push('/');
         }
       }
     } catch (error: any) {
