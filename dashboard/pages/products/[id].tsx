@@ -345,12 +345,13 @@ const ProductPage: FC = () => {
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Available Colors</h3>
                       <div className="flex flex-wrap gap-2">
                         {product.productColors.map((color: any, index: number) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm"
-                          >
-                            {color.name}
-                          </span>
+                          <div key={index} className="flex items-center space-x-2 px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">
+                            <div 
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: color.hex || '#f3f4f6' }}
+                            ></div>
+                            <span>{color.name}</span>
+                          </div>
                         ))}
                       </div>
                     </div>

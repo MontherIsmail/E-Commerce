@@ -443,7 +443,11 @@ const ProductsPage: FC = () => {
                       {product.productColors && product.productColors.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {product.productColors.slice(0, 3).map((color: any, index: number) => (
-                            <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                            <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded flex items-center gap-1">
+                              <div 
+                                className="w-3 h-3 rounded-full border border-gray-300"
+                                style={{ backgroundColor: color.hex || '#f3f4f6' }}
+                              ></div>
                               {color.name}
                             </span>
                           ))}

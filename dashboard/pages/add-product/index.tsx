@@ -14,21 +14,10 @@ const AddProductPage: FC<AddProductPageProps> = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Predefined color options
-  const colorOptions = [
-    { name: "Black", class: "bg-black", selectedClass: "ring-black" },
-    { name: "White", class: "bg-white border border-gray-300", selectedClass: "ring-gray-300" },
-    { name: "Red", class: "bg-red-500", selectedClass: "ring-red-500" },
-    { name: "Blue", class: "bg-blue-500", selectedClass: "ring-blue-500" },
-    { name: "Green", class: "bg-green-500", selectedClass: "ring-green-500" },
-    { name: "Yellow", class: "bg-yellow-500", selectedClass: "ring-yellow-500" },
-    { name: "Purple", class: "bg-purple-500", selectedClass: "ring-purple-500" },
-    { name: "Pink", class: "bg-pink-500", selectedClass: "ring-pink-500" },
-    { name: "Gray", class: "bg-gray-500", selectedClass: "ring-gray-500" },
-    { name: "Orange", class: "bg-orange-500", selectedClass: "ring-orange-500" },
-    { name: "Indigo", class: "bg-indigo-500", selectedClass: "ring-indigo-500" },
-    { name: "Teal", class: "bg-teal-500", selectedClass: "ring-teal-500" },
-  ];
+  // Helper function to validate hex color
+  const isValidHexColor = (hex: string) => {
+    return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex);
+  };
 
   const handleSubmit = async (values: any) => {
     const {
@@ -112,7 +101,7 @@ const AddProductPage: FC<AddProductPageProps> = () => {
             productPrice: "",
             productDescription: "",
             productCategory: "",
-            productColors: [{ name: "Black", class: "bg-black", selectedClass: "ring-black" }],
+            productColors: [{ name: "", hex: "#000000" }],
             productSizes: [{ name: "", inStock: true }],
             stock: "",
           }}
@@ -292,48 +281,41 @@ const AddProductPage: FC<AddProductPageProps> = () => {
                               </div>
                               <div className="space-y-3">
                                 <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-2">Select Color</label>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">Color Name</label>
                                   <Field
                                     name={`productColors.${index}.name`}
-                                    as="select"
+                                    type="text"
+                                    placeholder="e.g., Midnight Blue, Cherry Red"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                  >
-                                    <option value="">Choose a color...</option>
-                                    {colorOptions.map((option) => (
-                                      <option key={option.name} value={option.name}>
-                                        {option.name}
-                                      </option>
-                                    ))}
-                                  </Field>
+                                  />
                                 </div>
                                 <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-2">Color Preview</label>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">Hex Color Code</label>
                                   <div className="flex items-center space-x-3">
+                                    <Field
+                                      name={`productColors.${index}.hex`}
+                                      type="text"
+                                      placeholder="#000000"
+                                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    />
                                     <div 
-                                      className={`w-8 h-8 rounded-full border-2 ${colorOptions.find(opt => opt.name === color.name)?.class || 'bg-gray-300'} ${colorOptions.find(opt => opt.name === color.name)?.selectedClass || 'ring-gray-300'}`}
+                                      className="w-12 h-12 rounded-lg border-2 border-gray-300 flex-shrink-0"
+                                      style={{ 
+                                        backgroundColor: isValidHexColor(color.hex) ? color.hex : '#f3f4f6',
+                                        borderColor: isValidHexColor(color.hex) ? color.hex : '#d1d5db'
+                                      }}
                                     ></div>
-                                    <span className="text-sm text-gray-600">
-                                      {color.name || "No color selected"}
-                                    </span>
                                   </div>
+                                  {color.hex && !isValidHexColor(color.hex) && (
+                                    <p className="text-red-500 text-sm mt-1">Please enter a valid hex color (e.g., #FF0000)</p>
+                                  )}
                                 </div>
-                                {/* Hidden fields for class and selectedClass */}
-                                <Field
-                                  name={`productColors.${index}.class`}
-                                  type="hidden"
-                                  value={colorOptions.find(opt => opt.name === color.name)?.class || "bg-gray-300"}
-                                />
-                                <Field
-                                  name={`productColors.${index}.selectedClass`}
-                                  type="hidden"
-                                  value={colorOptions.find(opt => opt.name === color.name)?.selectedClass || "ring-gray-300"}
-                                />
                               </div>
                             </div>
                           ))}
                           <button
                             type="button"
-                            onClick={() => push({ name: "", class: "bg-gray-300", selectedClass: "ring-gray-300" })}
+                            onClick={() => push({ name: "", hex: "#000000" })}
                             className="w-full flex items-center justify-center px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border-2 border-dashed border-gray-300"
                           >
                             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

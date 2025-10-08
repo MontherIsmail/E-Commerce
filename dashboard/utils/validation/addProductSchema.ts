@@ -14,8 +14,9 @@ const addProductSchema = Yup.object({
     .of(
       Yup.object({
         name: Yup.string().required("Color Name is required"),
-        class: Yup.string().required("Color Class is required"),
-        selectedClass: Yup.string().required("Selected Class is required"),
+        hex: Yup.string()
+          .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color format")
+          .required("Hex Color is required"),
       })
     )
     .min(1, "At least one color is required"),
