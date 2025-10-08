@@ -28,7 +28,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" type="image/png" sizes="192x192" href={`${basePath}/icon-192.png?v=6`} />
         <link rel="icon" type="image/png" sizes="512x512" href={`${basePath}/icon-512.png?v=6`} />
         <link rel="manifest" href={`${basePath}/manifest.json`} />
-        <meta name="theme-color" content="#3B82F6" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="color-scheme" content="light only" />
       </Head>
       <AuthProvider>
         <Component {...pageProps} />
