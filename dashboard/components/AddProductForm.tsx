@@ -11,8 +11,9 @@ const validationSchema = Yup.object({
   productColors: Yup.array().of(
     Yup.object({
       name: Yup.string().required("Required"),
-      class: Yup.string().required("Required"),
-      selectedClass: Yup.string().required("Required"),
+      hex: Yup.string()
+        .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color format")
+        .required("Required"),
     })
   ).min(1, "At least one color is required"),
   productSizes: Yup.array().of(
@@ -38,7 +39,7 @@ const AddProductForm: FC<AddProductFormProps> = ({ onClose, onSave }) => {
         productPrice: 0,
         productDescription: "",
         productCategory: "",
-        productColors: [{ name: "", class: "", selectedClass: "" }],
+        productColors: [{ name: "", hex: "#000000" }],
         productSizes: [{ name: "", inStock: false }],
         stock: 0,
       }}
@@ -134,20 +135,27 @@ const AddProductForm: FC<AddProductFormProps> = ({ onClose, onSave }) => {
                   placeholder="Color Name"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                 />
-                <Field
-                  id={`productColors.${index}.class`}
-                  name={`productColors.${index}.class`}
-                  type="text"
-                  placeholder="Color Class"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
-                <Field
-                  id={`productColors.${index}.selectedClass`}
-                  name={`productColors.${index}.selectedClass`}
-                  type="text"
-                  placeholder="Selected Color Class"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                />
+                <div className="flex items-center space-x-2 mt-1">
+                  <Field
+                    id={`productColors.${index}.hex`}
+                    name={`productColors.${index}.hex`}
+                    type="color"
+                    value={color?.hex || "#000000"}
+                    className="w-12 h-8 border border-gray-300 rounded cursor-pointer"
+                  />
+                  <Field
+                    id={`productColors.${index}.hex`}
+                    name={`productColors.${index}.hex`}
+                    type="text"
+                    placeholder="#000000"
+                    value={color?.hex || ""}
+                    className="flex-1 border border-gray-300 rounded-md shadow-sm px-2 py-1 text-sm font-mono"
+                  />
+                  <div 
+                    className="w-8 h-8 rounded border border-gray-300"
+                    style={{ backgroundColor: color?.hex || '#f3f4f6' }}
+                  ></div>
+                </div>
                 <button
                   type="button"
                   className="mt-2 text-red-500"
@@ -160,7 +168,7 @@ const AddProductForm: FC<AddProductFormProps> = ({ onClose, onSave }) => {
             <button
               type="button"
               className="text-blue-500"
-              onClick={() => setFieldValue("productColors", [...values.productColors, { name: "", class: "", selectedClass: "" }])}
+              onClick={() => setFieldValue("productColors", [...values.productColors, { name: "", hex: "#000000" }])}
             >
               Add Color
             </button>

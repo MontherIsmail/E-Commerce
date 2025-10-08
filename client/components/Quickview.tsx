@@ -226,17 +226,11 @@ const Quickview = ({ id }: QuickviewProps) => {
                                 key={color.name}
                                 value={color}
                                 aria-label={color.name}
-                                className={classNames(
-                                  color.selectedClass,
-                                  "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none data-[checked]:ring-2 data-[focus]:data-[checked]:ring data-[focus]:data-[checked]:ring-offset-1"
-                                )}
+                                className="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none data-[checked]:ring-2 data-[focus]:data-[checked]:ring data-[focus]:data-[checked]:ring-offset-1"
                               >
                                 <span
                                   aria-hidden="true"
-                                  className={classNames(
-                                    color.class,
-                                    "h-8 w-8 rounded-full border-2 border-gray-300"
-                                  )}
+                                  className="h-8 w-8 rounded-full border-2 border-gray-300"
                                 style={{
                                     backgroundColor: color.hex || '#6b7280'
                                 }}

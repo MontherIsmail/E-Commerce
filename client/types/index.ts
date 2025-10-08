@@ -28,8 +28,7 @@ export interface Product {
 
 export interface ProductColor {
   name: string;
-  class: string;
-  selectedClass: string;
+  hex: string;
 }
 
 export interface ProductSize {
