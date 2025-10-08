@@ -296,6 +296,7 @@ const AddProductPage: FC<AddProductPageProps> = () => {
                                       <Field
                                         name={`productColors.${index}.hex`}
                                         type="color"
+                                        value={color?.hex || "#000000"}
                                         className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
                                       />
                                     </div>
@@ -303,17 +304,18 @@ const AddProductPage: FC<AddProductPageProps> = () => {
                                       name={`productColors.${index}.hex`}
                                       type="text"
                                       placeholder="#000000"
+                                      value={color?.hex || ""}
                                       className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm font-mono"
                                     />
                                     <div 
                                       className="w-12 h-12 rounded-lg border-2 border-gray-300 flex-shrink-0"
                                       style={{ 
-                                        backgroundColor: isValidHexColor(color.hex) ? color.hex : '#f3f4f6',
-                                        borderColor: isValidHexColor(color.hex) ? color.hex : '#d1d5db'
+                                        backgroundColor: isValidHexColor(color?.hex) ? color.hex : '#f3f4f6',
+                                        borderColor: isValidHexColor(color?.hex) ? color.hex : '#d1d5db'
                                       }}
                                     ></div>
                                   </div>
-                                  {color.hex && !isValidHexColor(color.hex) && (
+                                  {color?.hex && !isValidHexColor(color.hex) && (
                                     <p className="text-red-500 text-sm mt-1">Please enter a valid hex color (e.g., #FF0000)</p>
                                   )}
                                 </div>
