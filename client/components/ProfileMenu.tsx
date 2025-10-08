@@ -1,12 +1,13 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ChevronDownIcon, UserIcon } from "@heroicons/react/20/solid";
 import { ChartPieIcon, CursorArrowRaysIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 
 const ProfileMenu = () => {
   const { logout } = useAuth();
   const solutions = [
-    { name: "Profile", href: "/profile", icon: UserIcon, onClick: undefined },
+    { name: "Profile", href: "/profile", icon: UserIcon, onClick: undefined, isLink: true },
     {
       name: "Logout",
       href: "#",
@@ -15,6 +16,7 @@ const ProfileMenu = () => {
         logout();
       },
       icon: CursorArrowRaysIcon,
+      isLink: false,
     },
   ];
   return (
@@ -46,14 +48,24 @@ const ProfileMenu = () => {
                   />
                 </div>
                 <div className="mt-3">
-                  <a 
-                    href={item.href} 
-                    onClick={item.onClick}
-                    className="font-semibold text-gray-900"
-                  >
-                    {item.name}
-                    <span className="absolute inset-0" />
-                  </a>
+                  {item.isLink ? (
+                    <Link 
+                      href={item.href} 
+                      className="font-semibold text-gray-900"
+                    >
+                      {item.name}
+                      <span className="absolute inset-0" />
+                    </Link>
+                  ) : (
+                    <a 
+                      href={item.href} 
+                      onClick={item.onClick}
+                      className="font-semibold text-gray-900"
+                    >
+                      {item.name}
+                      <span className="absolute inset-0" />
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
