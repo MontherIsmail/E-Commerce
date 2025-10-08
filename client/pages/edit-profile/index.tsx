@@ -6,6 +6,13 @@ import Swal from "sweetalert2";
 import { Footer, Navbar } from "../../components";
 import withAuth from "../../hoc/withAuth";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const EditProfile = () => {
   const { user } = useAuth();
   const [userData, setUserData] = useState({
@@ -74,7 +81,7 @@ const EditProfile = () => {
         timer: 1500,
       });
 
-      router.push("/profile");
+      router.push(`${basePath}/profile`);
     } catch (error) {
       console.error("Error updating profile:", error);
     }

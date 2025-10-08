@@ -3,10 +3,17 @@ import { ChevronDownIcon, UserIcon } from "@heroicons/react/20/solid";
 import { ChartPieIcon, CursorArrowRaysIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../context/AuthContext";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const ProfileMenu = () => {
   const { logout } = useAuth();
   const solutions = [
-    { name: "Profile", href: "/profile", icon: UserIcon, onClick: undefined },
+    { name: "Profile", href: `${basePath}/profile`, icon: UserIcon, onClick: undefined },
     {
       name: "Logout",
       href: "#",

@@ -1,26 +1,33 @@
 import men from "../../assets/men.png"
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const callouts = [
     {
       name: 'All Products',
       description: 'Browse our complete collection of products',
       imageSrc: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
       imageAlt: 'Modern shopping store with various products displayed',
-      href: '/products',
+      href: `${basePath}/products`,
     },
     {
       name: 'Men',
       description: 'Stylish clothing and accessories for men',
       imageSrc: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
       imageAlt: 'Fashionable men\'s clothing and accessories',
-      href: '/men',
+      href: `${basePath}/men`,
     },
     {
       name: 'Women',
       description: 'Elegant fashion and accessories for women',
       imageSrc: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
       imageAlt: 'Beautiful women\'s fashion and accessories',
-      href: '/women',
+      href: `${basePath}/women`,
     },
   ]
   

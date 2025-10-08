@@ -16,6 +16,13 @@ import { useAuth } from "../../context/AuthContext";
 import { API_CONFIG } from "../../config/api";
 import type { CartItem } from "../../types";
 
+// Dynamic base path based on environment
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
+};
+
+const basePath = getBasePath();
+
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
 );
@@ -116,7 +123,7 @@ const CheckoutForm = () => {
         console.error(error);
       } else if (paymentIntent.status === "succeeded") {
         toast.success("Payment succeeded! Redirecting to orders...");
-        router.push("/orders");
+        router.push(`${basePath}/orders`);
       }
     } catch (error: any) {
       toast.error(error?.message || "An unexpected error occurred. Please try again.");
