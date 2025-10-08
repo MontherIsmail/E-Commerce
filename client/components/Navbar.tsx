@@ -478,7 +478,6 @@ const Navbar = () => {
           border-radius: 50%;
           transition: var(--transition);
           position: relative;
-          gap: 0.5rem;
         }
         .cart-link:hover {
           background: rgba(0, 0, 0, 0.05);
@@ -499,16 +498,24 @@ const Navbar = () => {
           color: var(--primary-color);
         }
         .cart-count {
-          position: relative;
+          position: absolute;
+          top: 0.25rem;
+          right: 0.25rem;
           background: var(--primary-color);
           color: white;
-          font-size: 0.75rem;
-          font-weight: 600;
-          padding: 0.25rem 0.5rem;
+          font-size: 0.65rem;
+          font-weight: 700;
+          padding: 0.15rem 0.4rem;
           border-radius: 9999px;
-          min-width: 1.5rem;
+          min-width: 1.25rem;
+          height: 1.25rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           text-align: center;
           line-height: 1;
+          border: 2px solid white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .profile-container {
           display: none;
@@ -520,6 +527,7 @@ const Navbar = () => {
         }
         .auth-links {
           display: none;
+          margin-left: 2rem;
         }
         @media (min-width: 1024px) {
           .auth-links {
@@ -531,14 +539,17 @@ const Navbar = () => {
           font-weight: 600;
           color: var(--text-primary);
           transition: var(--transition);
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          background: rgba(0, 0, 0, 0.03);
+        }
+        .login-link:hover {
+          background: rgba(0, 0, 0, 0.08);
         }
         @media (min-width: 768px) {
           .login-link {
             font-size: 0.875rem;
           }
-        }
-        .login-link:hover {
-          color: var(--primary-color);
         }
         .mobile-menu-button {
           display: block;
