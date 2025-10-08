@@ -142,7 +142,7 @@ const UsersPage: React.FC = () => {
       await axios.put(getApiUrl(`/auth/users/${userId}`), payload, { withCredentials: true });
       Swal.fire({ icon: 'success', title: 'Updated', text: 'User updated successfully', timer: 1500, showConfirmButton: false });
       // reflect in UI
-      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, username: payload.username, email: payload.email } as any : u)));
+      setUsers((prev) => prev.map((u) => (Number(u.id) === userId ? { ...u, username: payload.username, email: payload.email } as any : u)));
       setIsEditing(false);
       setEditForm(null);
       setSelectedUser(null);
