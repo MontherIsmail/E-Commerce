@@ -1,5 +1,5 @@
 import Router from 'express';
-import { signUp, getUsers, login, logout, me, createAdmin } from "../controllers/authController";
+import { signUp, getUsers, login, logout, me, createAdmin, deleteUser } from "../controllers/authController";
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import checkAuth from '../middleware/checkAuth';
 import checkAdmin from '../middleware/checkAdmin';
@@ -14,5 +14,6 @@ router.post('/logout', asyncMiddleware(logout));
 router.get('/users', checkAuth, checkAdmin, requirePermission('manageAdmins'), asyncMiddleware(getUsers));
 router.get('/me', asyncMiddleware(me));
 router.post('/create-admin', checkAuth, requirePermission('manageAdmins'), asyncMiddleware(createAdmin));
+router.delete('/users/:id', checkAuth, checkAdmin, requirePermission('manageAdmins'), asyncMiddleware(deleteUser));
 
 export default router;
