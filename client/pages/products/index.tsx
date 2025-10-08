@@ -365,6 +365,20 @@ const Products = () => {
           width: 100%;
         }
 
+        @media (max-width: 640px) {
+          .filters-grid {
+            grid-template-columns: 1fr;
+            gap: 0.875rem;
+          }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .filters-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+          }
+        }
+
         .filter-item {
           display: flex;
           flex-direction: column;
@@ -610,11 +624,6 @@ const Products = () => {
             font-size: 1rem;
           }
 
-          .filters-grid {
-            grid-template-columns: 1fr;
-            gap: 0.875rem;
-          }
-
           .products-grid {
             grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
             gap: 1.5rem;
@@ -630,6 +639,15 @@ const Products = () => {
 
           .filter-label {
             font-size: 0.75rem;
+          }
+
+          .price-inputs {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          .price-separator {
+            display: none;
           }
         }
       `}</style>
