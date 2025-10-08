@@ -76,12 +76,12 @@ const Card = ({ product }: CardProps) => {
                 <div key={index} className="flex items-center space-x-1">
                   <div
                     className="w-4 h-4 rounded-full border border-gray-300"
-                    title={color.name}
+                    title={color?.name || 'Unknown'}
                     style={{
-                      backgroundColor: color.hex || '#6b7280'
+                      backgroundColor: color?.hex || '#6b7280'
                     }}
                   ></div>
-                  <span className="text-xs text-gray-600">{color.name}</span>
+                  <span className="text-xs text-gray-600">{color?.name || 'Unknown'}</span>
                 </div>
               ))}
               {product.productColors.length > 4 && (

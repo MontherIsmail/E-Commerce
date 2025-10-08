@@ -47,7 +47,7 @@ interface Size {
 const Quickview = ({ id }: QuickviewProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [product, setProduct] = useState<Product | null>(null);
-  const [selectedColor, setSelectedColor] = useState<Color | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -70,7 +70,7 @@ const Quickview = ({ id }: QuickviewProps) => {
       const cartItem = {
         productId: id,
         userId: user?.id,
-        selectedColor: selectedColor.name,
+        selectedColor: selectedColor,
         selectedSize: selectedSize.name,
         quantity,
       };
@@ -98,7 +98,7 @@ const Quickview = ({ id }: QuickviewProps) => {
         
         // Set initial selected color and size
         if (product?.productColors && product.productColors.length > 0) {
-          setSelectedColor(product.productColors[0]);
+          setSelectedColor(product.productColors[0]?.name || "");
         }
         if (product?.productSizes && product.productSizes.length > 0) {
           const firstInStock = product.productSizes.find((size: any) => size.inStock);
@@ -223,16 +223,16 @@ const Quickview = ({ id }: QuickviewProps) => {
                           >
                             {product?.productColors?.map((color: any) => (
                               <Radio
-                                key={color.name}
-                                value={color}
-                                aria-label={color.name}
+                                key={color?.name || 'unknown'}
+                                value={color?.name || 'unknown'}
+                                aria-label={color?.name || 'Unknown'}
                                 className="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none data-[checked]:ring-2 data-[focus]:data-[checked]:ring data-[focus]:data-[checked]:ring-offset-1"
                               >
                                 <span
                                   aria-hidden="true"
                                   className="h-8 w-8 rounded-full border-2 border-gray-300"
                                 style={{
-                                    backgroundColor: color.hex || '#6b7280'
+                                    backgroundColor: color?.hex || '#6b7280'
                                 }}
                                 />
                               </Radio>

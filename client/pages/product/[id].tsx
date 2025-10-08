@@ -30,7 +30,7 @@ const Product = () => {
   const [product, setProduct] = useState<any>();
   const [products, setProducts] = useState<any>();
   const [loadingProducts, setLoadingProducts] = useState(true);
-  const [selectedColor, setSelectedColor] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<any>(null);
 
   const router = useRouter();
@@ -48,7 +48,7 @@ const Product = () => {
       
       // Set initial color and size after product is loaded
       if (product?.productColors && product.productColors.length > 0) {
-        setSelectedColor(product.productColors[0]);
+        setSelectedColor(product.productColors[0]?.name || "");
       }
       if (product?.productSizes && product.productSizes.length > 0) {
         const firstInStock = product.productSizes.find((size: any) => size.inStock);
@@ -89,7 +89,7 @@ const Product = () => {
       const cartItem = {
         productId: id,
         userId: user.id,
-        selectedColor: selectedColor.name,
+        selectedColor: selectedColor,
         selectedSize: selectedSize.name,
         quantity,
       };
@@ -202,16 +202,16 @@ const Product = () => {
                       >
                         {product?.productColors?.map((color: any) => (
                           <Radio
-                            key={color.name}
-                            value={color}
-                            aria-label={color.name}
+                            key={color?.name || 'unknown'}
+                            value={color?.name || 'unknown'}
+                            aria-label={color?.name || 'Unknown'}
                             className="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none data-[checked]:ring-2"
                           >
                             <span
                               aria-hidden="true"
                               className="h-8 w-8 rounded-full border-2 border-gray-300"
                                 style={{
-                                    backgroundColor: color.hex || '#6b7280'
+                                    backgroundColor: color?.hex || '#6b7280'
                                 }}
                             />
                           </Radio>
