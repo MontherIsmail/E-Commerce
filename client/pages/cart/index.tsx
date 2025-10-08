@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import createClient from "../../api";
 import { Footer, Navbar } from "../../components";
 import { CartItemSkeleton } from "../../components/Skeletons";
@@ -10,7 +11,6 @@ import withAuth from "../../hoc/withAuth";
 import type { CartItem } from "../../types";
 
 const Cart = () => {
-  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   const [subTotal, setSubtotal] = useState(0);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -136,9 +136,9 @@ const Cart = () => {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>
-                            <a href={`${basePath}/product/${item.products.id}`}>
+                            <Link href={`/product/${item.products.id}`}>
                               {item.products.productName}
-                            </a>
+                            </Link>
                           </h3>
                           <p className="ml-4 text-green-400">
                             ${item.products.productPrice}
@@ -247,15 +247,15 @@ const Cart = () => {
 
                 {/* Checkout Button */}
                 <div className="pt-4">
-                  <a
-                    href={`${basePath}/checkout`}
+                  <Link
+                    href="/checkout"
                     className="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
                     </svg>
                     Proceed to Checkout
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Security Badge */}
@@ -292,8 +292,8 @@ const Cart = () => {
           <p className="text-gray-500 text-center max-w-md mb-8">
             Looks like you haven't added anything to your cart yet. Start shopping to find amazing products!
           </p>
-            <a
-              href={`${basePath}/products`}
+            <Link
+              href="/products"
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-lg transform hover:scale-105"
           >
             <svg
@@ -310,7 +310,7 @@ const Cart = () => {
               />
             </svg>
             Start Shopping
-          </a>
+          </Link>
         </div>
       )}
       <Footer />

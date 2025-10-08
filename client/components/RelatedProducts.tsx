@@ -1,8 +1,8 @@
+import Link from "next/link";
 import Card from "./Card";
 import { ProductCardSkeleton } from "./Skeletons";
 
 const RelatedProducts = ({products, loading = false}: any) => {
-  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   
   return (
     <div className="bg-white">
@@ -11,12 +11,12 @@ const RelatedProducts = ({products, loading = false}: any) => {
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             Related Products
           </h2>
-          <a href={`${basePath}/products`}>
+          <Link href="/products">
             <button className="modern-btn">
               <span className="btn-text">See More</span>
               <div className="btn-shine"></div>
             </button>
-          </a>
+          </Link>
         </div>
         {loading ? (
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">

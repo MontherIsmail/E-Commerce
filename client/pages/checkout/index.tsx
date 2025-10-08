@@ -123,7 +123,7 @@ const CheckoutForm = () => {
         console.error(error);
       } else if (paymentIntent.status === "succeeded") {
         toast.success("Payment succeeded! Redirecting to orders...");
-        router.push(`${basePath}/orders`);
+        router.push('/orders');
       }
     } catch (error: any) {
       toast.error(error?.message || "An unexpected error occurred. Please try again.");

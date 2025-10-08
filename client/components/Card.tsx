@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import Quickview from "./Quickview";
 import { Product } from "../types";
 
@@ -7,8 +8,6 @@ interface CardProps {
 }
 
 const Card = ({ product }: CardProps) => {
-  // Handle basePath for production
-  const basePath = process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
   
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100">
@@ -56,9 +55,9 @@ const Card = ({ product }: CardProps) => {
       <div className="p-4">
         {/* Product Name */}
         <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-700 transition-colors">
-          <a href={`${basePath}/product/${product.id}`} className="hover:underline">
+          <Link href={`/product/${product.id}`} className="hover:underline">
             {product?.productName || "Product Name"}
-          </a>
+          </Link>
         </h3>
 
         {/* Product Description */}

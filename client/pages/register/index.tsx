@@ -24,7 +24,7 @@ const Register = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push(`${basePath}/`);
+      router.push('/');
     }
   }, [user, loading, router]);
   const submitRegister = async (i: any) => {
@@ -226,11 +226,11 @@ const Register = () => {
               <div className="ml-3 text-sm">
                 <label htmlFor="terms" className="text-gray-700">
                   I agree to the{" "}
-                  <Link href={`${basePath}/terms-of-service`} className="text-black hover:text-gray-600 font-medium">
+                  <Link href="/terms-of-service" className="text-black hover:text-gray-600 font-medium">
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href={`${basePath}/privacy-policy`} className="text-black hover:text-gray-600 font-medium">
+                  <Link href="/privacy-policy" className="text-black hover:text-gray-600 font-medium">
                     Privacy Policy
                   </Link>
                 </label>
@@ -298,7 +298,7 @@ const Register = () => {
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
               <Link
-                href={`${basePath}/login`}
+                href="/login"
                 className="font-medium text-black hover:text-gray-600 transition-colors"
               >
                 Sign in here

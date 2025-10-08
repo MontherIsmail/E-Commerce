@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
+import Link from "next/link";
 import { Footer, Navbar, RelatedProducts } from "../../components";
 import createClient from "../../api";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -101,7 +102,7 @@ const Product = () => {
         toast.error("Failed to add product to cart");
       }
     } else {
-      router.push(`${basePath}/login`);
+      router.push('/login');
     }
   };
 
@@ -118,12 +119,12 @@ const Product = () => {
               >
                 <li>
                   <div className="flex items-center">
-                    <a
-                      href={`${basePath}/${product?.productCategory?.toLowerCase() || 'products'}`}
+                    <Link
+                      href={`/${product?.productCategory?.toLowerCase() || 'products'}`}
                       className="mr-2 text-sm font-medium text-gray-900"
                     >
                       {product?.productCategory}
-                    </a>
+                    </Link>
                     <svg
                       fill="currentColor"
                       width={16}

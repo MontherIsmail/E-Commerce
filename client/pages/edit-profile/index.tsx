@@ -81,7 +81,7 @@ const EditProfile = () => {
         timer: 1500,
       });
 
-      router.push(`${basePath}/profile`);
+      router.push('/profile');
     } catch (error) {
       console.error("Error updating profile:", error);
     }

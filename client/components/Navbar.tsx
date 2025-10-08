@@ -8,6 +8,7 @@ import {
   ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Link from "next/link";
 import logo from "../assets/logo.png";
 import ProfileMenu from "./ProfileMenu";
 import { useAuth } from "../context/AuthContext";
@@ -21,10 +22,10 @@ const getBasePath = () => {
 const basePath = getBasePath();
 
 const navigation = [
-  { name: "Products", href: `${basePath}/products` },
-  { name: "Men", href: `${basePath}/men` },
-  { name: "Women", href: `${basePath}/women` },
-  { name: "About Us", href: `${basePath}/about` },
+  { name: "Products", href: "/products" },
+  { name: "Men", href: "/men" },
+  { name: "Women", href: "/women" },
+  { name: "About Us", href: "/about" },
 ];
 
 const Navbar = () => {
@@ -50,27 +51,27 @@ const Navbar = () => {
       >
         <div className="navbar-content">
           <div className="logo-container">
-            <a href={`${basePath}/`} className="logo-link">
+            <Link href="/" className="logo-link">
               <span className="sr-only">Your Company</span>
               <Image alt="" src={logo} className="logo-image" />
-            </a>
+            </Link>
           </div>
           <div className="nav-links">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className="nav-link"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </div>
           <div className="nav-actions">
             {user?.id ? (
               <>
                 <div className="cart-container">
-                  <a href={`${basePath}/cart`} className="cart-link">
+                  <Link href="/cart" className="cart-link">
                     <ShoppingBagIcon
                       aria-hidden="true"
                       className="cart-icon"
@@ -79,7 +80,7 @@ const Navbar = () => {
                       {cartCount}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </a>
+                  </Link>
                 </div>
                 <div className="profile-container">
                   <ProfileMenu />
@@ -87,12 +88,12 @@ const Navbar = () => {
               </>
             ) : (
               <div className="auth-links">
-                <a
-                  href={`${basePath}/login`}
+                <Link
+                  href="/login"
                   className="login-link"
                 >
                   Log in <span aria-hidden="true">&rarr;</span>
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -154,10 +155,10 @@ const Navbar = () => {
             }}
           >
           <div className="mobile-menu-header" style={{position: 'relative', zIndex: 1}}>
-            <a href={`${basePath}/`} className="mobile-logo">
+            <Link href="/" className="mobile-logo">
               <span className="sr-only">Your Company</span>
               <Image alt="" src={logo} className="h-8 w-auto" />
-            </a>
+            </Link>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
@@ -171,7 +172,7 @@ const Navbar = () => {
             <div className="mobile-nav-section" style={{position: 'relative', zIndex: 1}}>
               <div className="mobile-nav-links" style={{position: 'relative', zIndex: 1}}>
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className="mobile-nav-link"
@@ -201,14 +202,14 @@ const Navbar = () => {
                     }}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className="mobile-auth-section" style={{position: 'relative', zIndex: 1}}>
                 {user?.id ? (
                   <>
-                    <a
-                      href={`${basePath}/cart`}
+                    <Link
+                      href="/cart"
                       className="mobile-cart-link"
                       onClick={() => setMobileMenuOpen(false)}
                       style={{
@@ -239,9 +240,9 @@ const Navbar = () => {
                     >
                       <ShoppingBagIcon className="h-5 w-5" />
                       Cart ({cartCount})
-                    </a>
-                    <a
-                      href={`${basePath}/profile`}
+                    </Link>
+                    <Link
+                      href="/profile"
                       className="mobile-auth-link"
                       onClick={() => setMobileMenuOpen(false)}
                       style={{
@@ -269,7 +270,7 @@ const Navbar = () => {
                       }}
                     >
                       Profile
-                    </a>
+                    </Link>
                     <button
                       onClick={() => {
                         logout();
@@ -307,8 +308,8 @@ const Navbar = () => {
                     </button>
                   </>
                 ) : (
-                  <a
-                    href={`${basePath}/login`}
+                  <Link
+                    href="/login"
                     className="mobile-auth-link"
                     onClick={() => setMobileMenuOpen(false)}
                     style={{
@@ -336,7 +337,7 @@ const Navbar = () => {
                     }}
                   >
                     Log in
-                  </a>
+                  </Link>
                 )}
               </div>
             </div>
