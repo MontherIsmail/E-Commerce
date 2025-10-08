@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import withPermission from "../../hoc/withPermission";
 import axios from "axios";
-import { getApiUrl } from "@/config/api";
+import { API_ENDPOINTS, getApiUrl } from "@/config/api";
 import Swal from "sweetalert2";
+import { useAuth } from "@/context/AuthContext";
 
 interface Admin {
   id: number;
@@ -24,6 +25,7 @@ const AdminsPage = () => {
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
+  const { user } = useAuth();
   
   const [newAdmin, setNewAdmin] = useState({
     email: "",
@@ -56,6 +58,36 @@ const AdminsPage = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+  const handleDeleteAdmin = async (adminId: number) => {
+    if (!user?.permissions?.manageAdmins) {
+      Swal.fire({ icon: "error", title: "Forbidden", text: "You don't have permission to delete admins." });
+      return;
+    }
+    if (user.id === adminId) {
+      Swal.fire({ icon: "warning", title: "Not allowed", text: "You cannot delete your own admin account." });
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Delete admin?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#ef4444",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await axios.delete(getApiUrl(API_ENDPOINTS.USER(String(adminId))), { withCredentials: true });
+      Swal.fire({ icon: "success", title: "Deleted", text: "Admin deleted successfully.", timer: 1500, showConfirmButton: false });
+      fetchAdmins();
+    } catch (error: any) {
+      Swal.fire({ icon: "error", title: "Error", text: error?.response?.data?.message || "Failed to delete admin" });
     }
   };
 
@@ -189,6 +221,11 @@ const AdminsPage = () => {
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Created
                     </th>
+                    {user?.permissions?.manageAdmins && (
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -250,6 +287,22 @@ const AdminsPage = () => {
                         <td className="px-6 py-4 text-sm text-gray-500">
                           {new Date(admin.createdAt).toLocaleDateString()}
                         </td>
+                        {user?.permissions?.manageAdmins && (
+                          <td className="px-6 py-4">
+                            <button
+                              onClick={() => handleDeleteAdmin(admin.id)}
+                              disabled={user?.id === admin.id}
+                              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm border ${
+                                user?.id === admin.id
+                                  ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                                  : "bg-red-50 text-red-600 hover:bg-red-100 border-red-200"
+                              }`}
+                              title={user?.id === admin.id ? "You cannot delete your own account" : "Delete admin"}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     ))
                   )}
