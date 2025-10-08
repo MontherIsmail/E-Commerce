@@ -309,13 +309,13 @@ const ProductEditForm: FC<ProductEditFormProps> = ({
                       Colors *
                     </label>
                     <FieldArray name="productColors">
-                      {({ push, remove }) => (
+                      {({ push, remove, form }) => (
                         <div className="space-y-4">
-                          {values.productColors.map((color: any, index: number) => (
+                          {form.values.productColors.map((color: any, index: number) => (
                             <div key={index} className="border border-gray-200 rounded-lg p-4">
                               <div className="flex justify-between items-center mb-3">
                                 <span className="text-sm font-medium text-gray-700">Color {index + 1}</span>
-                                {values.productColors.length > 1 && (
+                                {form.values.productColors.length > 1 && (
                                   <button
                                     type="button"
                                     onClick={() => remove(index)}
