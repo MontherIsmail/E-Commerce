@@ -25,6 +25,8 @@ import {
 
 const UsersPage: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<{ username: string; email: string; password: string } | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [searchId, setSearchId] = useState<string>("");
   const [filterName, setFilterName] = useState<string>("");
@@ -111,6 +113,42 @@ const UsersPage: React.FC = () => {
 
   const handleViewUser = (user: User) => {
     setSelectedUser(user);
+  };
+
+  const beginEditUser = (user: User) => {
+    setSelectedUser(user);
+    setEditForm({ username: user.username || '', email: user.email || '', password: '' });
+    setIsEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setIsEditing(false);
+    setEditForm(null);
+  };
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!editForm) return;
+    const { name, value } = e.target;
+    setEditForm({ ...editForm, [name]: value });
+  };
+
+  const handleUpdateUser = async (userId: number) => {
+    if (!editForm) return;
+    try {
+      const payload: any = { username: editForm.username, email: editForm.email };
+      if (editForm.password && editForm.password.trim().length > 0) {
+        payload.password = editForm.password.trim();
+      }
+      await axios.put(getApiUrl(`/auth/users/${userId}`), payload, { withCredentials: true });
+      Swal.fire({ icon: 'success', title: 'Updated', text: 'User updated successfully', timer: 1500, showConfirmButton: false });
+      // reflect in UI
+      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, username: payload.username, email: payload.email } as any : u)));
+      setIsEditing(false);
+      setEditForm(null);
+      setSelectedUser(null);
+    } catch (error: any) {
+      Swal.fire({ icon: 'error', title: 'Error', text: error?.response?.data?.message || 'Failed to update user' });
+    }
   };
 
   const handleDeleteUser = (userId: string) => {
@@ -398,6 +436,13 @@ const UsersPage: React.FC = () => {
                           View
                         </button>
                         <button
+                          onClick={() => beginEditUser(user)}
+                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                        >
+                          <FiEdit className="w-3 h-3 mr-1" />
+                          Edit
+                        </button>
+                        <button
                           onClick={() => handleDeleteUser(user.id)}
                                   className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                         >
@@ -473,8 +518,66 @@ const UsersPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Edit User Modal */}
+        {isEditing && selectedUser && editForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">Edit User</h2>
+                  <button onClick={cancelEdit} className="text-gray-400 hover:text-gray-600 transition-colors">
+                    <FiX className="w-6 h-6" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={editForm.username}
+                    onChange={handleEditChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    placeholder="Username"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editForm.email}
+                    onChange={handleEditChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    placeholder="Email"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">New Password (optional)</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={editForm.password}
+                    onChange={handleEditChange}
+                    minLength={6}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    placeholder="Minimum 6 characters"
+                  />
+                </div>
+              </div>
+
+              <div className="p-6 border-t border-gray-200 flex justify-end space-x-3">
+                <button onClick={cancelEdit} className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Cancel</button>
+                <button onClick={() => handleUpdateUser(Number(selectedUser.id))} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Save Changes</button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Enhanced User Details Modal */}
-        {selectedUser && (
+        {selectedUser && !isEditing && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
               <div className="p-6">
