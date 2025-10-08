@@ -15,13 +15,6 @@ import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
 import router from "next/router";
-
-// Dynamic base path based on environment
-const getBasePath = () => {
-  return process.env.NODE_ENV === 'production' ? '/ecommerce' : '';
-};
-
-const basePath = getBasePath();
 import { classNames } from "../utils/classNames";
 
 interface QuickviewProps {
@@ -91,7 +84,7 @@ const Quickview = ({ id }: QuickviewProps) => {
         toast.error("Failed to add product to cart");
       }
     } else {
-      router.push(`${basePath}/login`);
+      router.push('/login');
     }
   };
 
